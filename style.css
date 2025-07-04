@@ -2,7 +2,9 @@
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
+td,th{
+    text-align: center !important;
+}
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f2f5;
