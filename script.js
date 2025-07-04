@@ -117,13 +117,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     let loggedInUser = null; // Stores current user data { id, name, role }
     let allAccounts = []; // Stores all account definitions from Firestore
     let allTaskDefinitions = []; // Stores all task definitions from Firestore
+    let allUsers = []; // Stores all user definitions from Firestore (for admin panel and filters)
     let selectedAccount = null; // The account selected for the current work session
     let selectedTaskDefinition = null; // The task definition selected for the current work session
     let currentSessionTasks = []; // Tasks added in the current unsaved session
     let isSavingWork = false; // Flag to prevent beforeunload warning during save
 
     // Constants
-    const SESSION_DURATION_MS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds (Changed from 3 hours)
     const HOURLY_RATE = 75; // EGP per hour
 
     // 3. Utility Functions
@@ -358,9 +359,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             'taskDetailsByTiming': 'تفاصيل المهام حسب التوقيت:',
             'tasksTiming': 'مهام {timing} دقيقة: {count} مهمة (إجمالي {totalTime} دقيقة)',
             'grandTotal': 'الإجمالي الكلي', // New translation
-            'totalTasksOverall': 'إجمالي عدد المههم', // New translation
-            'totalTimeOverall': 'إجمالي الوقت', // New translation
-            'totalBalanceOverall': 'إجمالي الرصيد', // New translation
+            'totalTasksOverall': 'إجمالي عدد المهام', // New translation
+            'totalTimeOverall': ' الوقت', // New translation
+            'totalBalanceOverall': ' الرصيد', // New translation
+            'sessionWarning': 'ستنتهي جلستك بعد ساعتين أو بعد ساعة من إغلاق المتصفح. هل ترغب في تسجيل الخروج الآن؟' // New translation for session warning
         },
         'en': {
             'loginTitle': 'Login',
@@ -461,7 +463,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'confirmDeleteRecord': 'Are you sure you want to delete this record for user {name}?',
             'recordDeletedSuccess': 'Record deleted successfully.',
             'errorDeletingRecord': 'An error occurred while deleting the record.',
-            'editRecord': 'Edit Work Record',
+            'editRecord': 'Edit',
             'taskCountEdit': 'Task Count:',
             'totalTimeEdit': 'Total Time (minutes):',
             'saveChangesBtn': 'Save Changes',
@@ -472,13 +474,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             'sessionResumeError': 'Could not resume session. Data inconsistent.',
             'errorLoadingRecords': 'An error occurred while loading work records.',
             'notImplemented': 'This feature is not yet implemented.',
-            'hello': 'Hello, ',
+            'hello': 'Hi, ',
             'taskDetailsByTiming': 'Task Details by Timing:',
             'tasksTiming': '{count} tasks of {timing} minutes (Total {totalTime} minutes)',
             'grandTotal': 'Grand Total', // New translation
             'totalTasksOverall': 'Total Tasks Overall', // New translation
             'totalTimeOverall': 'Total Time Overall', // New translation
             'totalBalanceOverall': 'Total Balance Overall', // New translation
+            'sessionWarning': 'Your session will expire in 2 hours or 1 hour after closing the browser. Do you want to log out now?' // New translation for session warning
         }
     };
 
@@ -582,6 +585,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (storedUser && storedExpiry && Date.now() < parseInt(storedExpiry)) {
             loggedInUser = JSON.parse(storedUser);
+            // Fetch all static data once on session load
+            await fetchAllStaticData();
             if (loggedInUser.id === 'admin') {
                 showPage(adminPanelPage); // This will hide loginPage
                 await renderAdminPanel(); // Ensure admin panel is rendered
@@ -604,7 +609,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             event.returnValue = ''; // Required for Chrome to show the prompt
             return ''; // Required for Firefox to show the prompt
         }
+        // Optional: Add a general warning for session expiry if the user is logged in
+        if (loggedInUser) {
+            // This will show the browser's default "Are you sure you want to leave?" prompt.
+            // Custom modals are not allowed here for security reasons.
+            event.preventDefault();
+            event.returnValue = getTranslatedText('sessionWarning');
+            return getTranslatedText('sessionWarning');
+        }
     });
+
+    // New function to fetch all static data
+    const fetchAllStaticData = async () => {
+        showLoadingIndicator(true);
+        try {
+            // Fetch Users
+            const usersCollectionRef = collection(db, 'users');
+            const usersSnapshot = await getDocs(usersCollectionRef);
+            allUsers = usersSnapshot.docs.map(getDocData);
+
+            // Fetch Accounts
+            const accountsCollectionRef = collection(db, 'accounts');
+            const accountsSnapshot = await getDocs(accountsCollectionRef);
+            allAccounts = accountsSnapshot.docs.map(getDocData);
+
+            // Fetch Task Definitions
+            const tasksCollectionRef = collection(db, 'tasks');
+            const tasksSnapshot = await getDocs(tasksCollectionRef);
+            allTaskDefinitions = tasksSnapshot.docs.map(getDocData);
+
+            console.log("All static data fetched and cached.");
+        } catch (error) {
+            console.error("Error fetching all static data:", error);
+            showToastMessage(getTranslatedText('errorLoadingData'), 'error');
+        } finally {
+            showLoadingIndicator(false);
+        }
+    };
 
     // 5. Login Logic
     const handleLogin = async () => {
@@ -639,6 +680,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // In case of an error accessing Firestore, we proceed with the default PIN.
                 // The user will see a login error if the default PIN doesn't match their input.
             }
+
+            // Fetch all static data immediately after successful login or session load
+            await fetchAllStaticData();
 
             // Now use adminPinValue for comparison
             if (pin === adminPinValue) {
@@ -757,17 +801,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 7. Start Work Page Logic
     const fetchAccountsAndTasks = async () => {
-        showLoadingIndicator(true);
+        // Now using cached data from allAccounts and allTaskDefinitions
+        // No need to fetch from Firestore again here
+        // showLoadingIndicator(true); // Removed as data is already cached
         try {
-            const accountsCollectionRef = collection(db, 'accounts'); // Use direct import 'collection'
-            const accountsSnapshot = await getDocs(accountsCollectionRef); // Use direct import 'getDocs'
-            allAccounts = accountsSnapshot.docs.map(getDocData);
-
-            const tasksCollectionRef = collection(db, 'tasks'); // Use direct import 'collection'
-            const tasksSnapshot = await getDocs(tasksCollectionRef); // Use direct import 'getDocs'
-            allTaskDefinitions = tasksSnapshot.docs.map(getDocData);
-
-            // Populate dropdowns
+            // Populate dropdowns from cached data
             accountSelect.innerHTML = `<option value="">${getTranslatedText('accountName')}</option>`;
             allAccounts.forEach(account => {
                 const option = document.createElement('option');
@@ -784,10 +822,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 taskTypeSelect.appendChild(option);
             });
         } catch (error) {
-            console.error("Error fetching accounts or tasks:", error);
+            console.error("Error populating accounts or tasks from cache:", error);
             showToastMessage(getTranslatedText('errorLoadingData'), 'error');
         } finally {
-            showLoadingIndicator(false);
+            // showLoadingIndicator(false); // Removed
         }
     };
 
@@ -803,7 +841,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         taskSelectionPopup.style.display = 'flex'; // Show popup for selection (using flex)
         accountSelect.value = "";
         taskTypeSelect.value = "";
-        await fetchAccountsAndTasks();
+        await fetchAccountsAndTasks(); // This now uses cached data
     };
 
     confirmSelectionBtn.addEventListener('click', () => {
@@ -1363,7 +1401,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         showLoadingIndicator(true); // Start loading indicator for admin panel
         try {
-            // These functions no longer manage their own loading indicators
+            // These functions now use cached data
             await loadAndDisplayUsers();
             await loadAndDisplayAccounts();
             await loadAndDisplayTaskDefinitions();
@@ -1382,18 +1420,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadAndDisplayUsers = async () => {
         usersTableBody.innerHTML = '';
         try {
-            const usersCollectionRef = collection(db, 'users'); // Use direct import collection
-            const usersSnapshot = await getDocs(usersCollectionRef); // Use direct import getDocs
-            console.log("Users fetched for admin panel:", usersSnapshot.docs.length); // Debug log
-            if (usersSnapshot.empty) {
+            // Use cached allUsers data
+            console.log("Users fetched for admin panel (from cache):", allUsers.length); // Debug log
+            if (allUsers.length === 0) {
                 const row = usersTableBody.insertRow();
                 const cell = row.insertCell(0);
                 cell.colSpan = 3;
                 cell.textContent = getTranslatedText('noDataToShow');
                 cell.style.textAlign = 'center';
             } else {
-                usersSnapshot.forEach(documentSnapshot => { // Changed param name to documentSnapshot for clarity
-                    const user = getDocData(documentSnapshot);
+                allUsers.forEach(user => { // Iterate over cached users
                     console.log("Processing user for admin panel:", user.name); // Debug log for each user
                     const row = usersTableBody.insertRow();
                     row.insertCell().textContent = user.name;
@@ -1413,6 +1449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             try {
                                 await deleteDoc(doc(db, 'users', user.id)); // Use direct imports deleteDoc, doc
                                 showToastMessage(getTranslatedText('userDeletedSuccess'), 'success');
+                                await fetchAllStaticData(); // Re-fetch all static data after deletion
                                 await loadAndDisplayUsers(); // Reload after delete
                             } catch (err) {
                                 console.error("Error deleting user:", err);
@@ -1454,6 +1491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToastMessage(getTranslatedText('userAddedSuccess'), 'success');
             newUserNameInput.value = '';
             newUserPINInput.value = '';
+            await fetchAllStaticData(); // Re-fetch all static data after adding
             await loadAndDisplayUsers();
             await populateUserFilter(); // Re-populate user filter after adding a new user
         } catch (error) {
@@ -1468,19 +1506,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadAndDisplayAccounts = async () => {
         accountsTableBody.innerHTML = '';
         try {
-            const accountsCollectionRef = collection(db, 'accounts'); // Use direct import collection
-            const accountsSnapshot = await getDocs(accountsCollectionRef); // Use direct import getDocs
-            console.log("Accounts fetched for admin panel:", accountsSnapshot.docs.length); // Debug log
-            allAccounts = accountsSnapshot.docs.map(getDocData); // Update global allAccounts
-            if (accountsSnapshot.empty) {
+            // Use cached allAccounts data
+            console.log("Accounts fetched for admin panel (from cache):", allAccounts.length); // Debug log
+            if (allAccounts.length === 0) {
                 const row = accountsTableBody.insertRow();
                 const cell = row.insertCell(0);
                 cell.colSpan = 2;
                 cell.textContent = getTranslatedText('noDataToShow');
                 cell.style.textAlign = 'center';
             } else {
-                accountsSnapshot.forEach(documentSnapshot => { // Changed param name to documentSnapshot for clarity
-                    const account = getDocData(documentSnapshot);
+                allAccounts.forEach(account => { // Iterate over cached accounts
                     console.log("Processing account for admin panel:", account.name); // Debug log
                     const row = accountsTableBody.insertRow();
                     row.insertCell().textContent = account.name;
@@ -1494,6 +1529,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             try {
                                 await deleteDoc(doc(db, 'accounts', account.id)); // Use direct imports deleteDoc, doc
                                 showToastMessage(getTranslatedText('accountDeletedSuccess'), 'success');
+                                await fetchAllStaticData(); // Re-fetch all static data after deletion
                                 await loadAndDisplayAccounts(); // Reload after delete
                             } catch (err) {
                                 console.error("Error deleting account:", err);
@@ -1532,6 +1568,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await addDoc(accountsCollectionRef, { name: name }); // Use direct import addDoc
             showToastMessage(getTranslatedText('accountAddedSuccess'), 'success');
             newAccountNameInput.value = '';
+            await fetchAllStaticData(); // Re-fetch all static data after adding
             await loadAndDisplayAccounts();
         } catch (error) {
             console.error("Error adding account:", error);
@@ -1545,19 +1582,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadAndDisplayTaskDefinitions = async () => {
         tasksDefinitionTableBody.innerHTML = '';
         try {
-            const tasksCollectionRef = collection(db, 'tasks'); // Use direct import collection
-            const tasksSnapshot = await getDocs(tasksCollectionRef); // Use direct import getDocs
-            console.log("Task Definitions fetched for admin panel:", tasksSnapshot.docs.length); // Debug log
-            allTaskDefinitions = tasksSnapshot.docs.map(getDocData); // Update global allTaskDefinitions
-            if (tasksSnapshot.empty) {
+            // Use cached allTaskDefinitions data
+            console.log("Task Definitions fetched for admin panel (from cache):", allTaskDefinitions.length); // Debug log
+            if (allTaskDefinitions.length === 0) {
                 const row = tasksDefinitionTableBody.insertRow();
                 const cell = row.insertCell(0);
                 cell.colSpan = 3;
                 cell.textContent = getTranslatedText('noDataToShow');
                 cell.style.textAlign = 'center';
             } else {
-                tasksSnapshot.forEach(documentSnapshot => { // Changed param name to documentSnapshot for clarity
-                    const task = getDocData(documentSnapshot);
+                allTaskDefinitions.forEach(task => { // Iterate over cached tasks
                     console.log("Processing task definition for admin panel:", task.name); // Debug log
                     const row = tasksDefinitionTableBody.insertRow();
                     row.insertCell().textContent = task.name;
@@ -1572,6 +1606,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             try {
                                 await deleteDoc(doc(db, 'tasks', task.id)); // Use direct imports deleteDoc, doc
                                 showToastMessage(getTranslatedText('taskDeletedSuccess'), 'success');
+                                await fetchAllStaticData(); // Re-fetch all static data after deletion
                                 await loadAndDisplayTaskDefinitions(); // Reload after delete
                             } catch (err) {
                                 console.error("Error deleting task definition:", err);
@@ -1623,6 +1658,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToastMessage(getTranslatedText('taskAddedSuccess'), 'success');
             newTaskNameInput.value = '';
             newTimingsContainer.innerHTML = `<input type="number" step="0.1" class="new-task-timing" placeholder="${getTranslatedText('timingPlaceholder')}">`;
+            await fetchAllStaticData(); // Re-fetch all static data after adding
             await loadAndDisplayTaskDefinitions();
         } catch (error) {
             console.error("Error adding task definition:", error);
@@ -1636,17 +1672,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const populateUserFilter = async () => {
         recordFilterUser.innerHTML = `<option value="">${getTranslatedText('allUsers')}</option>`;
         try {
-            const usersCollectionRef = collection(db, 'users'); // Use direct import collection
-            const usersSnapshot = await getDocs(usersCollectionRef); // Use direct import getDocs
-            usersSnapshot.forEach(documentSnapshot => { // Changed param name to documentSnapshot for clarity
-                const user = getDocData(documentSnapshot);
+            // Use cached allUsers data
+            allUsers.forEach(user => { // Iterate over cached users
                 const option = document.createElement('option');
                 option.value = user.id;
                 option.textContent = user.name;
                 recordFilterUser.appendChild(option);
             });
         } catch (error) {
-            console.error("Error populating user filter:", error);
+            console.error("Error populating user filter (from cache):", error);
             showToastMessage(getTranslatedText('errorLoadingData'), 'error');
         }
     };
@@ -1742,7 +1776,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const openEditRecordModal = (record) => {
         currentEditingRecordId = record.id;
 
-        // Populate accounts select
+        // Populate accounts select from cached data
         editAccountSelect.innerHTML = '';
         allAccounts.forEach(acc => {
             const option = document.createElement('option');
@@ -1752,7 +1786,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         editAccountSelect.value = record.accountId;
 
-        // Populate tasks select
+        // Populate tasks select from cached data
         editTaskTypeSelect.innerHTML = '';
         allTaskDefinitions.forEach(task => {
             const option = document.createElement('option');
@@ -1847,7 +1881,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Attempt to load session on initial page load
     // loadSession will call showPage() if a session is resumed,
     // which will hide loginPage.
-    await loadSession();
+    await loadSession(); // This will now call fetchAllStaticData if session is resumed
 
     // Event listeners for language buttons
     if (langArBtn) {
