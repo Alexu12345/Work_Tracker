@@ -1,596 +1,733 @@
-/* General Styles */
-:root {
-    --primary-color: #007bff; /* Blue */
-    --secondary-color: #6c757d; /* Gray */
-    --success-color: #28a745; /* Green */
-    --error-color: #dc3545; /* Red */
-    --warning-color: #ffc107; /* Yellow */
-    --info-color: #17a2b8; /* Teal */
-    --purple-color: #6f42c1; /* Purple */
-    --text-color: #343a40; /* Dark gray for text */
-    --background-color: #f8f9fa; /* Light background */
-    --card-background: #ffffff; /* White card background */
-    --border-color: #dee2e6; /* Light gray border */
-    --shadow-color: rgba(0, 0, 0, 0.1); /* Soft shadow */
-    --button-hover-brightness: 110%; /* Button hover effect */
-    --neon-blue: #00e6e6; /* Bright neon blue for dark mode */
-    --neon-purple: #9d00ff; /* Bright neon purple for dark mode */
+/* Universal box-sizing for consistent layout */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
-
-/* Dark Mode Variables */
-body.dark-mode {
-    --primary-color: #00bfff; /* Lighter blue for dark mode */
-    --secondary-color: #adb5bd; /* Lighter gray */
-    --text-color: #e9ecef; /* Light gray for text */
-    --background-color: #212529; /* Dark background */
-    --card-background: #343a40; /* Dark card background */
-    --border-color: #495057; /* Darker gray border */
-    --shadow-color: rgba(0, 230, 230, 0.2); /* Neon blue shadow for dark mode */
+td,th{
+    text-align: center !important;
 }
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: #f0f2f5;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align to top, not center, to allow content flow */
     min-height: 100vh;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    direction: rtl; /* Default to RTL */
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    direction: rtl;
+    text-align: right;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
 }
 
+/* Page Containers - General styling */
 .page {
-    background-color: var(--card-background);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px;
+    margin: 20px auto; /* Center the page horizontally */
     box-sizing: border-box;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex; /* Ensure flex for internal layout */
+    flex-direction: column; /* Stack content vertically within each page */
+    align-items: center; /* Center content horizontally within the page */
+    gap: 20px; /* Add vertical gap between direct children of .page */
 }
 
 h1, h2, h3 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    width: 100%; /* Ensure headings take full width */
 }
 
-.input-group, .pin-input-group {
-    margin-bottom: 15px;
-    text-align: right;
-    width: 100%;
+/* Input Group Styles */
+.input-group {
+    margin-bottom: 15px; /* Slightly reduced margin */
+    width: 100%; /* Ensure input group takes full width */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align labels/inputs to the right */
 }
 
 .input-group label {
-    display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: var(--text-color);
+    font-weight: 600;
+    color: #555;
+    transition: color 0.3s ease;
 }
 
 .input-group input[type="text"],
 .input-group input[type="password"],
 .input-group input[type="number"],
 .input-group input[type="date"],
-.input-group input[type="time"],
+.input-group input[type="time"], /* Added for time input */
 .input-group select {
-    width: calc(100% - 20px); /* Adjust for padding */
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-}
-
-.input-group input[type="text"]:focus,
-.input-group input[type="password"]:focus,
-.input-group input[type="number"]:focus,
-.input-group input[type="date"]:focus,
-.input-group input[type="time"]:focus,
-.input-group select:focus,
-.pin-input-field:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus highlight */
-}
-
-/* PIN Input Fields Styling */
-.pin-input-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px; /* Space between fields */
-    margin-bottom: 25px;
-}
-
-.pin-input-field {
-    width: 45px; /* Adjust size */
-    height: 60px; /* Make it taller */
-    font-size: 2.5em; /* Large font size */
-    text-align: center; /* Center text */
-    border: 2px solid var(--border-color);
+    width: 100%; /* Full width within its parent */
+    padding: 12px;
+    border: 1px solid #ced4da;
     border-radius: 8px;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    font-size: 16px;
+    box-sizing: border-box; /* Crucial for consistent width */
+    margin-top: 5px;
+    color: #333;
+    background-color: #f8f9fa;
     transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    box-sizing: border-box;
-    -moz-appearance: textfield; /* Hide arrows for number input in Firefox */
-}
-/* Hide arrows for number input in Chrome, Safari, Edge */
-.pin-input-field::-webkit-outer-spin-button,
-.pin-input-field::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
 }
 
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 
+/* Error Message */
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+    width: 100%; /* Ensure it takes full width */
+}
+
+/* General Button Styles */
 button {
-    background-color: var(--primary-color);
+    background-color: #007bff;
     color: white;
     padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease, filter 0.3s ease;
-    margin-top: 10px;
-    width: 100%;
-    box-sizing: border-box;
+    font-size: 17px;
+    width: 100%; /* Full width for general buttons */
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
-    filter: brightness(var(--button-hover-brightness));
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-button.secondary {
-    background-color: var(--secondary-color);
+/* Disabled button style */
+button:disabled,
+button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #cccccc !important; /* Override other background colors */
+    transform: none !important; /* Disable hover transform */
+    box-shadow: none !important; /* Disable hover shadow */
 }
 
-button.secondary:hover {
-    filter: brightness(var(--button-hover-brightness));
+/* Specific Page Styles */
+.login-container {
+    max-width: 450px;
+    text-align: center;
 }
 
-button.danger {
-    background-color: var(--error-color);
-}
-
-button.danger:hover {
-    filter: brightness(var(--button-hover-brightness));
-}
-
-.error-message {
-    color: var(--error-color);
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-/* Dashboard Styles */
-.main-dashboard-container, .start-work-container, .track-work-container, .admin-panel-container {
-    max-width: 900px; /* Larger max-width for dashboards */
+/* Main Dashboard Styles */
+.main-dashboard-container {
+    padding-top: 20px;
+    max-width: 800px; /* Wider for chart */
 }
 
 .header-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%; /* Ensure header bar takes full width */
 }
 
 .user-info {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    text-align: right; /* Ensure text aligns properly for RTL */
+    align-items: center; /* Align items in a row */
+    gap: 20px; /* Space between avatar, name, and total boxes */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-grow: 1; /* Allow user info to take available space */
 }
 
 .user-avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--primary-color);
+    border: 2px solid #007bff;
+    flex-shrink: 0; /* Prevent avatar from shrinking */
 }
 
 .user-info p {
+    font-size: 20px;
+    font-weight: 500;
     margin: 0;
-    font-size: 1.1em;
-    font-weight: bold;
+    flex-shrink: 0; /* Prevent name from shrinking */
 }
 
 .total-hours-box {
-    background-color: var(--background-color);
+    background-color: #e9ecef;
     padding: 10px 15px;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
-    margin-top: 10px;
-    text-align: center;
-    box-shadow: 0 2px 5px var(--shadow-color);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Stack hours and balance vertically */
+    align-items: flex-end; /* Align text to the right */
+    gap: 5px; /* Space between hours and balance lines */
+    font-size: 18px;
+    font-weight: 600;
+    color: #007bff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    flex-grow: 1; /* Allow the box to grow */
+    min-width: 180px; /* Ensure it doesn't get too small */
 }
 
 .total-hours-box p {
-    font-size: 0.9em;
-    margin: 5px 0;
-    color: var(--text-color);
+    margin: 0;
+    font-weight: normal;
+    color: #333;
+    transition: color 0.3s ease;
+}
+/* Ensure balance text is also styled */
+.total-hours-box p span {
+    font-weight: bold;
+    color: #007bff; /* Or a different color for balance if desired */
 }
 
+/* Dashboard Options (Start Work, Track Work buttons) */
 .dashboard-options {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center; /* Center buttons */
+    gap: 20px; /* Space between buttons */
+    width: 100%; /* Take full width */
+    margin-top: 25px; /* Space from header */
 }
 
 .big-option-btn {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 20px;
-    font-size: 1.4em;
-    border-radius: 10px;
-    text-align: center;
+    background-color: #28a745; /* Green */
+    padding: 20px 30px; /* Larger padding */
+    font-size: 22px; /* Larger font size */
+    flex-grow: 1; /* Allow buttons to grow and fill space */
+    max-width: 250px; /* Max width for individual buttons */
+    min-width: 180px; /* Minimum width for responsiveness */
+    margin-top: 0; /* Override default button margin-top */
+}
+
+.big-option-btn:hover {
+    background-color: #218838;
 }
 
 /* Start Work Page */
-.start-work-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .popup {
-    background-color: var(--card-background);
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px var(--shadow-color);
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: fixed; /* Changed to fixed to overlay content properly */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex; /* Ensure popup content is flexed */
+    flex-direction: column; /* Stack popup content vertically */
+    gap: 15px; /* Space between popup elements */
 }
 
-.work-summary-section, .task-timing-buttons-section {
-    width: 100%;
-    margin-top: 20px;
+.popup h2 {
+    margin-bottom: 25px;
+    color: #007bff;
+}
+
+.popup button {
+    margin: 5px; /* Added for spacing between buttons */
+    width: auto; /* Override 100% width for popup buttons */
+    flex-grow: 1; /* Allow buttons to grow within their container */
+}
+.popup button.secondary { /* Style for the new "Back" button */
+    background-color: #6c757d;
+}
+
+.popup button.secondary:hover {
+    background-color: #5a6268;
+}
+
+.work-summary-section {
+    margin-bottom: 30px;
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%; /* Ensure it takes full width */
 }
 
 .work-summary-section table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
 }
 
-.work-summary-section table td {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    text-align: center;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+.work-summary-section td {
+    padding: 12px;
+    font-size: 18px;
+    color: #495057;
+    border: none; /* No borders for this summary table */
+    transition: color 0.3s ease;
 }
 
-#detailedSummaryContainer {
+.work-summary-section tr:first-child td:last-child {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 22px;
+}
+
+.work-summary-section tr:last-child td:last-child {
+    font-weight: bold;
+    color: #28a745;
+    font-size: 22px;
+}
+
+/* Styling for detailedSummaryContainer */
+#detailedSummaryContainer h3 {
+    font-size: 18px;
     margin-top: 15px;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--background-color);
-    max-height: 200px; /* Scrollable */
-    overflow-y: auto;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: right; /* Ensure right alignment */
+    transition: color 0.3s ease;
 }
+#detailedSummaryContainer p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #e0e0e0;
+    text-align: right; /* Ensure right alignment */
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+#detailedSummaryContainer p:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 
 .task-timing-buttons-section {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
     justify-content: center;
-    margin-bottom: 20px;
+    gap: 15px; /* Reduced gap for more buttons per row */
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    width: 100%; /* Ensure it takes full width */
 }
 
-.task-timing-button {
-    background-color: var(--info-color); /* Teal */
-    color: white;
-    padding: 10px 15px;
+.timing-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Reduced gap between main button and undo button */
+    flex-shrink: 0; /* Prevent shrinking */
+    flex-basis: 120px; /* Adjusted base width to fit more buttons */
+    min-height: 80px; /* Adjusted min-height to accommodate both buttons */
+    justify-content: flex-start; /* Align content to the top */
+    position: relative; /* Crucial for positioning the absolute undo button */
+}
+
+.task-timing-btn {
+    background-color: #17a2b8; /* Teal */
+    display: inline-block;
+    width: 100%; /* Take full width of wrapper */
+    padding: 12px 10px; /* Adjusted padding */
+    margin: 0; /* Reset margin */
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-timing-btn:hover {
+    background-color: #138496;
+}
+
+.undo-btn {
+    background-color: #ffc107; /* Yellow */
+    color: #333;
+    padding: 0 15px; /* Start with zero padding */
+    border: none;
     border-radius: 5px;
-    font-size: 1em;
-    flex-grow: 1; /* Allow buttons to grow */
-    max-width: 150px; /* Max width for each button */
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.3s ease, height 0.3s ease, padding 0.3s ease, margin 0.3s ease; /* Smooth transition for visibility */
+    width: fit-content;
+    opacity: 0; /* Start hidden */
+    height: 0; /* Occupy no space */
+    overflow: hidden; /* Hide content */
+    pointer-events: none; /* Disable clicks when hidden */
+    margin-top: 0; /* No margin when hidden */
+
+    /* Positioning to prevent layout shift */
+    /* position: absolute; */
+    /* top: 0; Align with the top of the parent wrapper */
+    /* right: 0; Align to the right in RTL */
+    /* transform: translateX(50%) translateY(-50%); Center over the corner of the button */
+    z-index: 10; /* Ensure it's above the main button */
+    white-space: nowrap; /* Prevent text wrapping */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Add shadow for better visibility */
 }
 
-.task-timing-button.active-task {
-    background-color: var(--success-color); /* Green when active */
-    border: 2px solid var(--primary-color);
+.undo-btn.show {
+    opacity: 1;
+    height: auto; /* Allow height to adjust */
+    padding: 8px 15px; /* Restore padding */
+    pointer-events: auto; /* Enable clicks */
+    /* No margin-top needed as position absolute handles it */
+}
+
+.undo-btn:hover {
+    background-color: #e0a800;
 }
 
 .save-work-btn {
-    background-color: var(--success-color);
+    background-color: #007bff; /* Blue */
+    margin-top: 30px;
 }
 
-/* Track Work Page */
-.chart-container {
-    width: 100%;
-    height: 300px; /* Fixed height for chart */
-    margin-bottom: 20px;
-    background-color: var(--background-color);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px var(--shadow-color);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+.save-work-btn:hover {
+    background-color: #0056b3;
 }
 
+/* Track Work Page Styles */
+.track-work-container {
+    max-width: 1200px; /* Wider for detailed table */
+    padding: 40px;
+}
+/* Chart specific styles on track work page */
+#taskChart {
+    max-width: 400px; /* Smaller chart size */
+    max-height: 400px;
+    margin: 20px auto; /* Center the chart */
+}
+
+
+/* Responsive table container */
 .table-responsive {
     width: 100%;
-    overflow-x: auto; /* Enable horizontal scrolling for tables */
+    overflow-x: auto; /* Enable horizontal scrolling for tables if content overflows */
     margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    box-shadow: 0 2px 8px var(--shadow-color);
 }
 
-table {
-    width: 100%;
+.track-work-container table,
+.admin-section table {
+    width: 100%; /* Ensure table takes full width of its container */
     border-collapse: collapse;
-    background-color: var(--card-background);
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden; /* For rounded corners */
+    /* Removed min-width to allow auto table-layout to work effectively */
     transition: background-color 0.3s ease;
+    table-layout: auto; /* Changed to auto: Allows columns to size based on content */
 }
 
-table th, table td {
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    text-align: right; /* Default to right for RTL */
-    color: var(--text-color);
-    transition: border-color 0.3s ease, color 0.3s ease;
-    white-space: nowrap; /* Prevent text wrapping in table cells */
+.track-work-container table th,
+.track-work-container table td,
+.admin-section table th,
+.admin-section table td {
+    padding: 8px 10px; /* Reduced padding for smaller font */
+    text-align: right;
+    border: 1px solid #dee2e6; /* All cells have borders for clarity */
+    white-space: normal; /* Allow text wrapping */
+    word-break: break-word; /* Break long words */
+    font-size: 13px; /* Reduced font size for tables */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-table th {
-    background-color: var(--primary-color);
+.track-work-container table th,
+.admin-section table th {
+    background-color: #007bff;
     color: white;
+    font-weight: 600;
+    position: sticky; /* Make headers sticky for scrolling */
+    top: 0;
+    z-index: 1; /* Ensure headers are above content when scrolling */
+}
+
+.track-work-container table tbody tr:nth-child(even),
+.admin-section table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.track-work-container table tbody tr:hover,
+.admin-section table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Styling for total cells in track work table */
+.track-work-container table .total-cell {
     font-weight: bold;
-    text-align: center;
+    background-color: #e0f7fa; /* Light blue background for totals */
+    color: #0056b3;
+    text-align: center; /* Center total cells */
 }
 
-table tbody tr:nth-child(even) {
-    background-color: var(--background-color);
+/* New: Border for daily record rows */
+.track-work-container table tbody .daily-record-row {
+    border-top: 2px solid #007bff; /* Blue border at the top of each date group */
+}
+/* Ensure the first row doesn't have an extra top border if not needed */
+.track-work-container table tbody tr:first-child.daily-record-row {
+    border-top: none;
 }
 
-table tbody tr:hover {
-    background-color: var(--border-color);
-}
-
-table tfoot td {
+/* Styling for grand total footer */
+#trackTasksTableFoot td {
     font-weight: bold;
-    background-color: var(--info-color);
-    color: white;
+    background-color: #d1ecf1; /* Slightly darker blue for grand total */
+    border-top: 2px solid #007bff;
+    color: #004085;
+}
+#trackTasksTableFoot .grand-total-label {
+    text-align: right; /* Align label to right */
+}
+#trackTasksTableFoot .grand-total-value {
+    text-align: center; /* Center the value */
 }
 
-/* Admin Panel */
+/* New class for footer cells to handle dark mode colors */
+.grand-total-footer-cell {
+    background-color: #e9ecef; /* Default light mode color */
+    border-top: 2px solid #007bff; /* Default light mode border */
+    color: #004085; /* Default light mode text color */
+}
+
+
+/* Admin Panel Styles */
 .admin-panel-container {
-    max-width: 1000px; /* Wider for admin panel */
+    max-width: 900px; /* Wider for admin tables */
+}
+
+.admin-panel-container h1 {
+    color: #007bff;
 }
 
 .admin-section {
-    background-color: var(--background-color);
-    padding: 20px;
+    background-color: #f8f9fa;
+    padding: 25px;
     border-radius: 10px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 10px var(--shadow-color);
-    text-align: right; /* Ensure labels and input groups align right */
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Ensure admin sections take full width */
+    display: flex; /* Use flex for internal layout */
+    flex-direction: column; /* Stack content vertically */
+    gap: 15px; /* Space between elements in admin section */
 }
 
-.admin-section h2, .admin-section h3 {
-    text-align: center;
-    color: var(--primary-color);
+.admin-section h2 {
+    text-align: right;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.admin-section h3 {
+    text-align: right;
+    margin-top: 30px;
     margin-bottom: 15px;
+    color: #333;
 }
 
-.admin-section .input-group input,
-.admin-section .input-group select,
 .admin-section input[type="text"],
 .admin-section input[type="password"],
 .admin-section input[type="number"] {
-    margin-bottom: 10px;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px; /* Keep margin for inputs */
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .admin-section button {
-    margin-top: 5px;
-    margin-bottom: 15px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 0; /* Reset margin-bottom for buttons in flex container */
+    width: auto; /* Allow buttons to size based on content */
+    align-self: flex-start; /* Align buttons to the right in RTL */
 }
 
-/* Specific to Admin Tables */
-#usersTable .actions-column,
-#accountsTable .actions-column,
-#tasksDefinitionTable .actions-column,
-#workRecordsTable .actions-column,
-#employeeRatesTable .actions-column {
-    width: 150px; /* Fixed width for action columns */
-    text-align: center;
+.admin-section button:hover {
+    background-color: #218838;
 }
 
-.action-btn {
-    padding: 5px 10px;
-    font-size: 0.9em;
-    margin: 0 3px;
-    border-radius: 4px;
+#addTimingFieldBtn {
+    background-color: #17a2b8;
+}
+#addTimingFieldBtn:hover {
+    background-color: #138496;
+}
+#addTaskDefinitionBtn {
+    background-color: #6f42c1; /* purple */
+}
+#addTaskDefinitionBtn:hover {
+    background-color: #5a2a98;
 }
 
-/* Filter controls in Admin Panel */
+
+/* Admin table specific styling (override general table if needed) */
+.admin-section table th,
+.admin-section table td {
+    padding: 10px 12px;
+    font-size: 15px;
+}
+
+.admin-action-btn {
+    background-color: #6c757d; /* Secondary grey */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: auto;
+    margin: 3px;
+    display: inline-block;
+}
+
+.admin-action-btn:hover {
+    background-color: #5a6268;
+}
+
+.admin-action-btn.delete {
+    background-color: #dc3545; /* Red */
+}
+
+.admin-action-btn.delete:hover {
+    background-color: #c82333;
+}
+
+#newTimingsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between timing inputs */
+    width: 100%;
+}
+
+#newTimingsContainer input {
+    margin-bottom: 0; /* Reset margin-bottom as gap handles it */
+}
+
 .filter-controls {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
-    justify-content: center;
+    width: 100%;
+    justify-content: flex-end; /* Align filters to the right */
 }
 
-.filter-controls input, .filter-controls select {
-    flex: 1; /* Allow inputs to take available space */
-    min-width: 150px; /* Minimum width before wrapping */
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid var(--border-color);
-    background-color: var(--background-color);
-    color: var(--text-color);
+.filter-controls input,
+.filter-controls select,
+.filter-controls button {
+    flex-grow: 1;
+    min-width: 120px; /* Ensure inputs don't get too small */
+    margin-top: 0; /* Reset margin-top from general button/input styles */
 }
 
-/* Task Timing Input Group (Admin Panel) */
-.timing-input-group {
-    display: flex;
-    gap: 10px; /* Space between minutes and seconds inputs */
-    margin-bottom: 15px;
-    justify-content: center; /* Center the group */
-    align-items: center;
-}
 
-.timing-input-group input {
-    width: 80px; /* Smaller width for minutes/seconds inputs */
-    text-align: center;
-    padding: 8px;
-    font-size: 1em;
-}
-
-/* Modal Styles */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: var(--card-background);
-    margin: auto;
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 5px 20px var(--shadow-color);
-    position: relative;
-    text-align: right; /* Align modal content right for RTL */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modal-content label, .modal-content p {
-    display: block;
-    margin-bottom: 8px;
-    margin-top: 15px;
-    font-weight: bold;
-    color: var(--text-color);
-}
-
-.modal-content input[type="text"],
-.modal-content input[type="number"],
-.modal-content input[type="date"],
-.modal-content input[type="time"],
-.modal-content select {
-    width: calc(100% - 20px); /* Full width minus padding */
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box;
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
-
-.modal-content button {
-    width: auto; /* Auto width for modal buttons */
+.back-btn, #logoutAdminBtn {
+    background-color: #6c757d;
+    color: white;
     padding: 10px 20px;
-    display: inline-block;
-    margin-right: 10px;
-    margin-top: 20px;
-}
-
-
-.close-button {
-    color: var(--secondary-color);
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    left: 20px; /* Position top-left for RTL */
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: var(--error-color);
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Toast Message */
-.toast-message {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
+    border: none;
     border-radius: 5px;
-    padding: 16px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 25px;
+    display: block;
+    width: 100%;
+}
+
+.back-btn:hover, #logoutAdminBtn:hover {
+    background-color: #5a6268;
+}
+
+/* Toast Message Styles */
+.toast-message {
     position: fixed;
-    z-index: 1000;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 30px;
-    font-size: 17px;
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    z-index: 2000;
     opacity: 0;
-    transition: opacity 0.5s, visibility 0.5s, bottom 0.5s;
+    transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    min-width: 250px;
+    text-align: center;
+}
+
+.toast-message.success {
+    background-color: #28a745; /* Green */
+}
+
+.toast-message.error {
+    background-color: #dc3545; /* Red */
 }
 
 .toast-message.show {
-    visibility: visible;
     opacity: 1;
-    bottom: 50px;
+    top: 30px; /* Slight animation */
 }
 
-.toast-message.success { background-color: var(--success-color); }
-.toast-message.error { background-color: var(--error-color); }
-.toast-message.warning { background-color: var(--warning-color); color: var(--text-color); }
-.toast-message.info { background-color: var(--info-color); }
-
-/* Loading Indicator */
+/* Loading Indicator Styles */
 .loading-indicator {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
+    z-index: 3000;
 }
 
 .spinner {
-    border: 8px solid rgba(255, 255, 255, 0.3);
-    border-top: 8px solid var(--primary-color); /* Blue spinner */
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #007bff; /* Blue */
     border-radius: 50%;
     width: 60px;
     height: 60px;
-    animation: spin 1s linear infinite;
+    animation: spin 0.7s linear infinite; /* Faster spin */
+    transition: border-top-color 0.3s ease;
 }
 
 @keyframes spin {
@@ -598,182 +735,435 @@ table tfoot td {
     100% { transform: rotate(360deg); }
 }
 
-/* Language Switcher */
-.lang-switcher {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-    display: flex;
-    gap: 5px;
-}
-html[dir="rtl"] .lang-switcher {
-    right: 20px;
-    left: auto;
-}
-html[dir="ltr"] .lang-switcher {
-    left: 20px;
-    right: auto;
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 4000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
 }
 
-.lang-btn {
-    background-color: var(--secondary-color);
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: right;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: flex; /* Use flex for modal content */
+    flex-direction: column; /* Stack content vertically */
+    gap: 15px; /* Space between elements */
+}
+
+.modal-content h3 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 25px;
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.modal-content input[type="number"],
+.modal-content input[type="date"], /* Added for date input in modal */
+.modal-content input[type="time"], /* Added for time input in modal */
+.modal-content select {
+    width: 100%; /* Full width within modal */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    display: block;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-content button {
+    background-color: #007bff;
     color: white;
-    padding: 8px 12px;
+    padding: 12px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em;
-    width: auto; /* Override default button width */
+    font-size: 17px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+.close-button {
+    color: #aaa;
+    float: left; /* Adjust for RTL */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px; /* Adjust for RTL */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Language Switcher Styles */
+.lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px; /* Position on the right */
+    z-index: 100;
+    display: flex;
+    gap: 5px;
+}
+
+.lang-btn {
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: auto; /* Override 100% width from general button style */
+}
+
+.lang-btn:hover {
+    background-color: #dee2e6;
+    color: #343a40;
 }
 
 .lang-btn.active {
-    background-color: var(--primary-color);
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
     font-weight: bold;
 }
 
-/* Dark Mode Toggle */
+/* Dark Mode Toggle Button */
 .dark-mode-toggle {
-    position: absolute;
+    position: fixed;
     top: 20px;
-    left: 20px;
-    background-color: var(--secondary-color);
+    left: 20px; /* Position on the left */
+    z-index: 5000; /* Ensure it's on top of other elements */
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    border-radius: 50%; /* Make it round */
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2em;
-    cursor: pointer;
-    box-shadow: 0 2px 5px var(--shadow-color);
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    z-index: 10;
-}
-html[dir="rtl"] .dark-mode-toggle {
-    left: 20px;
-    right: auto;
-}
-html[dir="ltr"] .dark-mode-toggle {
-    right: 20px;
-    left: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dark-mode-toggle:hover {
-    filter: brightness(var(--button-hover-brightness));
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Dark mode specific styles */
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212; /* Very dark background */
+    color: #e0e0e0; /* Light text */
+}
+
+body.dark-mode .page,
+body.dark-mode .modal-content,
+body.dark-mode .popup,
+body.dark-mode .admin-section,
+body.dark-mode .work-summary-section,
+body.dark-mode .task-timing-buttons-section,
+body.dark-mode .track-work-container table,
+body.dark-mode .track-work-container table tbody tr:nth-child(even),
+body.dark-mode .track-work-container table tbody tr:hover,
+body.dark-mode .lang-btn,
+body.dark-mode .input-group input,
+body.dark-mode .input-group select,
+body.dark-mode .modal-content input[type="number"],
+body.dark-mode .modal-content input[type="date"],
+body.dark-mode .modal-content input[type="time"],
+body.dark-mode .modal-content select {
+    background-color: #1e1e1e; /* Darker container background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* More prominent shadow */
+    border-color: #333;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #00e6e6; /* Neon Cyan */
+    text-shadow: 0 0 5px rgba(0, 230, 230, 0.5); /* Subtle neon glow */
+}
+
+body.dark-mode .input-group label,
+body.dark-mode .modal-content label,
+body.dark-mode .work-summary-section td,
+body.dark-mode #detailedSummaryContainer p {
+    color: #00e6e6; /* Neon Cyan */
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #2a2a2a; /* Darker input fields */
+    color: #00e6e6; /* Neon Cyan */
+    border-color: #444;
+}
+
+body.dark-mode button:not(.dark-mode-toggle):not(.lang-btn),
+body.dark-mode .task-timing-btn,
+body.dark-mode .big-option-btn,
+body.dark-mode .save-work-btn,
+body.dark-mode .admin-action-btn,
+body.dark-mode .back-btn,
+body.dark-mode #logoutAdminBtn {
+    background-color: #007bff; /* Keep blue for primary actions */
+    color: #e0e0e0;
+}
+
+body.dark-mode button:not(.dark-mode-toggle):not(.lang-btn):hover,
+body.dark-mode .task-timing-btn:hover,
+body.dark-mode .big-option-btn:hover,
+body.dark-mode .save-work-btn:hover,
+body.dark-mode .admin-action-btn:hover,
+body.dark-mode .back-btn:hover,
+body.dark-mode #logoutAdminBtn:hover {
+    background-color: #0056b3; /* Darker hover state */
+}
+
+body.dark-mode .task-timing-btn.active {
+    background-color: #00aaff;
+}
+
+body.dark-mode .undo-btn {
+    background-color: #ffcc00; /* Brighter yellow */
+    color: #121212; /* Dark text for contrast */
+}
+
+body.dark-mode .undo-btn:hover {
+    background-color: #e6b800;
+}
+
+
+body.dark-mode .total-hours-box {
+    background-color: #2a2a2a; /* Darker box backgrounds */
+    border: 1px solid #444;
+}
+
+body.dark-mode .total-hours-box p {
+    color: #00e6e6; /* Neon Cyan */
+}
+
+body.dark-mode table {
+    border-color: #444;
+}
+
+body.dark-mode table th {
+    background-color: #2a2a2a; /* Darker header background */
+    color: #00e6e6; /* Neon Cyan */
+    border-color: #444;
+}
+
+body.dark-mode table td {
+    background-color: #1e1e1e !important; /* Very dark cell background */
+    color: #e0e0e0 !important; /* Light text for table cells */
+    border-color: #444 !important;
+}
+
+body.dark-mode .toast-message.success {
+    background-color: #28a745;
+}
+
+body.dark-mode .toast-message.error {
+    background-color: #dc3545;
+}
+
 body.dark-mode .spinner {
-    border-top-color: var(--neon-blue); /* Neon blue spinner in dark mode */
+    border-top: 8px solid #00e6e6; /* Neon Cyan spinner */
 }
 
-body.dark-mode .user-avatar {
-    border-color: var(--neon-blue);
+body.dark-mode .lang-btn {
+    background-color: #2a2a2a !important;
+    color: #00e6e6 !important; /* Neon Cyan */
+    border-color: #444 !important;
 }
 
-body.dark-mode .big-option-btn {
-    background-color: var(--neon-blue);
+body.dark-mode .lang-btn:hover {
+    background-color: #3b6978 !important;
+    color: #e0e0e0 !important;
 }
 
 body.dark-mode .lang-btn.active {
-    background-color: var(--neon-blue);
+    background-color: #0056b3;
+    border-color: #0056b3;
 }
 
-body.dark-mode button {
-    background-color: var(--neon-blue); /* Neon blue buttons in dark mode */
-}
-body.dark-mode button.secondary {
-    background-color: var(--secondary-color); /* Keep secondary gray */
-}
-body.dark-mode button.danger {
-    background-color: var(--error-color); /* Keep error red */
-}
-body.dark-mode table th {
-    background-color: var(--neon-blue); /* Neon blue table headers */
+/* Dark mode for total cells */
+body.dark-mode .track-work-container table .total-cell {
+    background-color: #2a2a2a !important; /* Darker total cell background */
+    color: #00e6e6 !important; /* Neon Cyan */
 }
 
-/* Responsive Adjustments */
+/* Dark mode for grand total footer */
+body.dark-mode #trackTasksTableFoot td.grand-total-footer-cell {
+    background-color: #2a2a2a !important; /* Darker footer background */
+    border-top-color: #00e6e6 !important; /* Neon Cyan border */
+    color: #00e6e6 !important; /* Neon Cyan */
+}
+
+/* Dark mode for daily record row border */
+body.dark-mode .track-work-container table tbody .daily-record-row {
+    border-top: 2px solid #00e6e6; /* Neon Cyan border in dark mode */
+}
+
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .page {
         padding: 20px;
+        gap: 15px; /* Reduce gap on smaller screens */
     }
 
-    h1 {
-        font-size: 1.8em;
+    h1, h2, h3 {
+        margin-bottom: 20px; /* Adjust heading margin */
     }
 
     .header-bar {
         flex-direction: column;
-        align-items: flex-start;
+        text-align: center;
+        gap: 15px;
     }
 
     .user-info {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
+        flex-direction: column; /* Stack avatar, name, and boxes vertically */
         margin-bottom: 15px;
+        gap: 10px; /* Adjust gap for vertical stacking */
+    }
+    .user-info p {
+        font-size: 18px; /* Slightly smaller font for name */
+    }
+    .total-hours-box {
+        width: 100%; /* Full width for the box on small screens */
+        min-width: unset;
+        align-items: center; /* Center text within the box */
     }
 
-    .total-hours-box {
-        width: 100%;
-        margin-top: 15px;
-    }
 
     .dashboard-options {
-        gap: 10px;
+        flex-direction: column;
+        gap: 15px; /* Adjust gap */
     }
 
     .big-option-btn {
-        padding: 15px;
-        font-size: 1.2em;
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+        padding: 15px 20px; /* Adjust padding */
+        font-size: 20px; /* Adjust font size */
     }
 
-    .lang-switcher {
-        top: 10px;
-        right: 10px;
+    .popup {
+        padding: 20px;
+        gap: 10px; /* Reduce gap in popup */
     }
-    html[dir="rtl"] .lang-switcher {
-        right: 10px;
-        left: auto;
+    .popup button {
+        width: 100%; /* Full width for popup buttons on small screens */
+        margin: 5px 0; /* Adjust margin for stacked buttons */
     }
-    html[dir="ltr"] .lang-switcher {
-        left: 10px;
-        right: auto;
+
+
+    .task-timing-buttons-section {
+        gap: 10px; /* Further reduce gap for timing buttons */
+    }
+    .timing-button-wrapper {
+        flex-basis: calc(50% - 10px); /* Two columns on small screens */
+        min-width: unset;
+        max-width: 180px; /* Limit individual button width */
+    }
+
+
+    .tracking-content {
+        flex-direction: column;
+    }
+
+    .task-stats-table,
+    .pie-chart-container {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .admin-section {
+        padding: 15px; /* Reduce padding for admin sections */
+        gap: 10px; /* Reduce gap in admin sections */
+    }
+
+    .admin-section button {
+        width: 100%; /* Full width for admin section buttons */
+        align-self: stretch; /* Stretch buttons to fill width */
+    }
+
+    .lang-switcher, .dark-mode-toggle {
+        position: static;
+        margin-bottom: 10px;
+        justify-content: center;
+        width: 100%;
+        order: -1; /* Move to top on small screens */
+    }
+
+    .lang-btn {
+        flex-grow: 1;
     }
 
     .dark-mode-toggle {
-        top: 10px;
-        left: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
     }
-    html[dir="rtl"] .dark-mode-toggle {
-        left: 10px;
-        right: auto;
+    .modal-content {
+        padding: 20px;
+        gap: 10px; /* Reduce gap in modal content */
     }
-    html[dir="ltr"] .dark-mode-toggle {
-        right: 10px;
-        left: auto;
+    /* Ensure tables scroll horizontally on small screens */
+    .table-responsive {
+        overflow-x: auto;
     }
-
-    .filter-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filter-controls input, .filter-controls select, .filter-controls button {
-        width: 100%;
-        min-width: unset;
-    }
-
-    .pin-input-group {
-        gap: 5px; /* Reduce gap on smaller screens */
-    }
-
-    .pin-input-field {
-        width: 35px; /* Smaller width for fields */
-        height: 50px; /* Smaller height for fields */
-        font-size: 2em; /* Smaller font size */
+    /* Removed min-width for tables to let table-layout: auto handle it */
+    .track-work-container table,
+    .admin-section table {
+        /* min-width: 600px; */ /* Removed */
     }
 }
