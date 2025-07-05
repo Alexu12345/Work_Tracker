@@ -1,0 +1,564 @@
+/* Universal box-sizing for consistent layout */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top, not center, to allow content flow */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    direction: rtl;
+    text-align: right;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+}
+
+/* Page Container */
+.dashboard-container {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px; /* Wider for dashboard content */
+    margin: 20px auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Increased gap for better spacing */
+}
+
+h1, h2 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    width: 100%;
+}
+
+/* Filter Controls */
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-controls label {
+    font-weight: 600;
+    color: #555;
+    align-self: center;
+    transition: color 0.3s ease;
+}
+
+.filter-controls select,
+.filter-controls input[type="date"],
+.filter-controls input[type="week"],
+.filter-controls input[type="month"] {
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    flex-grow: 1; /* Allow inputs to grow */
+    min-width: 150px; /* Minimum width for readability */
+}
+
+.filter-controls input:focus,
+.filter-controls select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.filter-input-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    flex-grow: 1;
+    min-width: 250px; /* Ensure group takes enough space */
+    justify-content: flex-end; /* Align inputs to the right within their group */
+}
+.filter-input-group label {
+    margin-left: 10px; /* Space between label and input */
+}
+
+#applyFilterBtn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-grow: 1;
+    min-width: 120px;
+    margin-top: 0; /* Override default button margin */
+}
+
+#applyFilterBtn:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+/* Dashboard Content Layout */
+.dashboard-content {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    gap: 30px; /* Space between chart and top employees */
+    width: 100%;
+    justify-content: center; /* Center content when wrapped */
+}
+
+.chart-section {
+    flex: 3; /* Takes more space */
+    min-width: 400px; /* Minimum width for chart */
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chart-container {
+    width: 100%;
+    height: 400px; /* Fixed height for chart */
+    margin-top: 20px;
+}
+
+/* Top 5 Employees Section */
+.top-employees-section {
+    flex: 1; /* Takes less space */
+    min-width: 280px; /* Minimum width for ladders */
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ladder-container {
+    display: flex;
+    flex-direction: row; /* Arrange ladders horizontally */
+    align-items: flex-end; /* Align ladders to the bottom */
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 20px;
+    min-height: 200px; /* Ensure space for ladders */
+}
+
+.ladder-item {
+    background-color: #007bff; /* Base color for ladders */
+    color: white;
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align content to bottom of ladder */
+    align-items: center;
+    padding: 10px 5px;
+    width: 60px; /* Fixed width for each ladder */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden; /* Hide overflow for content */
+    transition: all 0.5s ease-out; /* Smooth transition for height changes */
+    
+    /* Animation for initial render */
+    transform: translateY(100%);
+    opacity: 0;
+    animation: slideUp 0.8s ease-out forwards;
+    animation-delay: calc(var(--rank) * 0.1s); /* Staggered animation */
+}
+
+.ladder-item:hover {
+    transform: translateY(-5px) scale(1.02); /* Slight lift and scale on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ladder-rank {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.ladder-name {
+    font-size: 0.9em;
+    text-align: center;
+    word-break: break-word; /* Allow name to break */
+    margin-bottom: 5px;
+}
+
+.ladder-hours {
+    font-size: 0.8em;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+.ladder-trophy {
+    font-size: 2em;
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: bounce 1s infinite alternate ease-in-out; /* Subtle bounce */
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    from { transform: translateX(-50%) translateY(0); }
+    to { transform: translateX(-50%) translateY(-5px); }
+}
+
+.no-data-message {
+    text-align: center;
+    color: #888;
+    font-size: 1.1em;
+    margin-top: 30px;
+}
+
+/* Back button */
+.back-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 30px;
+    width: auto; /* Allow button to size based on content */
+    align-self: flex-start; /* Align to right in RTL */
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Toast Message Styles (copied from main app) */
+.toast-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    min-width: 250px;
+    text-align: center;
+}
+
+.toast-message.success {
+    background-color: #28a745;
+}
+
+.toast-message.error {
+    background-color: #dc3545;
+}
+
+.toast-message.show {
+    opacity: 1;
+    top: 30px;
+}
+
+/* Loading Indicator Styles (copied from main app, faster spin) */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #007bff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 0.7s linear infinite; /* Faster spin */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Language Switcher Styles (copied from main app) */
+.lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 5px;
+}
+
+.lang-btn {
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: auto;
+}
+
+.lang-btn:hover {
+    background-color: #dee2e6;
+    color: #343a40;
+}
+
+.lang-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    font-weight: bold;
+}
+
+/* Dark Mode Toggle Button (copied from main app) */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 5000;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212; /* Very dark background */
+    color: #e0e0e0; /* Light text */
+}
+
+body.dark-mode .dashboard-container,
+body.dark-mode .filter-controls,
+body.dark-mode .chart-section,
+body.dark-mode .top-employees-section {
+    background-color: #1e1e1e; /* Darker container background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* More prominent shadow */
+    border-color: #333;
+}
+
+body.dark-mode h1,
+body.dark-mode h2 {
+    color: #00e6e6; /* Neon Cyan */
+    text-shadow: 0 0 5px rgba(0, 230, 230, 0.5); /* Subtle neon glow */
+}
+
+body.dark-mode .filter-controls label {
+    color: #00e6e6; /* Neon Cyan */
+}
+
+body.dark-mode .filter-controls select,
+body.dark-mode .filter-controls input {
+    background-color: #2a2a2a; /* Darker input fields */
+    color: #00e6e6; /* Neon Cyan */
+    border-color: #444;
+}
+
+body.dark-mode #applyFilterBtn {
+    background-color: #28a745; /* Keep green for apply */
+    color: #e0e0e0;
+}
+body.dark-mode #applyFilterBtn:hover {
+    background-color: #218838;
+}
+
+body.dark-mode .ladder-item {
+    background-color: #2a2a2a; /* Darker ladder background */
+    color: #00e6e6; /* Neon Cyan text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .ladder-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .ladder-rank,
+body.dark-mode .ladder-name,
+body.dark-mode .ladder-hours {
+    text-shadow: none; /* Remove text shadow for neon effect */
+}
+
+body.dark-mode .ladder-trophy {
+    filter: drop-shadow(0 0 5px rgba(0, 230, 230, 0.7)); /* Neon glow for trophy */
+}
+
+body.dark-mode .no-data-message {
+    color: #b0c4de;
+}
+
+body.dark-mode .back-btn {
+    background-color: #3b6978;
+    color: #e0e0e0;
+}
+
+body.dark-mode .back-btn:hover {
+    background-color: #4a899a;
+}
+
+body.dark-mode .toast-message.success {
+    background-color: #218838;
+}
+
+body.dark-mode .toast-message.error {
+    background-color: #bd2130;
+}
+
+body.dark-mode .spinner {
+    border-top: 8px solid #00e6e6; /* Neon Cyan spinner */
+}
+
+body.dark-mode .lang-btn {
+    background-color: #2a2a2a !important;
+    color: #00e6e6 !important; /* Neon Cyan */
+    border-color: #444 !important;
+}
+
+body.dark-mode .lang-btn:hover {
+    background-color: #3b6978 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .lang-btn.active {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chart-section,
+    .top-employees-section {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .ladder-container {
+        flex-wrap: wrap; /* Allow ladders to wrap on smaller screens */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .ladder-item {
+        width: 80px; /* Adjust ladder width for smaller screens */
+        height: auto !important; /* Allow height to adjust */
+        padding: 10px 5px;
+    }
+    .ladder-rank, .ladder-name, .ladder-hours {
+        font-size: 0.8em;
+    }
+    .ladder-trophy {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 20px;
+        gap: 20px;
+    }
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-controls select,
+    .filter-controls input,
+    .filter-controls button {
+        width: 100%;
+        min-width: unset;
+    }
+    .filter-input-group {
+        flex-direction: column;
+        align-items: stretch;
+        min-width: unset;
+    }
+    .filter-input-group label {
+        margin-left: 0;
+        text-align: right;
+    }
+    .lang-switcher, .dark-mode-toggle {
+        position: static;
+        margin-bottom: 10px;
+        justify-content: center;
+        width: 100%;
+        order: -1; /* Move to top on small screens */
+    }
+    .lang-btn {
+        flex-grow: 1;
+    }
+    .dark-mode-toggle {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+}

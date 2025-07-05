@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="adminDashboardTitle">لوحة تحكم المدير</title>
+    <link rel="stylesheet" href="admin_dashboard.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Message -->
+    <div id="toastMessage" class="toast-message" style="display: none;"></div>
+
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <button id="langArBtn" class="lang-btn active">العربية</button>
+        <button id="langEnBtn" class="lang-btn">English</button>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="dark-mode-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="dashboard-container page">
+        <h1 data-key="adminDashboardTitle">لوحة تحكم المدير</h1>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <label for="filterType" data-key="filterBy">تصفية حسب:</label>
+            <select id="filterType">
+                <option value="all" data-key="allTime">جميع الأوقات</option>
+                <option value="day" data-key="specificDay">يوم معين</option>
+                <option value="week" data-key="specificWeek">أسبوع معين</option>
+                <option value="month" data-key="specificMonth">شهر معين</option>
+                <option value="custom" data-key="customRange">نطاق مخصص</option>
+            </select>
+
+            <div id="dateFilter" class="filter-input-group" style="display: none;">
+                <label for="filterDate" data-key="selectDate">اختر تاريخ:</label>
+                <input type="date" id="filterDate">
+            </div>
+
+            <div id="weekFilter" class="filter-input-group" style="display: none;">
+                <label for="filterWeek" data-key="selectWeek">اختر أسبوع:</label>
+                <input type="week" id="filterWeek">
+            </div>
+
+            <div id="monthFilter" class="filter-input-group" style="display: none;">
+                <label for="filterMonth" data-key="selectMonth">اختر شهر:</label>
+                <input type="month" id="filterMonth">
+            </div>
+
+            <div id="customFilter" class="filter-input-group" style="display: none;">
+                <label for="filterStartDate" data-key="startDate">تاريخ البدء:</label>
+                <input type="date" id="filterStartDate">
+                <label for="filterEndDate" data-key="endDate">تاريخ الانتهاء:</label>
+                <input type="date" id="filterEndDate">
+            </div>
+
+            <button id="applyFilterBtn" data-key="applyFilter">تطبيق التصفية</button>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Main Performance Chart -->
+            <div class="chart-section">
+                <h2 data-key="performanceChartTitle">أداء المستخدمين</h2>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top 5 Employees Section -->
+            <div class="top-employees-section">
+                <h2 data-key="topEmployeesTitle">أفضل 5 موظفين</h2>
+                <div class="ladder-container">
+                    <!-- Ladders will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+
+        <button id="backToAdminPanelBtn" class="back-btn" data-key="backToAdminPanel">رجوع للوحة تحكم المدير</button>
+    </div>
+
+    <script type="module" src="admin_dashboard.js"></script>
+</body>
+
+</html>
