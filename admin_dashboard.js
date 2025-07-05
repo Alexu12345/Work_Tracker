@@ -16,6 +16,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log("admin_dashboard.js: DOMContentLoaded event fired."); // Debug log
+
     // DOM Elements
     const loadingIndicator = document.getElementById('loadingIndicator');
     const toastMessage = document.getElementById('toastMessage');
@@ -72,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Internet connection status check
     const checkConnectionStatus = () => {
+        console.log("admin_dashboard.js: Checking connection status..."); // Debug log inside function
         if (!navigator.onLine) {
             showToastMessage(getTranslatedText('noInternet'), 'error');
         }
