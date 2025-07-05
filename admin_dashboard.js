@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000); // Hide after 3 seconds
     };
 
+    // Function to show/hide loading indicator
+    const showLoadingIndicator = (show) => {
+        loadingIndicator.style.display = show ? 'flex' : 'none';
+    };
+
     // Internet connection status check
     const checkConnectionStatus = () => {
         console.log("admin_dashboard.js: Checking connection status..."); // Debug log inside function
@@ -497,10 +502,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentFilterValue1 = filterMonthInput.value;
         } else if (currentFilterType === 'custom') {
             currentFilterValue1 = filterStartDateInput.value;
-            currentFilterValue2 = filterEndDateInput.value;
+            filterValue2 = filterEndDateInput.value;
         }
 
-        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
+        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, filterValue2);
 
         ladderContainer.innerHTML = ''; // Clear previous ladders
 
