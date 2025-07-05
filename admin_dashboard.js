@@ -72,10 +72,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000); // Hide after 3 seconds
     };
 
-    // Function to show/hide loading indicator
-    const showLoadingIndicator = (show) => {
+    // Function to show/hide loading indicator (Changed to function declaration)
+    function showLoadingIndicator(show) {
         loadingIndicator.style.display = show ? 'flex' : 'none';
-    };
+    }
 
     // Internet connection status check
     const checkConnectionStatus = () => {
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             label: function(context) {
                                 const userName = context.label;
                                 const hours = context.raw;
-                                const category = context.dataset.backgroundColor[context.dataIndex].category; // Access category from color object
+                                const category = performanceData.find(d => d.userName === context.label)?.category || getTranslatedText('notRated'); // Correctly access category
                                 return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')}`;
                             },
                             afterLabel: function(context) {
