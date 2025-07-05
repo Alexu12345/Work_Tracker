@@ -70,9 +70,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000); // Hide after 3 seconds
     };
 
-    // Function to show/hide loading indicator
-    const showLoadingIndicator = (show) => {
-        loadingIndicator.style.display = show ? 'flex' : 'none';
+    // Internet connection status check
+    const checkConnectionStatus = () => {
+        if (!navigator.onLine) {
+            showToastMessage(getTranslatedText('noInternet'), 'error');
+        }
     };
 
     // Dark Mode Functions (copied from main app for consistency)
@@ -495,7 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentFilterValue2 = filterEndDateInput.value;
         }
 
-        const { topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
+        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
 
         ladderContainer.innerHTML = ''; // Clear previous ladders
 
