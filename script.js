@@ -1805,7 +1805,7 @@ const renderTrackWorkPage = async () => {
                         // Column 8: Total for Task (per task record) - Now column 8
                         if (!taskRowSpanHandled) {
                             const cell = row.insertCell();
-                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(taskData.taskTotalTime))} (${formatNumberToEnglish(taskData.taskTotalBalance.toFixed(2))} ${getTranslatedText('currencyUnit')})`;
+                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(taskData.taskTotalTime))} (${Math.round(formatNumberToEnglish(taskData.taskTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`;
                             cell.rowSpan = actualTaskRows;
                             cell.classList.add('total-cell');
                         }
@@ -1813,7 +1813,7 @@ const renderTrackWorkPage = async () => {
                         // Column 9: Total for Account (per account) - Now column 9
                         if (!accountRowSpanHandled) {
                             const cell = row.insertCell();
-                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(accountData.accountTotalTime))} (${formatNumberToEnglish(accountData.accountTotalBalance.toFixed(2))} ${getTranslatedText('currencyUnit')})`;
+                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(accountData.accountTotalTime))} (${Math.round(formatNumberToEnglish(accountData.accountTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`;
                             cell.rowSpan = accountData.totalRows;
                             cell.classList.add('total-cell');
                         }
@@ -1821,7 +1821,7 @@ const renderTrackWorkPage = async () => {
                         // Column 10: Daily Total Time (per date) - Now column 10
                         if (!dateRowSpanHandled) {
                             const cell = row.insertCell();
-                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(dateData.dateTotalTime))} (${formatNumberToEnglish(dateData.dateTotalBalance.toFixed(2))} ${getTranslatedText('currencyUnit')})`; // Display daily total
+                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(dateData.dateTotalTime))} (${Math.round(formatNumberToEnglish(dateData.dateTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`; // Display daily total
                             cell.rowSpan = dateData.totalRows;
                             cell.classList.add('total-cell', 'daily-total-cell'); // Add daily-total-cell class
                         }
