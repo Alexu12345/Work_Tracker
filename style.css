@@ -13,7 +13,7 @@ body {
     background-color: #f0f2f5; /* Light mode background */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align to top, not center, to allow content flow */
+    align-items: center; /* Align to top, not center, to allow content flow */
     min-height: 100vh;
     margin: 0;
     padding: 20px;
