@@ -31,7 +31,6 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 550px; /* Default max-width for most pages */
     margin: 20px auto; /* Center the page horizontally */
     box-sizing: border-box;
     display: flex; /* Ensure flex for internal layout */
@@ -610,9 +609,8 @@ button.disabled {
 
 /* Admin Panel Styles */
 .admin-panel-container {
-    max-width: 900px;
-    padding: 40px;
-    text-align: right;
+    padding: 30px;
+    text-align: center;
 }
 
 .admin-panel-container h1 {
