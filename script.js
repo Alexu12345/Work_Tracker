@@ -337,15 +337,15 @@ const formatMinutesToMMSS = (decimalMinutes) => {
         return '00:00';
     }
     // Convert total minutes to total seconds, then round to handle floating point inaccuracies
-    const totalSeconds = Math.round(decimalMinutes * 60); 
+    const totalSeconds = Math.round(decimalMinutes * 60);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    
+
     // Handle cases where seconds might round up to 60 (e.g., 59.9999 -> 60)
     if (seconds === 60) {
         return `${minutes + 1}:00`;
     }
-    
+
     const formattedMinutes = String(minutes).padStart(1, '0'); // No need for 2 digits if single digit
     const formattedSeconds = String(seconds).padStart(2, '0');
     return `${formattedMinutes}:${formattedSeconds}`;
@@ -388,8 +388,8 @@ const translations = {
         'admin': 'المدير',
         'totalHoursTitle': 'إجمالي ساعات العمل:',
         'hoursUnit': 'ساعة',
-        'totalBalanceTitle': 'إجمالي الرصيد:', 
-        'currencyUnit': 'جنيه', 
+        'totalBalanceTitle': 'إجمالي الرصيد:',
+        'currencyUnit': 'جنيه',
         'startWorkOption': 'بدء العمل',
         'trackWorkOption': 'متابعة العمل',
         'chooseTask': 'اختر المهمة',
@@ -407,16 +407,16 @@ const translations = {
         'errorSavingWork': 'حدث خطأ أثناء حفظ العمل. الرجاء المحاولة مرة أخرى.',
         'unsavedTasksWarning': 'لديك مهام غير محفوظة. هل أنت متأكد من العودة؟ سيتم فقدان البيانات غير المحفوظة.',
         'trackWorkTitle': 'متابعة العمل',
-        'serialColumn': 'المسلسل', 
-        'dateColumn': 'التاريخ', 
-        'dailyTotalTimeColumn': 'إجمالي اليوم', 
-        'timingValueColumn': 'التوقيت (دقيقة)', 
-        'taskTimingsSummary': 'ملخص توقيتات المهمة', 
-        'totalForTaskColumn': 'إجمالي المهمة', 
-        'totalForAccountColumn': 'إجمالي الحساب', 
-        'taskColumn': 'المهمة', 
-        'totalTimeMinutesColumn': 'إجمالي الوقت (دقيقة)', 
-        'completedTasksColumn': 'عدد المهام المنجزة', 
+        'serialColumn': 'المسلسل',
+        'dateColumn': 'التاريخ',
+        'dailyTotalTimeColumn': 'إجمالي اليوم',
+        'timingValueColumn': 'التوقيت (دقيقة)',
+        'taskTimingsSummary': 'ملخص توقيتات المهمة',
+        'totalForTaskColumn': 'إجمالي المهمة',
+        'totalForAccountColumn': 'إجمالي الحساب',
+        'taskColumn': 'المهمة',
+        'totalTimeMinutesColumn': 'إجمالي الوقت (دقيقة)',
+        'completedTasksColumn': 'عدد المهام المنجزة',
         'noDataToShow': 'لا توجد بيانات لعرضها',
         'adminPanelTitle': 'لوحة تحكم المدير',
         'manageUsers': 'إدارة المستخدمين',
@@ -477,8 +477,8 @@ const translations = {
         'filterBtn': 'تصفية',
         'noMatchingRecords': 'لا توجد سجلات عمل مطابقة.',
         'userColumn': 'المستخدم',
-        'dateColumn': 'التاريخ', 
-        'timeColumn': 'الوقت', 
+        'dateColumn': 'التاريخ',
+        'timeColumn': 'الوقت',
         'confirmDeleteRecord': 'هل أنت متأكد من حذف هذا السجل للمستخدم {name}؟',
         'recordDeletedSuccess': 'تم حذف السجل بنجاح.',
         'errorDeletingRecord': 'حدث خطأ أثناء حذف السجل.',
@@ -496,10 +496,10 @@ const translations = {
         'hello': 'مرحباً، ',
         'taskDetailsByTiming': 'تفاصيل المهام حسب التوقيت:',
         'tasksTiming': 'مهام {timing} دقيقة: {count} مهمة (إجمالي {totalTime} دقيقة)',
-        'grandTotal': 'الإجمالي الكلي', 
-        'totalTasksOverall': 'إجمالي عدد المهام', 
-        'totalTimeOverall': ' الوقت', 
-        'totalBalanceOverall': ' الرصيد', 
+        'grandTotal': 'الإجمالي الكلي',
+        'totalTasksOverall': 'إجمالي عدد المهام',
+        'totalTimeOverall': ' الوقت',
+        'totalBalanceOverall': ' الرصيد',
         'sessionWarning': 'ستنتهي جلستك بعد {duration} أو {closedBrowserDuration} من إغلاق المتصفح. هل ترغب في تسجيل الخروج الآن؟', // Updated
         'manageEmployeeRates': 'إدارة أسعار الموظفين والإجماليات', // New
         'employeeNameColumn': 'الموظف', // New
@@ -560,8 +560,8 @@ const translations = {
         'admin': 'Admin',
         'totalHoursTitle': 'Total Work Hours:',
         'hoursUnit': 'hours',
-        'totalBalanceTitle': 'Total Balance:', 
-        'currencyUnit': 'EGP', 
+        'totalBalanceTitle': 'Total Balance:',
+        'currencyUnit': 'EGP',
         'startWorkOption': 'Start Work',
         'trackWorkOption': 'Track Work',
         'chooseTask': 'Select Task',
@@ -579,16 +579,16 @@ const translations = {
         'errorSavingWork': 'An error occurred while saving work. Please try again.',
         'unsavedTasksWarning': 'You have unsaved tasks. Are you sure you want to go back? Unsaved data will be lost.',
         'trackWorkTitle': 'Work Tracking',
-        'serialColumn': 'Serial', 
-        'dateColumn': 'Date', 
-        'dailyTotalTimeColumn': 'Daily Total Time', 
-        'timingValueColumn': 'Timing (minutes)', 
-        'taskTimingsSummary': 'Task Timings Summary', 
-        'totalForTaskColumn': 'Total for Task', 
-        'totalForAccountColumn': 'Total for Account', 
-        'taskColumn': 'Task', 
-        'totalTimeMinutesColumn': 'Total Time (minutes)', 
-        'completedTasksColumn': 'Completed Tasks', 
+        'serialColumn': 'Serial',
+        'dateColumn': 'Date',
+        'dailyTotalTimeColumn': 'Daily Total Time',
+        'timingValueColumn': 'Timing (minutes)',
+        'taskTimingsSummary': 'Task Timings Summary',
+        'totalForTaskColumn': 'Total for Task',
+        'totalForAccountColumn': 'Total for Account',
+        'taskColumn': 'Task',
+        'totalTimeMinutesColumn': 'Total Time (minutes)',
+        'completedTasksColumn': 'Completed Tasks',
         'noDataToShow': 'No data to display',
         'adminPanelTitle': 'Admin Panel',
         'manageUsers': 'Manage Users',
@@ -649,8 +649,8 @@ const translations = {
         'filterBtn': 'Filter',
         'noMatchingRecords': 'No matching work records.',
         'userColumn': 'User',
-        'dateColumn': 'Date', 
-        'timeColumn': 'Time', 
+        'dateColumn': 'Date',
+        'timeColumn': 'Time',
         'confirmDeleteRecord': 'Are you sure you want to delete this record for user {name}?',
         'recordDeletedSuccess': 'Record deleted successfully.',
         'errorDeletingRecord': 'An error occurred while deleting the record.',
@@ -668,10 +668,10 @@ const translations = {
         'hello': 'Hi, ',
         'taskDetailsByTiming': 'Task Details by Timing:',
         'tasksTiming': '{count} tasks of {timing} minutes (Total {totalTime} minutes)',
-        'grandTotal': 'Grand Total', 
-        'totalTasksOverall': 'Total Tasks Overall', 
-        'totalTimeOverall': 'Total Time Overall', 
-        'totalBalanceOverall': 'Total Balance Overall', 
+        'grandTotal': 'Grand Total',
+        'totalTasksOverall': 'Total Tasks Overall',
+        'totalTimeOverall': 'Total Time Overall',
+        'totalBalanceOverall': 'Total Balance Overall',
         'sessionWarning': 'Your session will expire in {duration} or {closedBrowserDuration} after closing the browser. Do you want to log out now?', // Updated
         'manageEmployeeRates': 'Manage Employee Rates & Totals', // New
         'employeeNameColumn': 'Employee', // New
@@ -731,7 +731,7 @@ const setLanguage = (lang) => {
     localStorage.setItem('appLanguage', lang);
     applyTranslations();
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-    
+
     // Re-render chart if it exists to update labels direction and colors
     if (taskChart) {
         taskChart.options.plugins.legend.rtl = (lang === 'ar');
@@ -807,7 +807,7 @@ const applyTranslations = () => {
     document.querySelectorAll('.undo-btn').forEach(btn => {
         btn.textContent = getTranslatedText('undoLastAdd');
     });
-    
+
     // Update confirm/cancel buttons in custom modal
     document.getElementById('confirmModalBtn').textContent = getTranslatedText('confirmBtn');
     document.getElementById('cancelModalBtn').textContent = getTranslatedText('cancelBtn');
@@ -815,8 +815,8 @@ const applyTranslations = () => {
 
     // Re-render dynamic elements that contain text, like task timing buttons
     if (startWorkPage.style.display === 'flex' && taskSelectionPopup.style.display === 'none') {
-         renderTaskTimingButtons(); // Re-render to update units
-         updateWorkSummary(); // Re-render detailed summary
+        renderTaskTimingButtons(); // Re-render to update units
+        updateWorkSummary(); // Re-render detailed summary
     }
     // Admin panel tables need re-rendering to update texts
     if (adminPanelPage.style.display === 'flex') {
@@ -846,7 +846,7 @@ const saveSession = async (user) => {
     if (user && user.id !== 'admin') {
         try {
             const userDocRef = doc(db, 'users', user.id);
-            await updateDoc(userDocRef, { 
+            await updateDoc(userDocRef, {
                 lastActivityTimestamp: serverTimestamp(),
                 // Clear current activity status on new login/session save
                 currentAccountId: null,
@@ -987,18 +987,18 @@ const handleLogin = async () => {
     showLoadingIndicator(true);
     try {
         // Ensure adminPin document exists and retrieve its value
-        const adminDocRef = doc(db, 'settings', 'adminPin'); 
+        const adminDocRef = doc(db, 'settings', 'adminPin');
         let adminPinValue = "12345678"; // Default admin PIN
 
         try {
-            const adminDocSnapshot = await getDoc(adminDocRef); 
-            
+            const adminDocSnapshot = await getDoc(adminDocRef);
+
             // If the document exists, use its pin. Provide a fallback in case 'pin' field is missing.
-            if (adminDocSnapshot.exists()) { 
+            if (adminDocSnapshot.exists()) {
                 adminPinValue = adminDocSnapshot.data().pin || adminPinValue;
             } else {
                 // If the document does not exist, create it with the default PIN
-                await setDoc(adminDocRef, { pin: adminPinValue }); 
+                await setDoc(adminDocRef, { pin: adminPinValue });
             }
         } catch (error) {
             // In case of an error accessing Firestore, we proceed with the default PIN.
@@ -1018,10 +1018,9 @@ const handleLogin = async () => {
             return;
         }
 
-        const usersCollectionRef = collection(db, 'users'); 
-        const userQueryRef = query(usersCollectionRef, where('pin', '==', fullPin), limit(1)); 
-        const userQuerySnapshot = await getDocs(userQueryRef); 
-
+        const usersCollectionRef = collection(db, 'users');
+        const userQueryRef = query(usersCollectionRef, where('pin', '==', fullPin), limit(1));
+        const userQuerySnapshot = await getDocs(userQueryRef);
         if (!userQuerySnapshot.empty) {
             loggedInUser = getDocData(userQuerySnapshot.docs[0]);
             // Ensure user has a role, default to 'user' if not explicitly set
@@ -1120,12 +1119,12 @@ const renderMainDashboard = async () => {
     showLoadingIndicator(true);
     try {
         const userId = loggedInUser.id;
-        const workRecordsCollectionRef = collection(db, 'workRecords'); 
-        const recordsQueryRef = query(workRecordsCollectionRef, where('userId', '==', userId)); 
-        const recordsSnapshot = await getDocs(recordsQueryRef); 
+        const workRecordsCollectionRef = collection(db, 'workRecords');
+        const recordsQueryRef = query(workRecordsCollectionRef, where('userId', '==', userId));
+        const recordsSnapshot = await getDocs(recordsQueryRef);
         let totalMinutesWorked = 0;
         let totalBalance = 0;
-        
+
         // Fetch all accounts to get default prices (using cached data)
         const accountsMap = new Map(allAccounts.map(acc => [acc.id, acc]));
 
@@ -1181,7 +1180,7 @@ const handleTrackWorkOptionClick = async () => {
         showPage(trackWorkPage);
         await renderTrackWorkPage(); // This will now also render the chart
         // Clear current activity status when navigating to Track Work page
-        await updateLastActivityTimestamp(true); 
+        await updateLastActivityTimestamp(true);
     }
 };
 
@@ -1226,7 +1225,7 @@ const initializeStartWorkPage = async () => {
     lastClickTime = null; // Reset last click time for new session
     await fetchAccountsAndTasks(); // This now uses cached data
     // Clear current activity status when initializing start work page (before selection)
-    await updateLastActivityTimestamp(true); 
+    await updateLastActivityTimestamp(true);
 };
 
 const handleConfirmSelection = async () => { // Made async to await Firestore update
@@ -1287,7 +1286,7 @@ const renderTaskTimingButtons = () => {
             const wrapper = document.createElement('div');
             wrapper.classList.add('timing-button-wrapper');
             // Ensure wrapper has relative positioning for absolute child
-            wrapper.style.position = 'relative'; 
+            wrapper.style.position = 'relative';
 
             const button = document.createElement('button');
             button.classList.add('task-timing-btn');
@@ -1370,20 +1369,20 @@ const renderTaskTimingButtons = () => {
             taskTimingButtonsContainer.appendChild(wrapper);
         });
     } else {
-         taskTimingButtonsContainer.innerHTML = `<p style="text-align: center; color: #888;">${getTranslatedText('noDataToShow')}</p>`;
+        taskTimingButtonsContainer.innerHTML = `<p style="text-align: center; color: #888;">${getTranslatedText('noDataToShow')}</p>`;
     }
 };
 
 const updateWorkSummary = () => {
     let totalCount = 0;
     let totalTime = 0;
-    
+
     // Group tasks by timing for detailed summary
     const timingSummary = {};
-    
+
     currentSessionTasks.forEach(task => {
         // Use total seconds (multiplied by 1000 for precision) as the key for grouping to avoid floating point issues
-        const timingKey = Math.round(task.timing * 1000).toString(); 
+        const timingKey = Math.round(task.timing * 1000).toString();
         if (!timingSummary[timingKey]) {
             timingSummary[timingKey] = { count: 0, totalTime: 0 }; // totalTime here will be in minutes
         }
@@ -1403,7 +1402,7 @@ const updateWorkSummary = () => {
         const heading = document.createElement('h3');
         heading.textContent = getTranslatedText('taskDetailsByTiming');
         detailedSummaryContainer.appendChild(heading);
-        
+
         // Sort timings for consistent display (convert key back to number for sorting)
         const sortedTimings = Object.keys(timingSummary).sort((a, b) => parseFloat(a) - parseFloat(b));
 
@@ -1411,7 +1410,7 @@ const updateWorkSummary = () => {
             const summary = timingSummary[timingKey];
             const p = document.createElement('p');
             // Convert timingKey back to decimal minutes for display
-            const displayTimingMinutes = parseFloat(timingKey) / 1000; 
+            const displayTimingMinutes = parseFloat(timingKey) / 1000;
             p.textContent = getTranslatedText('tasksTiming', {
                 timing: formatNumberToEnglish(formatMinutesToMMSS(displayTimingMinutes)), // Use formatted time
                 count: formatNumberToEnglish(summary.count),
@@ -1465,9 +1464,9 @@ const saveWorkRecord = async () => { // Renamed for clarity
             showToastMessage(getTranslatedText('workSavedSuccess'), 'success');
             currentSessionTasks = [];
             isSavingWork = false; // Reset flag
-            
+
             // Clear current activity status after saving work
-            await updateLastActivityTimestamp(true); 
+            await updateLastActivityTimestamp(true);
 
             showPage(mainDashboard);
             await renderMainDashboard();
@@ -1494,7 +1493,7 @@ backToDashboardFromStartWork.addEventListener('click', () => {
         });
     } else {
         // If no tasks, just go back and clear activity
-        updateLastActivityTimestamp(true); 
+        updateLastActivityTimestamp(true);
         showPage(mainDashboard);
     }
 });
@@ -1510,9 +1509,9 @@ const renderTrackWorkPage = async () => {
     showLoadingIndicator(true);
     try {
         const userId = loggedInUser.id;
-        const workRecordsCollectionRef = collection(db, 'workRecords'); 
-        const recordsQueryRef = query(workRecordsCollectionRef, where('userId', '==', userId), orderBy('timestamp', 'desc')); 
-        const recordsSnapshot = await getDocs(recordsQueryRef); 
+        const workRecordsCollectionRef = collection(db, 'workRecords');
+        const recordsQueryRef = query(workRecordsCollectionRef, where('userId', '==', userId), orderBy('timestamp', 'desc'));
+        const recordsSnapshot = await getDocs(recordsQueryRef);
 
         if (recordsSnapshot.empty) {
             const row = trackTasksTableBody.insertRow();
@@ -1529,7 +1528,7 @@ const renderTrackWorkPage = async () => {
             return;
         }
 
-        // Data processing for the complex table
+        // Data processing for the complex table with merging logic
         const processedData = {};
         let grandTotalTasks = 0;
         let grandTotalTime = 0;
@@ -1549,7 +1548,7 @@ const renderTrackWorkPage = async () => {
         });
 
 
-        recordsSnapshot.forEach(documentSnapshot => { 
+        recordsSnapshot.forEach(documentSnapshot => {
             const record = documentSnapshot.data();
             // Ensure timestamp is a Date object before formatting
             const recordDateObj = record.timestamp ? new Date(record.timestamp.toDate()) : new Date();
@@ -1561,45 +1560,45 @@ const renderTrackWorkPage = async () => {
             if (!processedData[recordDate].accounts[record.accountId]) {
                 processedData[recordDate].accounts[record.accountId] = { name: record.accountName, tasks: {}, accountTotalTasks: 0, accountTotalTime: 0, accountTotalBalance: 0, totalRows: 0 };
             }
-            // Group by taskDefinitionId, but also include the specific record's time for display
-            // Use documentSnapshot.id for a truly unique key for each record to avoid merging different records of the same task type
-            const taskRecordKey = documentSnapshot.id; 
-            if (!processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey]) {
-                processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey] = {
+
+            // Use taskDefinitionId as the key for tasks within an account for merging
+            const taskDefinitionKey = record.taskDefinitionId;
+            if (!processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey]) {
+                processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey] = {
                     name: record.taskDefinitionName,
-                    timings: {},
-                    taskTotalTasks: 0,
-                    taskTotalTime: 0,
-                    taskTotalBalance: 0,
-                    totalRows: 0 // To calculate rowspan for the task
+                    timings: {}, // This will aggregate all timings for this taskDefinitionId
+                    taskGroupTotalTasks: 0, // Total tasks for this task type group
+                    taskGroupTotalTime: 0, // Total time for this task type group
+                    taskGroupTotalBalance: 0, // Total balance for this task type group
+                    totalRows: 0 // To calculate rowspan for the task group
                 };
             }
 
+            // Add the current record's timings to the aggregated timings for this taskDefinitionKey
             record.recordedTimings.forEach(rt => {
-                // Use total seconds (multiplied by 1000 for precision) as the key for grouping to avoid floating point issues
-                const timingKey = Math.round(rt.timing * 1000).toString(); 
-                if (!processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].timings[timingKey]) {
-                    processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].timings[timingKey] = { count: 0, totalTime: 0 };
+                const timingKey = Math.round(rt.timing * 1000).toString();
+                if (!processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].timings[timingKey]) {
+                    processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].timings[timingKey] = { count: 0, totalTime: 0 };
                 }
-                processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].timings[timingKey].count++;
-                processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].timings[timingKey].totalTime += rt.timing;
+                processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].timings[timingKey].count++;
+                processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].timings[timingKey].totalTime += rt.timing;
 
                 // Aggregate for chart
                 chartDataForUser[record.taskDefinitionName] = (chartDataForUser[record.taskDefinitionName] || 0) + rt.timing;
             });
 
-            // Update totals for the specific record
-            processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].taskTotalTasks += record.totalTasksCount;
-            processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].taskTotalTime += record.totalTime;
+            // Update totals for the task group
+            processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].taskGroupTotalTasks += record.totalTasksCount;
+            processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].taskGroupTotalTime += record.totalTime;
 
             // Calculate balance for this record using applicable price
             const account = accountsMap.get(record.accountId);
             let pricePerHour = account ? (account.defaultPricePerHour || 0) : 0;
-            if (userCustomRatesMap.has(record.accountId)) { // Corrected variable name here
-                pricePerHour = userCustomRatesMap.get(record.accountId); // Corrected variable name here
+            if (userCustomRatesMap.has(record.accountId)) {
+                pricePerHour = userCustomRatesMap.get(record.accountId);
             }
             const recordBalance = (record.totalTime / 60) * pricePerHour;
-            processedData[recordDate].accounts[record.accountId].tasks[taskRecordKey].taskTotalBalance += recordBalance;
+            processedData[recordDate].accounts[record.accountId].tasks[taskDefinitionKey].taskGroupTotalBalance += recordBalance;
 
 
             // Update totals for account and date
@@ -1622,11 +1621,10 @@ const renderTrackWorkPage = async () => {
             for (const accountId in dateData.accounts) {
                 const accountData = dateData.accounts[accountId];
                 accountData.totalRows = 0;
-                for (const taskRecordKey in accountData.tasks) {
-                    const taskData = accountData.tasks[taskRecordKey];
-                    // Each timing within a task record gets its own row. If no timings, still one row for the task.
+                for (const taskDefinitionKey in accountData.tasks) {
+                    const taskData = accountData.tasks[taskDefinitionKey];
                     const timingsCount = Object.keys(taskData.timings).length;
-                    taskData.totalRows = timingsCount > 0 ? timingsCount : 1;
+                    taskData.totalRows = timingsCount > 0 ? timingsCount : 1; // At least one row for task
                     accountData.totalRows += taskData.totalRows;
                 }
                 dateData.totalRows += accountData.totalRows;
@@ -1702,25 +1700,25 @@ const renderTrackWorkPage = async () => {
 
             for (const accountId of sortedAccountIds) {
                 const accountData = dateData.accounts[accountId];
-                const sortedTaskRecordKeys = Object.keys(accountData.tasks).sort((a, b) => {
+                const sortedTaskDefinitionKeys = Object.keys(accountData.tasks).sort((a, b) => {
                     const taskA = accountData.tasks[a];
                     const taskB = accountData.tasks[b];
                     // Sort by task name first, then by total time (descending)
                     if (taskA.name !== taskB.name) {
                         return taskA.name.localeCompare(taskB.name, currentLanguage);
                     }
-                    return taskB.taskTotalTime - taskA.taskTotalTime;
+                    return taskB.taskGroupTotalTime - taskA.taskGroupTotalTime; // Use taskGroupTotalTime
                 });
                 let accountRowSpanHandled = false; // Flag to ensure account name and total for account cells are added only once per account group
 
-                for (const taskRecordKey of sortedTaskRecordKeys) {
-                    const taskData = accountData.tasks[taskRecordKey];
+                for (const taskDefinitionKey of sortedTaskDefinitionKeys) { // Changed to taskDefinitionKey
+                    const taskData = accountData.tasks[taskDefinitionKey]; // This is the aggregated task data
                     // Sort timings by their numerical value (after converting key back to number)
                     const sortedTimings = Object.keys(taskData.timings).sort((a, b) => parseFloat(a) - parseFloat(b));
                     const timingsCount = sortedTimings.length;
                     const actualTaskRows = timingsCount > 0 ? timingsCount : 1; // At least one row for task
 
-                    let taskRowSpanHandled = false; // Flag to ensure task name and total for task cells are added only once per task record
+                    let taskRowSpanHandled = false; // Flag to ensure task name and total for task cells are added only once per task group
 
                     for (let i = 0; i < actualTaskRows; i++) {
                         const row = trackTasksTableBody.insertRow();
@@ -1752,7 +1750,7 @@ const renderTrackWorkPage = async () => {
                             cell.classList.add('total-cell');
                         }
 
-                        // Column 4: Task Name (per task record)
+                        // Column 4: Task Name (per task group)
                         if (!taskRowSpanHandled) {
                             const cell = row.insertCell();
                             cell.textContent = taskData.name;
@@ -1771,46 +1769,45 @@ const renderTrackWorkPage = async () => {
                             timingValueCell.textContent = formatNumberToEnglish('00:00'); // Default if no timings
                         }
 
-                        // Column 6: Completed Tasks (per timing) - RE-ADDED
+                        // Column 6: Completed Tasks (per timing)
                         const completedTasksCell = row.insertCell();
                         if (currentTiming) {
                             completedTasksCell.textContent = formatNumberToEnglish(currentTiming.count);
                         } else {
                             completedTasksCell.textContent = formatNumberToEnglish(0);
                         }
-                        
-                        // Column 7: Total Time (per timing) - Now column 7
-                        const totalTimeCell = row.insertCell(); 
+
+                        // Column 7: Total Time (per timing)
+                        const totalTimeCell = row.insertCell();
                         if (currentTiming) {
                             totalTimeCell.textContent = formatNumberToEnglish(formatMinutesToMMSS(currentTiming.totalTime));
                         } else {
                             totalTimeCell.textContent = formatNumberToEnglish('00:00'); // Default if no timings
                         }
-                        
-                        // Add tooltip for tasks summary to the totalTimeCell
+
+                        // Add tooltip for tasks summary to the totalTimeCell (now reflects aggregated task timings)
                         const taskSummaryTooltip = Object.keys(taskData.timings)
-                            .map(timingKey => { // Renamed to timingKey
+                            .map(timingKey => {
                                 const summary = taskData.timings[timingKey];
-                                // Convert timingKey back to decimal minutes for display in tooltip
                                 const displayTimingMinutes = parseFloat(timingKey) / 1000;
                                 return getTranslatedText('tasksSummaryTooltip', {
                                     count: formatNumberToEnglish(summary.count),
                                     time: formatNumberToEnglish(formatMinutesToMMSS(displayTimingMinutes))
                                 });
                             })
-                            .join('\n'); // Join with newline for multi-line tooltip
+                            .join('\n');
                         totalTimeCell.title = taskSummaryTooltip;
 
 
-                        // Column 8: Total for Task (per task record) - Now column 8
+                        // Column 8: Total for Task (per task group)
                         if (!taskRowSpanHandled) {
                             const cell = row.insertCell();
-                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(taskData.taskTotalTime))} (${Math.round(formatNumberToEnglish(taskData.taskTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`;
+                            cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(taskData.taskGroupTotalTime))} (${Math.round(formatNumberToEnglish(taskData.taskGroupTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`;
                             cell.rowSpan = actualTaskRows;
                             cell.classList.add('total-cell');
                         }
 
-                        // Column 9: Total for Account (per account) - Now column 9
+                        // Column 9: Total for Account (per account)
                         if (!accountRowSpanHandled) {
                             const cell = row.insertCell();
                             cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(accountData.accountTotalTime))} (${Math.round(formatNumberToEnglish(accountData.accountTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`;
@@ -1818,7 +1815,7 @@ const renderTrackWorkPage = async () => {
                             cell.classList.add('total-cell');
                         }
 
-                        // Column 10: Daily Total Time (per date) - Now column 10
+                        // Column 10: Daily Total Time (per date)
                         if (!dateRowSpanHandled) {
                             const cell = row.insertCell();
                             cell.textContent = `${formatNumberToEnglish(formatMinutesToMMSS(dateData.dateTotalTime))} (${Math.round(formatNumberToEnglish(dateData.dateTotalBalance.toFixed(2)))} ${getTranslatedText('currencyUnit')})`; // Display daily total
@@ -1843,14 +1840,14 @@ const renderTrackWorkPage = async () => {
 
         // Render Footer (Grand Totals)
         const footerRow = trackTasksTableFoot.insertRow();
-        
+
         // Grand Total label
         let cell = footerRow.insertCell();
         cell.colSpan = 5; // Adjusted colspan to account for re-added column
         cell.textContent = getTranslatedText('grandTotal');
         cell.classList.add('grand-total-label');
 
-        // Total Tasks Overall value (re-added)
+        // Total Tasks Overall value
         cell = footerRow.insertCell();
         cell.textContent = `${getTranslatedText('totalTasksOverall')}: ${formatNumberToEnglish(grandTotalTasks)}`;
         cell.classList.add('grand-total-value');
@@ -1885,7 +1882,7 @@ const renderTrackWorkPage = async () => {
             Array.from(row.cells).forEach(c => {
                 c.style.fontWeight = 'bold';
                 // Use CSS classes for background and border for dark mode compatibility
-                c.classList.add('grand-total-footer-cell'); 
+                c.classList.add('grand-total-footer-cell');
             });
         });
 
@@ -1940,12 +1937,12 @@ const renderAdminPanel = async () => {
         recordFilterUser.value = ''; // Clear user filter (sets to "All Users")
         recordFilterAccount.value = ''; // Clear account filter
         recordFilterTask.value = ''; // Clear task filter
-        
+
         // Initial load of work records with pagination
-        lastVisibleRecord = null; // Reset pagination
+        lastVisibleRecord = null;
         allRecordsLoaded = false;
         await loadAndDisplayWorkRecords(null, null, null, null, RECORDS_PER_PAGE); // Load first 50 records
-        
+
         // renderEmployeeRatesAndTotals() will be called by onSnapshot
     } catch (error) {
         showToastMessage(getTranslatedText('errorLoadingData'), 'error');
@@ -1974,7 +1971,7 @@ const loadAndDisplayUsers = async () => {
                 const row = usersTableBody.insertRow();
                 row.insertCell().textContent = user.name;
                 row.insertCell().textContent = formatNumberToEnglish(user.pin);
-                
+
                 // Status Column Logic
                 const statusCell = row.insertCell();
                 let statusText = '';
@@ -2009,7 +2006,7 @@ const loadAndDisplayUsers = async () => {
                                     const timeSinceLastRecordMs = now - lastRecordedTimeMs;
                                     const maxTimingMinutes = getMaxTimingForTask(user.currentTaskDefinitionId);
                                     // Grace period: max task timing + 1 minute (converted to milliseconds)
-                                    const delayThresholdMs = (maxTimingMinutes * 60 * 1000) + (1 * 60 * 1000); 
+                                    const delayThresholdMs = (maxTimingMinutes * 60 * 1000) + (1 * 60 * 1000);
 
                                     if (timeSinceLastRecordMs > delayThresholdMs) {
                                         totalDelayMinutes = (timeSinceLastRecordMs - delayThresholdMs) / (60 * 1000); // in minutes
@@ -2064,7 +2061,7 @@ const loadAndDisplayUsers = async () => {
                         deleteBtn.disabled = true;
                         deleteBtn.textContent = getTranslatedText('deleting');
                         try {
-                            await deleteDoc(doc(db, 'users', user.id)); 
+                            await deleteDoc(doc(db, 'users', user.id));
                             showToastMessage(getTranslatedText('userDeletedSuccess'), 'success');
                             await fetchAllStaticData(); // Re-fetch all static data after deletion
                             // loadAndDisplayUsers() will be called by onSnapshot
@@ -2114,19 +2111,19 @@ const addUser = async () => { // Renamed for clarity
     addUserBtn.disabled = true;
     addUserBtn.textContent = getTranslatedText('adding');
     try {
-        const usersCollectionRef = collection(db, 'users'); 
-        const existingUserQueryRef = query(usersCollectionRef, where('pin', '==', pin), limit(1)); 
-        const existingUserSnapshot = await getDocs(existingUserQueryRef); 
+        const usersCollectionRef = collection(db, 'users');
+        const existingUserQueryRef = query(usersCollectionRef, where('pin', '==', pin), limit(1));
+        const existingUserSnapshot = await getDocs(existingUserQueryRef);
         if (!existingUserSnapshot.empty) {
             showInputError(newUserPINInput, newUserPINInputError, 'pinAlreadyUsed');
             showToastMessage(getTranslatedText('pinAlreadyUsed'), 'error');
             return;
         }
 
-        await addDoc(usersCollectionRef, { 
-            name: name, 
-            pin: pin, 
-            role: 'user', 
+        await addDoc(usersCollectionRef, {
+            name: name,
+            pin: pin,
+            role: 'user',
             lastActivityTimestamp: serverTimestamp(),
             currentAccountId: null, // Initialize new fields
             currentAccountName: null,
@@ -2134,7 +2131,7 @@ const addUser = async () => { // Renamed for clarity
             currentTaskDefinitionName: null,
             lastRecordedTaskTimestamp: null,
             sessionStartTime: null // Initialize session start time for new users
-        }); 
+        });
         showToastMessage(getTranslatedText('userAddedSuccess'), 'success');
         newUserNameInput.value = '';
         newUserPINInput.value = '';
@@ -2177,7 +2174,7 @@ const loadAndDisplayAccounts = async () => {
                         deleteBtn.disabled = true;
                         deleteBtn.textContent = getTranslatedText('deleting');
                         try {
-                            await deleteDoc(doc(db, 'accounts', account.id)); 
+                            await deleteDoc(doc(db, 'accounts', account.id));
                             showToastMessage(getTranslatedText('accountDeletedSuccess'), 'success');
                             await fetchAllStaticData(); // Re-fetch all static data after deletion
                             await loadAndDisplayAccounts(); // Reload after delete
@@ -2228,9 +2225,9 @@ const addAccount = async () => { // Renamed for clarity
     addAccountBtn.disabled = true;
     addAccountBtn.textContent = getTranslatedText('adding');
     try {
-        const accountsCollectionRef = collection(db, 'accounts'); 
-        const existingAccountQueryRef = query(accountsCollectionRef, where('name', '==', name), limit(1)); 
-        const existingAccountSnapshot = await getDocs(existingAccountQueryRef); 
+        const accountsCollectionRef = collection(db, 'accounts');
+        const existingAccountQueryRef = query(accountsCollectionRef, where('name', '==', name), limit(1));
+        const existingAccountSnapshot = await getDocs(existingAccountQueryRef);
         if (!existingAccountSnapshot.empty) {
             showInputError(newAccountNameInput, newAccountNameInputError, 'accountExists');
             showToastMessage(getTranslatedText('accountExists'), 'error');
@@ -2269,7 +2266,7 @@ const loadAndDisplayTaskDefinitions = async () => {
             allTaskDefinitions.forEach(task => { // Iterate over cached tasks
                 const row = tasksDefinitionTableBody.insertRow();
                 row.insertCell().textContent = task.name;
-                
+
                 const timingsCell = row.insertCell();
                 if (task.timings && task.timings.length > 0) {
                     // Display timings in MM:SS format with English digits
@@ -2289,7 +2286,7 @@ const loadAndDisplayTaskDefinitions = async () => {
                         deleteBtn.disabled = true;
                         deleteBtn.textContent = getTranslatedText('deleting');
                         try {
-                            await deleteDoc(doc(db, 'tasks', task.id)); 
+                            await deleteDoc(doc(db, 'tasks', task.id));
                             showToastMessage(getTranslatedText('taskDeletedSuccess'), 'success');
                             await fetchAllStaticData(); // Re-fetch all static data after deletion
                             await loadAndDisplayTaskDefinitions(); // Reload after delete
@@ -2389,16 +2386,16 @@ const addTaskDefinition = async () => { // Renamed for clarity
     addTaskDefinitionBtn.disabled = true;
     addTaskDefinitionBtn.textContent = getTranslatedText('adding');
     try {
-        const tasksCollectionRef = collection(db, 'tasks'); 
-        const existingTaskQueryRef = query(tasksCollectionRef, where('name', '==', name), limit(1)); 
-        const existingTaskSnapshot = await getDocs(existingTaskQueryRef); 
+        const tasksCollectionRef = collection(db, 'tasks');
+        const existingTaskQueryRef = query(tasksCollectionRef, where('name', '==', name), limit(1));
+        const existingTaskSnapshot = await getDocs(existingTaskQueryRef);
         if (!existingTaskSnapshot.empty) {
             showInputError(newTaskNameInput, newTaskNameInputError, 'taskExists');
             showToastMessage(getTranslatedText('taskExists'), 'error');
             return;
         }
 
-        await addDoc(tasksCollectionRef, { name: name, timings: timings }); 
+        await addDoc(tasksCollectionRef, { name: name, timings: timings });
         showToastMessage(getTranslatedText('taskAddedSuccess'), 'success');
         newTaskNameInput.value = '';
         newTimingsContainer.innerHTML = `
@@ -2454,10 +2451,10 @@ const populateFilters = async () => {
 const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId = null, taskDefinitionId = null, limitCount = RECORDS_PER_PAGE, append = false) => {
     showLoadingIndicator(true);
     try {
-        let recordsQuery = query(collection(db, 'workRecords'), orderBy('timestamp', 'desc')); 
+        let recordsQuery = query(collection(db, 'workRecords'), orderBy('timestamp', 'desc'));
 
         if (userId) {
-            recordsQuery = query(recordsQuery, where('userId', '==', userId)); 
+            recordsQuery = query(recordsQuery, where('userId', '==', userId));
         }
         if (accountId) {
             recordsQuery = query(recordsQuery, where('accountId', '==', accountId));
@@ -2473,8 +2470,8 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
             endOfDay.setHours(23, 59, 59, 999);
 
             recordsQuery = query(recordsQuery,
-                where('timestamp', '>=', Timestamp.fromDate(startOfDay)), 
-                where('timestamp', '<=', Timestamp.fromDate(endOfDay)) 
+                where('timestamp', '>=', Timestamp.fromDate(startOfDay)),
+                where('timestamp', '<=', Timestamp.fromDate(endOfDay))
             );
         }
 
@@ -2486,7 +2483,7 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
             recordsQuery = query(recordsQuery, limit(limitCount));
         }
 
-        const recordsSnapshot = await getDocs(recordsQuery); 
+        const recordsSnapshot = await getDocs(recordsQuery);
 
         if (!append) { // Clear table only if not appending
             workRecordsTableBody.innerHTML = '';
@@ -2504,7 +2501,7 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
             return;
         }
 
-        recordsSnapshot.forEach(documentSnapshot => { 
+        recordsSnapshot.forEach(documentSnapshot => {
             const record = getDocData(documentSnapshot);
             const row = workRecordsTableBody.insertRow();
             // Use optional chaining for robustness against missing fields in old records
@@ -2514,11 +2511,11 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
 
             const totalTimeCell = row.insertCell();
             totalTimeCell.textContent = formatNumberToEnglish(formatMinutesToMMSS(record.totalTime || 0));
-            
+
             const taskCountsByTiming = {};
             if (record.recordedTimings && Array.isArray(record.recordedTimings)) {
                 record.recordedTimings.forEach(rt => {
-                    const timingKey = Math.round((rt.timing || 0) * 1000).toString(); 
+                    const timingKey = Math.round((rt.timing || 0) * 1000).toString();
                     taskCountsByTiming[timingKey] = (taskCountsByTiming[timingKey] || 0) + 1;
                 });
             }
@@ -2537,7 +2534,7 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
             totalTimeCell.title = tooltipContent;
 
             row.insertCell().textContent = record.timestamp ? new Date(record.timestamp.toDate()).toLocaleDateString(currentLanguage, { day: 'numeric', month: 'short' }) : 'N/A';
-            
+
             const actionCell = row.insertCell();
             const editBtn = document.createElement('button');
             editBtn.textContent = getTranslatedText('editRecord');
@@ -2554,7 +2551,7 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
                     deleteBtn.disabled = true;
                     deleteBtn.textContent = getTranslatedText('deleting');
                     try {
-                        await deleteDoc(doc(db, 'workRecords', record.id)); 
+                        await deleteDoc(doc(db, 'workRecords', record.id));
                         showToastMessage(getTranslatedText('recordDeletedSuccess'), 'success');
                         // Reload records from scratch after deletion to ensure correct pagination state
                         lastVisibleRecord = null;
@@ -2624,7 +2621,7 @@ const handleLoadAllRecords = async () => {
     loadAllRecordsBtn.disabled = true;
     loadAllRecordsBtn.textContent = getTranslatedText('loading'); // Use a generic loading text
     loadMoreRecordsBtn.disabled = true; // Also disable load more
-    
+
     // Fetch all remaining records
     await loadAndDisplayWorkRecords(
         recordFilterUser.value === "" ? null : recordFilterUser.value,
@@ -2732,8 +2729,8 @@ const saveEditedRecord = async () => { // Renamed for clarity
     saveEditedRecordBtn.disabled = true;
     saveEditedRecordBtn.textContent = getTranslatedText('updating');
     try {
-        const recordDocRef = doc(db, 'workRecords', currentEditingRecordId); 
-        await updateDoc(recordDocRef, { 
+        const recordDocRef = doc(db, 'workRecords', currentEditingRecordId);
+        await updateDoc(recordDocRef, {
             accountId: newAccountId,
             accountName: newAccountName,
             taskDefinitionId: newTaskDefinitionId,
@@ -2741,7 +2738,7 @@ const saveEditedRecord = async () => { // Renamed for clarity
             totalTasksCount: newTotalTasksCount,
             totalTime: newTotalTime,
             timestamp: newTimestamp, // Update the main timestamp of the record
-            lastModified: serverTimestamp() 
+            lastModified: serverTimestamp()
         });
         showToastMessage(getTranslatedText('recordUpdatedSuccess'), 'success');
         editRecordModal.style.display = 'none';
@@ -2836,7 +2833,7 @@ const renderEmployeeRatesAndTotals = async () => {
                     let customRateDocId = customRateData?.docId || null;
 
                     const row = employeeRatesTableBody.insertRow();
-                    
+
                     // New: Icon cell
                     const iconCell = row.insertCell();
                     const editIcon = document.createElement('span');
@@ -2855,7 +2852,7 @@ const renderEmployeeRatesAndTotals = async () => {
 
                     row.insertCell().textContent = account.name;
                     row.insertCell().textContent = formatNumberToEnglish(defaultPrice.toFixed(2));
-                    
+
                     const customPriceCell = row.insertCell();
                     customPriceCell.textContent = customPrice !== null ? formatNumberToEnglish(customPrice.toFixed(2)) : getTranslatedText('notSet');
 
@@ -2988,7 +2985,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     pinInputs.forEach((input, index) => {
         input.addEventListener('input', () => {
             // Allow only digits
-            input.value = input.value.replace(/\D/g, ''); 
+            input.value = input.value.replace(/\D/g, '');
             if (input.value.length === 1 && index < pinInputs.length - 1) {
                 pinInputs[index + 1].focus();
             }
@@ -3088,7 +3085,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } else {
             // If no tasks, just go back and clear activity
-            updateLastActivityTimestamp(true); 
+            updateLastActivityTimestamp(true);
             showPage(mainDashboard);
         }
     });
@@ -3104,7 +3101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } else {
             // If no tasks, just go back and clear activity
-            updateLastActivityTimestamp(true); 
+            updateLastActivityTimestamp(true);
             showPage(mainDashboard);
         }
     });
@@ -3118,14 +3115,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Admin Panel Buttons
     addUserBtn.addEventListener('click', addUser);
     addAccountBtn.addEventListener('click', addAccount);
-    addTimingFieldBtn.addEventListener('click', addTimingField); 
+    addTimingFieldBtn.addEventListener('click', addTimingField);
     addTaskDefinitionBtn.addEventListener('click', addTaskDefinition);
     filterRecordsBtn.addEventListener('click', async () => {
         const selectedUserId = recordFilterUser.value === "" ? null : recordFilterUser.value;
         const selectedDate = recordFilterDate.value === "" ? null : recordFilterDate.value;
         const selectedAccountId = recordFilterAccount.value === "" ? null : recordFilterAccount.value;
         const selectedTaskDefinitionId = recordFilterTask.value === "" ? null : recordFilterTask.value;
-        
+
         // Reset pagination when filters change
         lastVisibleRecord = null;
         allRecordsLoaded = false;
