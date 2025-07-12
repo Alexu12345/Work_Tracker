@@ -2015,7 +2015,7 @@ const loadAndDisplayUsers = async () => {
                                 netSessionMinutes = totalSessionMinutes - totalDelayMinutes;
                             }
 
-                            statusTooltip = `- ${getTranslatedText('netSessionTime')}: ${formatNumberToEnglish(formatMinutesToMMSS(netSessionMinutes))}\n- ${getTranslatedText('delayAmount')}: ${formatNumberToEnglish(formatMinutesToMMSS(totalDelayMinutes))}\n- ${getTranslatedText('totalSessionTime')}: ${formatNumberToEnglish(formatMinutesToMMSS(totalSessionMinutes))}`;
+                            statusTooltip = `${getTranslatedText('totalSessionTime')}: ${formatNumberToEnglish(formatMinutesToMMSS(totalSessionMinutes))}`;
 
                         } else {
                             // User is online but not on a specific task (dashboard, track work, or selecting)
