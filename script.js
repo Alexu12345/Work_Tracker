@@ -538,6 +538,7 @@ const translations = {
         'onlineNow': 'متصل الآن', // New
         'onlineOnAccountTask': 'متصل الآن على "{account}" - "{task}"', // New status
         'onlineButNotWorking': 'متصل ولكن لا يعمل', // New status
+        'onlineSince': 'كان متصل منذ {minutes} دقيقة و {seconds} ثانية'
         'workingButNoRecord': 'يعمل ولكنه لم يسجل أي مهمة منذ {minutes} دقيقة و {seconds} ثانية', // New status
         'lastActivity': 'آخر نشاط: {date} {time}', // New
         'loadMoreBtn': 'أعرض أكثر ({count})', // New
@@ -711,6 +712,7 @@ const translations = {
         'onlineOnAccountTask': 'Online now on "{account}" - "{task}"', // New status
         'onlineButNotWorking': 'Online but not working', // New status
         'workingButNoRecord': 'Working but hasn\'t recorded any task since {minutes} minutes and {seconds} seconds ago', // New status
+        'onlineSince': 'Was online for: {minutes} minutes and {seconds} seconds',
         'lastActivity': 'Last activity: {date} {time}', // New
         'loadMoreBtn': 'Show More ({count})', // New
         'loadAllBtn': 'Show All', // New
