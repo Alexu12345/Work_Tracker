@@ -1,51 +1,71 @@
 /* Universal box-sizing for consistent layout */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
+
 /* Ensure text alignment is centered for table data and headers by default */
-td, th {
+td,
+th {
     text-align: center !important;
     white-space: normal !important;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5; /* Light mode background */
+    background-color: #f0f2f5;
+    /* Light mode background */
     display: flex;
     justify-content: center;
-    align-items: center; /* Align to top, not center, to allow content flow */
+    align-items: center;
+    /* Align to top, not center, to allow content flow */
     min-height: 100vh;
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
-    direction: rtl; /* Default to RTL */
-    text-align: right; /* Default text alignment for RTL */
-    color: #333; /* Light mode text color */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+    direction: rtl;
+    /* Default to RTL */
+    text-align: right;
+    /* Default text alignment for RTL */
+    color: #333;
+    /* Light mode text color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transition for dark mode */
 }
 
 /* Page Containers - General styling */
 .page {
-    background-color: #ffffff; /* Light mode page background */
+    background-color: #ffffff;
+    /* Light mode page background */
     padding: 35px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    margin: 20px auto; /* Center the page horizontally */
+    margin: 20px auto;
+    /* Center the page horizontally */
     box-sizing: border-box;
-    display: flex; /* Ensure flex for internal layout */
-    flex-direction: column; /* Stack content vertically within each page */
-    align-items: center; /* Center content horizontally within the page */
-    gap: 20px; /* Add vertical gap between direct children of .page */
+    display: flex;
+    /* Ensure flex for internal layout */
+    flex-direction: column;
+    /* Stack content vertically within each page */
+    align-items: center;
+    /* Center content horizontally within the page */
+    gap: 20px;
+    /* Add vertical gap between direct children of .page */
 }
 
-h1, h2, h3 {
-    color: #2c3e50; /* Light mode heading color */
+h1,
+h2,
+h3 {
+    color: #2c3e50;
+    /* Light mode heading color */
     text-align: center;
     margin-bottom: 30px;
     font-weight: 600;
     transition: color 0.3s ease;
-    width: 100%; /* Ensure headings take full width */
+    width: 100%;
+    /* Ensure headings take full width */
 }
 
 /* Input Group Styles */
@@ -54,13 +74,15 @@ h1, h2, h3 {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align labels/inputs to the right in RTL */
+    align-items: flex-end;
+    /* Align labels/inputs to the right in RTL */
 }
 
 .input-group label {
     margin-bottom: 8px;
     font-weight: 600;
-    color: #555; /* Light mode label color */
+    color: #555;
+    /* Light mode label color */
     transition: color 0.3s ease;
 }
 
@@ -72,38 +94,47 @@ h1, h2, h3 {
 .input-group select {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ced4da; /* Light mode input border */
+    border: 1px solid #ced4da;
+    /* Light mode input border */
     border-radius: 8px;
     font-size: 16px;
     box-sizing: border-box;
     margin-top: 5px;
-    color: #333; /* Light mode input text color */
-    background-color: #f8f9fa; /* Light mode input background */
+    color: #333;
+    /* Light mode input text color */
+    background-color: #f8f9fa;
+    /* Light mode input background */
     transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .input-group input:focus,
 .input-group select:focus {
-    border-color: #3498DB; /* Primary blue focus */
+    border-color: #3498DB;
+    /* Primary blue focus */
     outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25); /* Primary blue shadow */
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    /* Primary blue shadow */
 }
 
 /* Input validation feedback */
 .input-group input.is-invalid,
 .input-group select.is-invalid {
-    border-color: #E74C3C; /* Red for invalid */
+    border-color: #E74C3C;
+    /* Red for invalid */
     box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
 }
 
 .input-error-message {
-    color: #E74C3C; /* Red for error messages */
+    color: #E74C3C;
+    /* Red for error messages */
     font-size: 12px;
     margin-top: 5px;
     text-align: right;
     width: 100%;
-    display: none; /* Hidden by default, shown by JS */
+    display: none;
+    /* Hidden by default, shown by JS */
 }
+
 .input-error-message.show {
     display: block;
 }
@@ -111,20 +142,23 @@ h1, h2, h3 {
 
 /* General Button Styles */
 button {
-    background-color: #3498DB; /* Primary blue button */
+    background-color: #3498DB;
+    /* Primary blue button */
     color: white;
     padding: 12px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 17px;
-    width: 100%; /* Full width for general buttons */
+    width: 100%;
+    /* Full width for general buttons */
     margin-top: 15px;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
-    background-color: #2980B9; /* Darker primary blue on hover */
+    background-color: #2980B9;
+    /* Darker primary blue on hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -147,7 +181,8 @@ button.disabled {
 
 .login-container h1 {
     font-size: 32px;
-    color: #3498DB; /* Primary blue for login title */
+    color: #3498DB;
+    /* Primary blue for login title */
 }
 
 /* PIN Input Fields Styling */
@@ -171,13 +206,16 @@ button.disabled {
     box-sizing: border-box;
     -moz-appearance: textfield;
 }
+
 .pin-input-field::-webkit-outer-spin-button,
 .pin-input-field::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 .pin-input-field:focus {
-    border-color: #3498DB; /* Primary blue focus */
+    border-color: #3498DB;
+    /* Primary blue focus */
     outline: none;
     box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
 }
@@ -214,9 +252,11 @@ button.disabled {
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #3498DB; /* Primary blue border */
+    border: 3px solid #3498DB;
+    /* Primary blue border */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-left: 15px; /* Adjust for RTL */
+    margin-left: 15px;
+    /* Adjust for RTL */
 }
 
 .user-info p {
@@ -227,16 +267,19 @@ button.disabled {
 }
 
 .total-hours-box {
-    background-color: #2ECC71; /* Secondary green */
+    background-color: #2ECC71;
+    /* Secondary green */
     color: white;
     padding: 15px 25px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); /* Green shadow */
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    /* Green shadow */
     min-width: 180px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align text to the right in RTL */
+    align-items: flex-end;
+    /* Align text to the right in RTL */
     gap: 5px;
     font-size: 18px;
     font-weight: 600;
@@ -248,6 +291,7 @@ button.disabled {
     color: white;
     transition: color 0.3s ease;
 }
+
 .total-hours-box p span {
     font-weight: bold;
     color: white;
@@ -265,7 +309,8 @@ button.disabled {
 }
 
 .big-option-btn {
-    background-color: #3498DB; /* Primary blue */
+    background-color: #3498DB;
+    /* Primary blue */
     padding: 40px 30px;
     font-size: 28px;
     font-weight: bold;
@@ -279,20 +324,26 @@ button.disabled {
 }
 
 .big-option-btn:hover {
-    background-color: #2980B9; /* Darker primary blue on hover */
+    background-color: #2980B9;
+    /* Darker primary blue on hover */
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 #trackWorkOption {
-    background-color: #2C3E50; /* Darker blue/gray for contrast */
+    background-color: #2C3E50;
+    /* Darker blue/gray for contrast */
 }
+
 #trackWorkOption:hover {
     background-color: #1A242F;
 }
+
 #adminPanelOption {
-    background-color: #F39C12; /* Accent orange/yellow */
+    background-color: #F39C12;
+    /* Accent orange/yellow */
 }
+
 #adminPanelOption:hover {
     background-color: #E67E22;
 }
@@ -320,7 +371,8 @@ button.disabled {
 
 .popup h2 {
     margin-bottom: 25px;
-    color: #3498DB; /* Primary blue */
+    color: #3498DB;
+    /* Primary blue */
 }
 
 .popup button {
@@ -328,8 +380,10 @@ button.disabled {
     width: auto;
     flex-grow: 1;
 }
+
 .popup button.secondary {
-    background-color: #95A5A6; /* Soft gray for secondary action */
+    background-color: #95A5A6;
+    /* Soft gray for secondary action */
 }
 
 .popup button.secondary:hover {
@@ -338,7 +392,8 @@ button.disabled {
 
 .work-summary-section {
     margin-bottom: 30px;
-    background-color: #ECF0F1; /* Light gray background */
+    background-color: #ECF0F1;
+    /* Light gray background */
     padding: 20px;
     border-radius: 8px;
     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
@@ -361,13 +416,15 @@ button.disabled {
 
 .work-summary-section tr:first-child td:last-child {
     font-weight: bold;
-    color: #3498DB; /* Primary blue for count */
+    color: #3498DB;
+    /* Primary blue for count */
     font-size: 22px;
 }
 
 .work-summary-section tr:last-child td:last-child {
     font-weight: bold;
-    color: #2ECC71; /* Secondary green for time */
+    color: #2ECC71;
+    /* Secondary green for time */
     font-size: 22px;
 }
 
@@ -380,6 +437,7 @@ button.disabled {
     text-align: right;
     transition: color 0.3s ease;
 }
+
 #detailedSummaryContainer p {
     font-size: 16px;
     color: #555;
@@ -389,6 +447,7 @@ button.disabled {
     text-align: right;
     transition: color 0.3s ease, border-color 0.3s ease;
 }
+
 #detailedSummaryContainer p:last-child {
     border-bottom: none;
     margin-bottom: 0;
@@ -423,7 +482,8 @@ button.disabled {
 }
 
 .task-timing-btn {
-    background-color: #3498DB; /* Primary blue for task buttons */
+    background-color: #3498DB;
+    /* Primary blue for task buttons */
     display: inline-block;
     width: 100%;
     padding: 12px 10px;
@@ -434,11 +494,13 @@ button.disabled {
 }
 
 .task-timing-btn:hover {
-    background-color: #2980B9; /* Darker primary blue on hover */
+    background-color: #2980B9;
+    /* Darker primary blue on hover */
 }
 
 .undo-btn {
-    background-color: #F39C12; /* Accent yellow for undo */
+    background-color: #F39C12;
+    /* Accent yellow for undo */
     color: #333;
     padding: 0 15px;
     border: none;
@@ -454,7 +516,7 @@ button.disabled {
     margin-top: 0;
     z-index: 10;
     white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .undo-btn.show {
@@ -465,13 +527,16 @@ button.disabled {
 }
 
 .undo-btn:hover {
-    background-color: #E67E22; /* Darker accent yellow on hover */
+    background-color: #E67E22;
+    /* Darker accent yellow on hover */
 }
 
 .time-since-last-click {
     position: absolute;
-    top: -25px; /* Position above the button */
-    background-color: rgba(52, 152, 219, 0.7); /* Primary blue semi-transparent */
+    top: -25px;
+    /* Position above the button */
+    background-color: rgba(52, 152, 219, 0.7);
+    /* Primary blue semi-transparent */
     color: white;
     padding: 5px 8px;
     border-radius: 5px;
@@ -480,7 +545,8 @@ button.disabled {
     z-index: 100;
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* Do not block clicks */
+    pointer-events: none;
+    /* Do not block clicks */
 }
 
 .time-since-last-click.show {
@@ -488,19 +554,23 @@ button.disabled {
 }
 
 .save-work-btn {
-    background-color: #2ECC71; /* Secondary green for save */
+    background-color: #2ECC71;
+    /* Secondary green for save */
     margin-top: 30px;
 }
 
 .save-work-btn:hover {
-    background-color: #27AE60; /* Darker secondary green on hover */
+    background-color: #27AE60;
+    /* Darker secondary green on hover */
 }
 
 /* Track Work Page Styles */
 .track-work-container {
-    max-width: 1200px; /* Wider for detailed table */
+    max-width: 1200px;
+    /* Wider for detailed table */
     padding: 40px;
 }
+
 /* Chart specific styles on track work page */
 #taskChart {
     max-width: 400px;
@@ -523,7 +593,8 @@ button.disabled {
 .admin-section table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #f8f9fa; /* Light table background */
+    background-color: #f8f9fa;
+    /* Light table background */
     border-radius: 8px;
     overflow: hidden;
     table-layout: auto;
@@ -536,7 +607,8 @@ button.disabled {
 .admin-section table td {
     padding: 6px 8px;
     text-align: center;
-    border: 1px solid #dee2e6; /* Light table border */
+    border: 1px solid #dee2e6;
+    /* Light table border */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -547,7 +619,8 @@ button.disabled {
 
 .track-work-container table th,
 .admin-section table th {
-    background-color: #3498DB; /* Primary blue for table headers */
+    background-color: #3498DB;
+    /* Primary blue for table headers */
     color: white;
     font-weight: 600;
     position: sticky;
@@ -557,20 +630,25 @@ button.disabled {
 
 .track-work-container table tbody tr:nth-child(even),
 .admin-section table tbody tr:nth-child(even) {
-    background-color: #ECF0F1; /* Light gray for even rows */
+    background-color: #ECF0F1;
+    /* Light gray for even rows */
 }
 
 .track-work-container table tbody tr:hover,
 .admin-section table tbody tr:hover {
-    background-color: #DDEBF0; /* Lighter blue on hover */
+    background-color: #DDEBF0;
+    /* Lighter blue on hover */
 }
 
 /* Styling for total cells in track work table */
 .track-work-container table .total-cell {
     font-weight: bold;
-    background-color: #E0F7FA; /* Light blue for total cells */
-    color: #2980B9; /* Darker primary blue */
+    background-color: #E0F7FA;
+    /* Light blue for total cells */
+    color: #2980B9;
+    /* Darker primary blue */
 }
+
 /* Ensure date column does not wrap */
 .track-work-container table .date-cell {
     white-space: nowrap;
@@ -579,8 +657,10 @@ button.disabled {
 
 /* New: Border for daily record rows */
 .track-work-container table tbody .daily-record-row {
-    border-top: 2px solid #3498DB; /* Primary blue border */
+    border-top: 2px solid #3498DB;
+    /* Primary blue border */
 }
+
 .track-work-container table tbody tr:first-child.daily-record-row {
     border-top: none;
 }
@@ -588,22 +668,30 @@ button.disabled {
 /* Styling for grand total footer */
 #trackTasksTableFoot td {
     font-weight: bold;
-    background-color: #D1ECF1; /* Light cyan for footer */
-    border-top: 2px solid #3498DB; /* Primary blue border */
-    color: #2C3E50; /* Dark blue/gray */
+    background-color: #D1ECF1;
+    /* Light cyan for footer */
+    border-top: 2px solid #3498DB;
+    /* Primary blue border */
+    color: #2C3E50;
+    /* Dark blue/gray */
 }
+
 #trackTasksTableFoot .grand-total-label {
     text-align: right;
 }
+
 #trackTasksTableFoot .grand-total-value {
     text-align: center;
 }
 
 /* New class for footer cells to handle dark mode colors */
 .grand-total-footer-cell {
-    background-color: #ECF0F1; /* Light gray */
-    border-top: 2px solid #3498DB; /* Primary blue */
-    color: #2C3E50; /* Dark blue/gray */
+    background-color: #ECF0F1;
+    /* Light gray */
+    border-top: 2px solid #3498DB;
+    /* Primary blue */
+    color: #2C3E50;
+    /* Dark blue/gray */
 }
 
 
@@ -614,11 +702,13 @@ button.disabled {
 }
 
 .admin-panel-container h1 {
-    color: #3498DB; /* Primary blue */
+    color: #3498DB;
+    /* Primary blue */
 }
 
 .admin-section {
-    background-color: #f8f9fa; /* Light gray background */
+    background-color: #f8f9fa;
+    /* Light gray background */
     padding: 25px;
     border-radius: 10px;
     margin-bottom: 30px;
@@ -634,8 +724,10 @@ button.disabled {
     text-align: right;
     margin-top: 0;
     margin-bottom: 20px;
-    color: #3498DB; /* Primary blue */
-    border-bottom: 2px solid #e9ecef; /* Light gray border */
+    color: #3498DB;
+    /* Primary blue */
+    border-bottom: 2px solid #e9ecef;
+    /* Light gray border */
     padding-bottom: 10px;
 }
 
@@ -659,7 +751,8 @@ button.disabled {
 }
 
 .admin-section button {
-    background-color: #2ECC71; /* Secondary green */
+    background-color: #2ECC71;
+    /* Secondary green */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -673,18 +766,24 @@ button.disabled {
 }
 
 .admin-section button:hover {
-    background-color: #27AE60; /* Darker secondary green */
+    background-color: #27AE60;
+    /* Darker secondary green */
 }
 
 #addTimingFieldBtn {
-    background-color: #3498DB; /* Primary blue */
+    background-color: #3498DB;
+    /* Primary blue */
 }
+
 #addTimingFieldBtn:hover {
     background-color: #2980B9;
 }
+
 #addTaskDefinitionBtn {
-    background-color: #8E44AD; /* Purple for contrast */
+    background-color: #8E44AD;
+    /* Purple for contrast */
 }
+
 #addTaskDefinitionBtn:hover {
     background-color: #7D3C98;
 }
@@ -702,7 +801,8 @@ button.disabled {
 
 /* Consolidated admin action button style */
 .admin-action-btntp {
-    background-color: #95A5A6; /* Soft gray for default actions */
+    background-color: #95A5A6;
+    /* Soft gray for default actions */
     color: white;
     padding: 4px 8px;
     border-radius: 5px;
@@ -711,7 +811,7 @@ button.disabled {
     margin: 2px;
     display: inline-block;
     white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -721,16 +821,20 @@ button.disabled {
 }
 
 .admin-action-btntp.delete {
-    background-color: #E74C3C; /* Red for delete */
+    background-color: #E74C3C;
+    /* Red for delete */
 }
 
 .admin-action-btntp.delete:hover {
     background-color: #C0392B;
 }
 
-.admin-action-btntp.primary { /* For the modify button specifically */
-    background-color: #F39C12 !important; /* Accent yellow/orange */
+.admin-action-btntp.primary {
+    /* For the modify button specifically */
+    background-color: #F39C12 !important;
+    /* Accent yellow/orange */
 }
+
 .admin-action-btntp.primary:hover {
     background-color: #E67E22 !important;
 }
@@ -791,18 +895,24 @@ button.disabled {
     width: auto;
     flex-grow: 1;
     max-width: 200px;
-    margin-top: 0; /* Override general button margin */
+    margin-top: 0;
+    /* Override general button margin */
 }
+
 .pagination-controls button.secondary {
-    background-color: #95A5A6; /* Soft gray for secondary action */
+    background-color: #95A5A6;
+    /* Soft gray for secondary action */
 }
+
 .pagination-controls button.secondary:hover {
     background-color: #7F8C8D;
 }
 
 
-.back-btn, #logoutAdminBtn {
-    background-color: #95A5A6; /* Soft gray */
+.back-btn,
+#logoutAdminBtn {
+    background-color: #95A5A6;
+    /* Soft gray */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -815,7 +925,8 @@ button.disabled {
     width: 100%;
 }
 
-.back-btn:hover, #logoutAdminBtn:hover {
+.back-btn:hover,
+#logoutAdminBtn:hover {
     background-color: #7F8C8D;
 }
 
@@ -838,11 +949,13 @@ button.disabled {
 }
 
 .toast-message.success {
-    background-color: #2ECC71; /* Secondary green for success */
+    background-color: #2ECC71;
+    /* Secondary green for success */
 }
 
 .toast-message.error {
-    background-color: #E74C3C; /* Red for error */
+    background-color: #E74C3C;
+    /* Red for error */
 }
 
 .toast-message.show {
@@ -866,7 +979,8 @@ button.disabled {
 
 .spinner {
     border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498DB; /* Primary blue spinner */
+    border-top: 8px solid #3498DB;
+    /* Primary blue spinner */
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -875,8 +989,13 @@ button.disabled {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Modal Styles */
@@ -889,20 +1008,21 @@ button.disabled {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background-color: #fefefe; /* Light modal background */
+    background-color: #fefefe;
+    /* Light modal background */
     margin: auto;
     padding: 30px;
     border: 1px solid #888;
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     text-align: right;
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -913,7 +1033,8 @@ button.disabled {
 
 .modal-content h3 {
     text-align: center;
-    color: #3498DB; /* Primary blue */
+    color: #3498DB;
+    /* Primary blue */
     margin-bottom: 25px;
 }
 
@@ -942,7 +1063,8 @@ button.disabled {
 }
 
 .modal-content button {
-    background-color: #3498DB; /* Primary blue */
+    background-color: #3498DB;
+    /* Primary blue */
     color: white;
     padding: 12px 20px;
     border: none;
@@ -955,7 +1077,8 @@ button.disabled {
 }
 
 .modal-content button:hover {
-    background-color: #2980B9; /* Darker primary blue */
+    background-color: #2980B9;
+    /* Darker primary blue */
 }
 
 /* Modal specific buttons */
@@ -965,13 +1088,18 @@ button.disabled {
     justify-content: center;
     margin-top: 20px;
 }
+
 .modal-buttons button {
     flex-grow: 1;
-    margin-top: 0; /* Override general button margin */
+    margin-top: 0;
+    /* Override general button margin */
 }
+
 .modal-buttons button.secondary {
-    background-color: #95A5A6; /* Soft gray */
+    background-color: #95A5A6;
+    /* Soft gray */
 }
+
 .modal-buttons button.secondary:hover {
     background-color: #7F8C8D;
 }
@@ -1006,7 +1134,8 @@ button.disabled {
 }
 
 .lang-btn {
-    background-color: #ECF0F1; /* Light gray */
+    background-color: #ECF0F1;
+    /* Light gray */
     color: #495057;
     border: 1px solid #ced4da;
     padding: 8px 12px;
@@ -1018,12 +1147,14 @@ button.disabled {
 }
 
 .lang-btn:hover {
-    background-color: #DDEBF0; /* Lighter blue */
+    background-color: #DDEBF0;
+    /* Lighter blue */
     color: #343a40;
 }
 
 .lang-btn.active {
-    background-color: #3498DB; /* Primary blue */
+    background-color: #3498DB;
+    /* Primary blue */
     color: white;
     border-color: #3498DB;
     font-weight: bold;
@@ -1035,7 +1166,8 @@ button.disabled {
     top: 20px;
     left: 20px;
     z-index: 5000;
-    background-color: #3498DB; /* Primary blue */
+    background-color: #3498DB;
+    /* Primary blue */
     color: white;
     border: none;
     border-radius: 50%;
@@ -1051,15 +1183,18 @@ button.disabled {
 }
 
 .dark-mode-toggle:hover {
-    background-color: #2980B9; /* Darker primary blue */
+    background-color: #2980B9;
+    /* Darker primary blue */
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Dark Mode Styles */
 body.dark-mode {
-    background-color: #1A242F; /* Dark background */
-    color: #F8F9FA; /* Brighter general text color for better contrast */
+    background-color: #1A242F;
+    /* Dark background */
+    color: #F8F9FA;
+    /* Brighter general text color for better contrast */
 }
 
 body.dark-mode .page,
@@ -1068,22 +1203,27 @@ body.dark-mode .popup,
 body.dark-mode .admin-section,
 body.dark-mode .work-summary-section,
 body.dark-mode .task-timing-buttons-section {
-    background-color: #2C3E50; /* Darker blue/gray for elements */
+    background-color: #2C3E50;
+    /* Darker blue/gray for elements */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    border-color: #4A6070; /* Darker border */
-    color: #F8F9FA; /* Ensure general text within these containers is light */
+    border-color: #4A6070;
+    /* Darker border */
+    color: #F8F9FA;
+    /* Ensure general text within these containers is light */
 }
 
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3 {
-    color: #76D7C4; /* Soft teal for headings */
+    color: #76D7C4;
+    /* Soft teal for headings */
     text-shadow: 0 0 5px rgba(118, 215, 196, 0.3);
 }
 
 body.dark-mode .input-group label,
 body.dark-mode .modal-content label {
-    color: #E0E0E0; /* Slightly brighter for labels */
+    color: #E0E0E0;
+    /* Slightly brighter for labels */
 }
 
 body.dark-mode input[type="text"],
@@ -1092,8 +1232,10 @@ body.dark-mode input[type="number"],
 body.dark-mode input[type="date"],
 body.dark-mode input[type="time"],
 body.dark-mode select {
-    background-color: #34495E; /* Even darker blue/gray for inputs */
-    color: #F8F9FA; /* Ensure input text is bright */
+    background-color: #34495E;
+    /* Even darker blue/gray for inputs */
+    color: #F8F9FA;
+    /* Ensure input text is bright */
     border-color: #5D7A90;
 }
 
@@ -1104,8 +1246,10 @@ body.dark-mode .save-work-btn,
 body.dark-mode .admin-action-btn,
 body.dark-mode .back-btn,
 body.dark-mode #logoutAdminBtn,
-body.dark-mode .pagination-controls button { /* Added for pagination buttons */
-    background-color: #3498DB; /* Primary blue */
+body.dark-mode .pagination-controls button {
+    /* Added for pagination buttons */
+    background-color: #3498DB;
+    /* Primary blue */
     color: #ECF0F1;
 }
 
@@ -1116,7 +1260,8 @@ body.dark-mode .save-work-btn:hover,
 body.dark-mode .admin-action-btn:hover,
 body.dark-mode .back-btn:hover,
 body.dark-mode #logoutAdminBtn:hover,
-body.dark-mode .pagination-controls button:hover { /* Added for pagination buttons */
+body.dark-mode .pagination-controls button:hover {
+    /* Added for pagination buttons */
     background-color: #2980B9;
 }
 
@@ -1125,7 +1270,8 @@ body.dark-mode .task-timing-btn.active {
 }
 
 body.dark-mode .undo-btn {
-    background-color: #F39C12; /* Accent yellow */
+    background-color: #F39C12;
+    /* Accent yellow */
     color: #2C3E50;
 }
 
@@ -1134,18 +1280,21 @@ body.dark-mode .undo-btn:hover {
 }
 
 body.dark-mode .time-since-last-click {
-    background-color: rgba(52, 152, 219, 0.7); /* Primary blue semi-transparent */
+    background-color: rgba(52, 152, 219, 0.7);
+    /* Primary blue semi-transparent */
     color: #ECF0F1;
 }
 
 body.dark-mode .total-hours-box {
-    background-color: #2ECC71; /* Secondary green */
+    background-color: #2ECC71;
+    /* Secondary green */
     border: 1px solid #27AE60;
 }
 
 body.dark-mode .total-hours-box p,
 body.dark-mode .total-hours-box p span {
-    color: #F8F9FA; /* Ensure text inside total boxes is bright */
+    color: #F8F9FA;
+    /* Ensure text inside total boxes is bright */
 }
 
 
@@ -1154,14 +1303,18 @@ body.dark-mode table {
 }
 
 body.dark-mode table th {
-    background-color: #34495E; /* Darker blue/gray for table headers */
-    color: #76D7C4 !important; /* Soft teal, ensure it's applied */
+    background-color: #34495E;
+    /* Darker blue/gray for table headers */
+    color: #76D7C4 !important;
+    /* Soft teal, ensure it's applied */
     border-color: #5D7A90;
 }
 
 body.dark-mode table td {
-    background-color: #2C3E50 !important; /* Darker blue/gray for table cells */
-    color: #F8F9FA !important; /* Brighter text color for table cells */
+    background-color: #2C3E50 !important;
+    /* Darker blue/gray for table cells */
+    color: #F8F9FA !important;
+    /* Brighter text color for table cells */
     border-color: #4A6070 !important;
 }
 
@@ -1174,7 +1327,8 @@ body.dark-mode .toast-message.error {
 }
 
 body.dark-mode .spinner {
-    border-top: 8px solid #76D7C4; /* Soft teal spinner */
+    border-top: 8px solid #76D7C4;
+    /* Soft teal spinner */
 }
 
 body.dark-mode .lang-btn {
@@ -1195,8 +1349,10 @@ body.dark-mode .lang-btn.active {
 
 /* Dark mode for total cells */
 body.dark-mode .track-work-container table .total-cell {
-    background-color: #34495E !important; /* Darker blue/gray */
-    color: #76D7C4 !important; /* Soft teal */
+    background-color: #34495E !important;
+    /* Darker blue/gray */
+    color: #76D7C4 !important;
+    /* Soft teal */
 }
 
 /* Dark mode for grand total footer */
@@ -1208,7 +1364,8 @@ body.dark-mode #trackTasksTableFoot td.grand-total-footer-cell {
 
 /* Dark mode for daily record row border */
 body.dark-mode .track-work-container table tbody .daily-record-row {
-    border-top: 2px solid #76D7C4; /* Soft teal */
+    border-top: 2px solid #76D7C4;
+    /* Soft teal */
 }
 
 /* New style for the circular edit icon */
@@ -1219,12 +1376,13 @@ body.dark-mode .track-work-container table tbody .daily-record-row {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: #F39C12; /* Accent yellow/orange */
+    background-color: #F39C12;
+    /* Accent yellow/orange */
     color: white;
     cursor: pointer;
     font-size: 12px;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .edit-icon-circle:hover {
@@ -1233,7 +1391,8 @@ body.dark-mode .track-work-container table tbody .daily-record-row {
 }
 
 body.dark-mode .edit-icon-circle {
-    background-color: #76D7C4; /* Soft teal in dark mode */
+    background-color: #76D7C4;
+    /* Soft teal in dark mode */
     color: #2C3E50;
 }
 
@@ -1243,21 +1402,28 @@ body.dark-mode .edit-icon-circle:hover {
 
 
 body.dark-mode .admin-action-btntp {
-    background-color: #95A5A6 !important; /* Soft gray */
-    color: #F8F9FA !important; /* Ensure text is light */
+    background-color: #95A5A6 !important;
+    /* Soft gray */
+    color: #F8F9FA !important;
+    /* Ensure text is light */
 }
+
 body.dark-mode .admin-action-btntp:hover {
     background-color: #7F8C8D !important;
 }
+
 body.dark-mode .admin-action-btntp.delete {
     background-color: #E74C3C !important;
 }
+
 body.dark-mode .admin-action-btntp.delete:hover {
     background-color: #C0392B !important;
 }
+
 body.dark-mode .admin-action-btntp.primary {
     background-color: #F39C12 !important;
 }
+
 body.dark-mode .admin-action-btntp.primary:hover {
     background-color: #E67E22 !important;
 }
@@ -1270,7 +1436,9 @@ body.dark-mode .admin-action-btntp.primary:hover {
         gap: 15px;
     }
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
         margin-bottom: 20px;
     }
 
@@ -1285,9 +1453,11 @@ body.dark-mode .admin-action-btntp.primary:hover {
         margin-bottom: 15px;
         gap: 10px;
     }
+
     .user-info p {
         font-size: 18px;
     }
+
     .total-hours-box {
         width: 100%;
         min-width: unset;
@@ -1312,6 +1482,7 @@ body.dark-mode .admin-action-btntp.primary:hover {
         padding: 20px;
         gap: 10px;
     }
+
     .popup button {
         width: 100%;
         margin: 5px 0;
@@ -1321,8 +1492,10 @@ body.dark-mode .admin-action-btntp.primary:hover {
     .task-timing-buttons-section {
         gap: 10px;
     }
+
     .timing-button-wrapper {
-        flex-basis: calc(50% - 10px); /* Two columns on small screens */
+        flex-basis: calc(50% - 10px);
+        /* Two columns on small screens */
         min-width: unset;
         max-width: 180px;
     }
@@ -1348,7 +1521,8 @@ body.dark-mode .admin-action-btntp.primary:hover {
         align-self: stretch;
     }
 
-    .lang-switcher, .dark-mode-toggle {
+    .lang-switcher,
+    .dark-mode-toggle {
         position: static;
         margin-bottom: 10px;
         justify-content: center;
@@ -1367,30 +1541,40 @@ body.dark-mode .admin-action-btntp.primary:hover {
         height: 40px;
         font-size: 18px;
     }
+
     .modal-content {
         padding: 20px;
         gap: 10px;
     }
+
     /* Ensure tables scroll horizontally on small screens */
     .table-responsive {
         overflow-x: auto;
     }
+
     /* Set a minimum width for tables on small screens to ensure readability */
     .track-work-container table,
     .admin-section table {
-        min-width: 600px; /* Adjust as needed for content */
+        min-width: 600px;
+        /* Adjust as needed for content */
     }
+
     /* Adjust font size for table headers and data on smaller screens */
     .track-work-container table th,
     .track-work-container table td,
     .admin-section table th,
     .admin-section table td {
-        font-size: 11px; /* Even smaller font for mobile tables */
-        padding: 4px 6px; /* Reduced padding */
+        font-size: 11px;
+        /* Even smaller font for mobile tables */
+        padding: 4px 6px;
+        /* Reduced padding */
     }
+
     /* Adjust font size for action buttons in tables */
-    .admin-action-btn, .admin-action-btntp {
-        font-size: 9px !important; /* Very small for mobile buttons */
+    .admin-action-btn,
+    .admin-action-btntp {
+        font-size: 9px !important;
+        /* Very small for mobile buttons */
         padding: 3px 6px !important;
     }
 }
