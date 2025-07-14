@@ -293,6 +293,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const processDataForDashboard = (records, users, filterType, filterValue1, filterValue2) => {
         let filteredRecords = [...records]; // Work with a copy
 
+        // Debugging logs for filtering
+        console.log("processDataForDashboard - Initial records count:", records.length);
+        console.log("processDataForDashboard - Filter Type:", filterType, "Value1:", filterValue1, "Value2:", filterValue2);
+
+
         // Apply date filters
         if (filterType === 'day' && filterValue1) {
             const selectedDate = new Date(filterValue1);
@@ -301,17 +306,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             nextDay.setDate(selectedDate.getDate() + 1);
 
             filteredRecords = filteredRecords.filter(record => {
-                // Ensure record.timestamp is a Timestamp object before calling toDate()
                 const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= selectedDate && recordDate < nextDay;
             });
+            console.log("Filtered by day. Records count:", filteredRecords.length);
         } else if (filterType === 'week' && filterValue1) {
-            // filterValue1 for week is like 'YYYY-WMM'
             const [year, weekNum] = filterValue1.split('-W').map(Number);
             const firstDayOfYear = new Date(year, 0, 1);
             const days = (weekNum - 1) * 7;
             const startOfWeek = new Date(firstDayOfYear.setDate(firstDayOfYear.getDate() + days));
-            // Adjust to Monday if firstDayOfYear is not Monday
             startOfWeek.setDate(startOfWeek.getDate() - (startOfWeek.getDay() + 6) % 7); // Adjust to Monday
 
             const endOfWeek = new Date(startOfWeek);
@@ -321,9 +324,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startOfWeek && recordDate < endOfWeek;
             });
-
+            console.log("Filtered by week. Records count:", filteredRecords.length);
         } else if (filterType === 'month' && filterValue1) {
-            // filterValue1 for month is like 'YYYY-MM'
             const [year, month] = filterValue1.split('-').map(Number);
             const startOfMonth = new Date(year, month - 1, 1);
             const endOfMonth = new Date(year, month, 0); // Last day of the month
@@ -332,6 +334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startOfMonth && recordDate <= endOfMonth;
             });
+            console.log("Filtered by month. Records count:", filteredRecords.length);
         } else if (filterType === 'custom' && filterValue1 && filterValue2) {
             const startDate = new Date(filterValue1);
             startDate.setHours(0, 0, 0, 0);
@@ -342,7 +345,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startDate && recordDate <= endDate;
             });
+            console.log("Filtered by custom range. Records count:", filteredRecords.length);
         }
+        
+        console.log("Filtered records after date filtering:", filteredRecords);
 
         // Aggregate total hours per user
         const userHours = {};
@@ -350,11 +356,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!userHours[record.userId]) {
                 userHours[record.userId] = 0;
             }
-            // Ensure record.duration is in milliseconds, convert to minutes, then to hours
-            // Assuming record.duration is already in milliseconds from main app, if not, it needs conversion
-            // The main app saves duration in milliseconds.
-            userHours[record.userId] += record.duration / (1000 * 60 * 60); // Convert milliseconds to hours
+            // Ensure record.duration is in milliseconds, convert to hours
+            userHours[record.userId] += record.duration / (1000 * 60 * 60); 
         });
+
+        console.log("Aggregated user hours:", userHours);
 
         // Map user IDs to names and calculate performance scores/categories
         const performanceData = [];
@@ -368,13 +374,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (totalHours >= 2 && totalHours < 3) {
                 category = getTranslatedText('acceptable');
                 color = '#ffc107'; // Yellow
-            } else if (totalHours >= 3 && totalHours < 6) { // Changed to <6 for 3-5 range
+            } else if (totalHours >= 3 && totalHours < 6) { 
                 category = getTranslatedText('good');
                 color = '#28a745'; // Green
-            } else if (totalHours >= 6 && totalHours < 9) { // Changed to <9 for 6-8 range
+            } else if (totalHours >= 6 && totalHours < 9) { 
                 category = getTranslatedText('veryGood');
                 color = '#17a2b8'; // Teal
-            } else if (totalHours >= 9 && totalHours < 11) { // Changed to <11 for 9-10 range
+            } else if (totalHours >= 9 && totalHours < 11) { 
                 category = getTranslatedText('excellent');
                 color = '#007bff'; // Blue
             } else if (totalHours >= 11) {
@@ -397,9 +403,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Sort performance data by total hours descending
         performanceData.sort((a, b) => b.totalHours - a.totalHours);
+        console.log("Performance data (sorted):", performanceData);
 
         // Sort user total hours for top 5
         userTotalHours.sort((a, b) => b.hours - a.hours);
+        console.log("Top employees data (sorted):", userTotalHours);
+
 
         return { performanceData, topEmployees: userTotalHours.slice(0, 5) };
     };
@@ -515,11 +524,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (filterMonthInput) currentFilterValue1 = filterMonthInput.value;
         } else if (currentFilterType === 'custom') {
             if (filterStartDateInput) currentFilterValue1 = filterStartDateInput.value;
-            // Line where the error was previously reported.
             if (filterEndDateInput) currentFilterValue2 = filterEndDateInput.value;
         }
 
-        // Pass all necessary arguments to processDataForDashboard
+        console.log("renderTopEmployees - Filter Type:", currentFilterType); 
+        console.log("renderTopEmployees - Filter Value 1:", currentFilterValue1); 
+        console.log("renderTopEmployees - Filter Value 2:", currentFilterValue2); 
+
         const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
 
         if (!ladderContainer) return; // Defensive check
@@ -538,9 +549,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             ladderDiv.style.setProperty('--rank', rank); // Use CSS variable for animation delay
             
             // Determine ladder height based on rank (example scaling)
-            const baseHeight = 150; // px
-            const heightMultiplier = (5 - index) * 0.2 + 0.8; // 1st is tallest, 5th is shortest
-            ladderDiv.style.height = `${baseHeight * heightMultiplier}px`;
+            // Scale height based on the actual hours relative to the top employee's hours
+            const maxHours = topEmployees[0].hours;
+            const minHeight = 80; // Minimum height for the shortest ladder
+            const maxHeight = 200; // Maximum height for the tallest ladder
+            let height = minHeight;
+            if (maxHours > 0) {
+                // Linear scaling: (employee.hours / maxHours) * (maxHeight - minHeight) + minHeight
+                height = (employee.hours / maxHours) * (maxHeight - minHeight) + minHeight;
+            }
+            ladderDiv.style.height = `${height}px`;
 
             // Add animation class
             ladderDiv.classList.add('animate-ladder');
