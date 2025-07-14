@@ -72,6 +72,23 @@ const adjustColor = (hex, percent) => {
     ).toString(16).slice(1);
 };
 
+// Helper function to format hours (decimal) into HH:MM:SS
+function formatHoursToHHMMSS(decimalHours) {
+    if (typeof decimalHours !== 'number' || isNaN(decimalHours)) {
+        return "00:00:00";
+    }
+
+    const totalSeconds = Math.floor(decimalHours * 3600); // Convert hours to total seconds
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    // Pad with leading zeros if necessary
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOMContentLoaded event fired."); // Debug log
@@ -593,7 +610,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ladderDiv.innerHTML = `
                 <div class="ladder-rank">${getTranslatedText('rank')} ${rank}</div>
                 <div class="ladder-name">${employee.name}</div>
-                <div class="ladder-hours">${employee.hours.toFixed(2)} ${getTranslatedText('hours')}</div>
+                <div class="ladder-hours">${formatHoursToHHMMSS(employee.hours)}</div> <!-- Applied new formatting function -->
                 <div class="ladder-trophy">🏆</div> <!-- Simple emoji trophy -->
             `;
             ladderContainer.appendChild(ladderDiv);
