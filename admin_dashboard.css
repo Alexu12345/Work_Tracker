@@ -121,7 +121,7 @@ h1, h2 {
 /* Dashboard Content Layout */
 .dashboard-content {
     display: flex;
-    flex-direction: column;
+/*     flex-direction: column; */
     flex-wrap: wrap; /* Allow wrapping for responsiveness */
     gap: 30px; /* Space between chart and top employees */
     width: 100%;
