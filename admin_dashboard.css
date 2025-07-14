@@ -125,6 +125,7 @@ h1, h2 {
     gap: 30px; /* Space between chart and top employees */
     width: 100%;
     justify-content: center; /* Center content when wrapped */
+    flex-direction: column;
 }
 
 .chart-section {
@@ -180,7 +181,7 @@ h1, h2 {
     justify-content: flex-end; /* Align content to bottom of ladder */
     align-items: center;
     padding: 10px 5px;
-    width: 60px; /* Fixed width for each ladder */
+/*     width: 60px; /* Fixed width for each ladder */ */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden; /* Hide overflow for content */
