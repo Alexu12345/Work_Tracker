@@ -17,7 +17,7 @@ body {
     background-color: #f0f2f5;
     /* Light mode background */
     display: flex;
-/*     flex-direction: column; */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* Align to top, not center, to allow content flow */
