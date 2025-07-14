@@ -357,25 +357,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 userHours[record.userId] = 0;
             }
             
-            let durationInMs = 0;
-            // Check if record.duration is a Firebase Timestamp object
-            if (record.duration && typeof record.duration.toMillis === 'function') {
-                durationInMs = record.duration.toMillis();
-                console.log(`DEBUG: Record ID: ${record.id}, Duration (Timestamp to Ms): ${durationInMs}`);
-            } else if (typeof record.duration === 'number') {
-                durationInMs = record.duration;
-                console.log(`DEBUG: Record ID: ${record.id}, Duration (Number Ms): ${durationInMs}`);
+            let totalMinutes = 0;
+            // Check if record.totalTime exists and is a number
+            if (typeof record.totalTime === 'number') {
+                totalMinutes = record.totalTime;
+                console.log(`DEBUG: Record ID: ${record.id}, Raw totalTime (Minutes): ${totalMinutes}`);
             } else {
-                console.warn(`WARN: Record ID: ${record.id}, Unexpected duration type or value:`, record.duration);
-                // Default to 0 if duration is invalid
-                durationInMs = 0; 
+                console.warn(`WARN: Record ID: ${record.id}, Unexpected totalTime type or value:`, record.totalTime);
+                // Default to 0 if totalTime is invalid
+                totalMinutes = 0; 
             }
 
-            // Convert milliseconds to hours
-            userHours[record.userId] += durationInMs / (1000 * 60 * 60); 
+            // Convert minutes to hours and add to user's total
+            userHours[record.userId] += totalMinutes / 60; 
         });
 
-        console.log("DEBUG: Aggregated user hours:", userHours);
+        console.log("DEBUG: Aggregated user hours (before category assignment):", userHours);
 
         // Map user IDs to names and calculate performance scores/categories
         const performanceData = [];
@@ -385,6 +382,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const totalHours = userHours[user.id] || 0;
             let category = getTranslatedText('notRated');
             let color = '#888888'; // Grey for Not Rated
+
+            // Ensure totalHours is a valid number before comparison
+            if (typeof totalHours !== 'number' || isNaN(totalHours)) {
+                console.warn(`WARN: User ${user.name} has invalid totalHours: ${totalHours}. Setting to 0.`);
+                totalHours = 0;
+            }
 
             if (totalHours >= 2 && totalHours < 3) {
                 category = getTranslatedText('acceptable');
@@ -418,11 +421,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Sort performance data by total hours descending
         performanceData.sort((a, b) => b.totalHours - a.totalHours);
-        console.log("Performance data (sorted):", performanceData);
+        console.log("DEBUG: Performance data (sorted):", performanceData);
 
         // Sort user total hours for top 5
         userTotalHours.sort((a, b) => b.hours - a.hours);
-        console.log("Top employees data (sorted):", userTotalHours);
+        console.log("DEBUG: Top employees data (sorted):", userTotalHours);
 
 
         return { performanceData, topEmployees: userTotalHours.slice(0, 5) };
@@ -483,10 +486,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 const userName = context.label;
                                 const hours = context.raw;
                                 // Find the category from performanceData based on userName
+                                // performanceData is available in this scope because renderPerformanceChart is called from applyFiltersAndRender
+                                // and performanceData is part of the return from processDataForDashboard
                                 const category = performanceData.find(d => d.userName === userName)?.category || getTranslatedText('notRated');
                                 return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category})`;
                             },
-                            // Removed afterLabel as category is now in label
                         }
                     }
                 },
