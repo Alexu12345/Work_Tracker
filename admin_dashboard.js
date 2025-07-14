@@ -15,12 +15,68 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Global DOM Elements (accessible to all functions)
+const loadingIndicator = document.getElementById('loadingIndicator');
+const toastMessage = document.getElementById('toastMessage');
+
+// --- Utility Functions (moved to global scope for accessibility) ---
+
+// Function to show/hide loading indicator
+function showLoadingIndicator() {
+    if (loadingIndicator) {
+        loadingIndicator.style.display = 'flex';
+        loadingIndicator.style.opacity = '1';
+    }
+}
+
+function hideLoadingIndicator() {
+    if (loadingIndicator) {
+        loadingIndicator.style.opacity = '0';
+        setTimeout(() => {
+            loadingIndicator.style.display = 'none';
+        }, 300); // Match CSS transition time
+    }
+}
+
+// Function to show toast messages (notifications)
+function showToastMessage(message, type) {
+    if (!toastMessage) return; // Defensive check
+    toastMessage.textContent = message;
+    toastMessage.className = `toast-message ${type}`; // Add type class (success/error)
+    toastMessage.style.display = 'block';
+    void toastMessage.offsetWidth; // Trigger reflow for animation
+    toastMessage.classList.add('show');
+
+    setTimeout(() => {
+        toastMessage.classList.remove('show');
+        toastMessage.addEventListener('transitionend', function handler() {
+            toastMessage.style.display = 'none';
+            toastMessage.removeEventListener('transitionend', handler);
+        }, { once: true });
+    }, 3000); // Hide after 3 seconds
+}
+
+// Helper to adjust color (darken/lighten) for Chart.js
+const adjustColor = (hex, percent) => {
+    let f = parseInt(hex.slice(1), 16),
+        t = percent < 0 ? 0 : 255,
+        p = percent < 0 ? percent * -1 : percent,
+        R = f >> 16,
+        G = (f >> 8) & 0x00ff,
+        B = (f & 0x0000ff);
+    return "#" + (
+        0x1000000 +
+        (Math.round((t - R) * p) + R) * 0x10000 +
+        (Math.round((t - G) * p) + G) * 0x100 +
+        (Math.round((t - B) * p) + B)
+    ).toString(16).slice(1);
+};
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOMContentLoaded event fired."); // Debug log
 
-    // DOM Elements
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const toastMessage = document.getElementById('toastMessage');
+    // DOM Elements (specific to DOMContentLoaded scope)
     const langArBtn = document.getElementById('langArBtn');
     const langEnBtn = document.getElementById('langEnBtn');
     const darkModeToggle = document.getElementById('darkModeToggle');
@@ -45,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let cachedWorkRecords = [];
     let cachedUsers = [];
 
-    // --- Utility Functions ---
+    // --- Utility Functions (remaining within DOMContentLoaded scope) ---
 
     // Function to get document data with ID
     const getDocData = (documentSnapshot) => {
@@ -53,24 +109,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return { id: documentSnapshot.id, ...documentSnapshot.data() };
         }
         return null;
-    };
-
-    // Function to show toast messages (notifications)
-    const showToastMessage = (message, type) => {
-        if (!toastMessage) return; // Defensive check
-        toastMessage.textContent = message;
-        toastMessage.className = `toast-message ${type}`; // Add type class (success/error)
-        toastMessage.style.display = 'block';
-        void toastMessage.offsetWidth; // Trigger reflow for animation
-        toastMessage.classList.add('show');
-
-        setTimeout(() => {
-            toastMessage.classList.remove('show');
-            toastMessage.addEventListener('transitionend', function handler() {
-                toastMessage.style.display = 'none';
-                toastMessage.removeEventListener('transitionend', handler);
-            }, { once: true });
-        }, 3000); // Hide after 3 seconds
     };
 
     // Internet connection status check
@@ -233,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Data Fetching and Processing ---
 
     const fetchAllData = async () => {
-        showLoadingIndicator(true);
+        showLoadingIndicator(); // Now globally available
         try {
             const usersCollectionRef = collection(db, 'users');
             const usersSnapshot = await getDocs(usersCollectionRef);
@@ -248,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error("Error fetching all data:", error);
             showToastMessage(getTranslatedText('errorLoadingData'), 'error');
         } finally {
-            showLoadingIndicator(false);
+            hideLoadingIndicator(); // Now globally available
         }
     };
 
@@ -461,22 +499,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    // Helper to adjust color (darken/lighten)
-    const adjustColor = (hex, percent) => {
-        let f = parseInt(hex.slice(1), 16),
-            t = percent < 0 ? 0 : 255,
-            p = percent < 0 ? percent * -1 : percent,
-            R = f >> 16,
-            G = (f >> 8) & 0x00ff,
-            B = f & 0x0000ff;
-        return "#" + (
-            0x1000000 +
-            (Math.round((t - R) * p) + R) * 0x10000 +
-            (Math.round((t - G) * p) + G) * 0x100 +
-            (Math.round((t - B) * p) + B)
-        ).toString(16).slice(1);
-    };
-
     // --- Top Employees Rendering (Ladders) ---
 
     const renderTopEmployees = (records, users) => {
@@ -493,12 +515,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (filterMonthInput) currentFilterValue1 = filterMonthInput.value;
         } else if (currentFilterType === 'custom') {
             if (filterStartDateInput) currentFilterValue1 = filterStartDateInput.value;
+            // Line where the error was previously reported.
             if (filterEndDateInput) currentFilterValue2 = filterEndDateInput.value;
         }
-
-        console.log("renderTopEmployees - Filter Type:", currentFilterType); // Debug log
-        console.log("renderTopEmployees - Filter Value 1:", currentFilterValue1); // Debug log
-        console.log("renderTopEmployees - Filter Value 2:", currentFilterValue2); // Debug log
 
         // Pass all necessary arguments to processDataForDashboard
         const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
