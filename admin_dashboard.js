@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'endDate': 'تاريخ الانتهاء:',
             'applyFilter': 'تطبيق التصفية',
             'performanceChartTitle': 'أداء المستخدمين',
-            'topEmployeesTitle': 'أفضل 5 موظفين',
+            'topEmployeesTitle': 'أفضل 3 موظفين', // Changed from 5 to 3
             'backToAdminPanel': 'رجوع للوحة تحكم المدير',
             'noDataToShow': 'لا توجد بيانات لعرضها لهذه الفترة.',
             'notRated': 'غير مقيم',
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'endDate': 'End Date:',
             'applyFilter': 'Apply Filter',
             'performanceChartTitle': 'User Performance',
-            'topEmployeesTitle': 'Top 5 Employees',
+            'topEmployeesTitle': 'Top 3 Employees', // Changed from 5 to 3
             'backToAdminPanel': 'Back to Admin Panel',
             'noDataToShow': 'No data to display for this period.',
             'notRated': 'Not Rated',
@@ -352,6 +352,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Aggregate total hours per user
         const userHours = {};
+        let overallTotalHours = 0; // Initialize overall total hours
+
         filteredRecords.forEach(record => {
             if (!userHours[record.userId]) {
                 userHours[record.userId] = 0;
@@ -369,10 +371,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Convert minutes to hours and add to user's total
-            userHours[record.userId] += totalMinutes / 60; 
+            const hoursToAdd = totalMinutes / 60;
+            userHours[record.userId] += hoursToAdd; 
+            overallTotalHours += hoursToAdd; // Add to overall total
         });
 
         console.log("DEBUG: Aggregated user hours (before category assignment):", userHours);
+        console.log("DEBUG: Overall total hours:", overallTotalHours);
+
 
         // Map user IDs to names and calculate performance scores/categories
         const performanceData = [];
@@ -423,17 +429,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         performanceData.sort((a, b) => b.totalHours - a.totalHours);
         console.log("DEBUG: Performance data (sorted):", performanceData);
 
-        // Sort user total hours for top 5
+        // Sort user total hours for top 3
         userTotalHours.sort((a, b) => b.hours - a.hours);
         console.log("DEBUG: Top employees data (sorted):", userTotalHours);
 
 
-        return { performanceData, topEmployees: userTotalHours.slice(0, 5) };
+        return { performanceData, topEmployees: userTotalHours.slice(0, 3), overallTotalHours }; // Changed slice to 3
     };
 
     // --- Chart Rendering ---
 
-    const renderPerformanceChart = (labels, data, colors) => {
+    const renderPerformanceChart = (labels, data, colors, overallTotalHours) => { // Added overallTotalHours parameter
         if (performanceChart) {
             performanceChart.destroy();
         }
@@ -485,11 +491,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                             label: function(context) {
                                 const userName = context.label;
                                 const hours = context.raw;
-                                // Find the category from performanceData based on userName
-                                // performanceData is available in this scope because renderPerformanceChart is called from applyFiltersAndRender
-                                // and performanceData is part of the return from processDataForDashboard
                                 const category = performanceData.find(d => d.userName === userName)?.category || getTranslatedText('notRated');
-                                return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category})`;
+                                
+                                let percentage = 0;
+                                if (overallTotalHours > 0) { // Avoid division by zero
+                                    percentage = (hours / overallTotalHours) * 100;
+                                }
+                                return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category}) - ${percentage.toFixed(2)}%`;
                             },
                         }
                     }
@@ -550,7 +558,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("renderTopEmployees - Filter Value 1:", currentFilterValue1); 
         console.log("renderTopEmployees - Filter Value 2:", currentFilterValue2); 
 
-        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
+        const { performanceData, topEmployees, overallTotalHours } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2); // Destructure overallTotalHours
 
         if (!ladderContainer) return; // Defensive check
         ladderContainer.innerHTML = ''; // Clear previous ladders
@@ -560,7 +568,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Create ladders for top 5
+        // Create ladders for top 3
         topEmployees.forEach((employee, index) => {
             const rank = index + 1;
             const ladderDiv = document.createElement('div');
@@ -628,13 +636,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (filterEndDateInput) filterValue2 = filterEndDateInput.value;
         }
 
-        const { performanceData, topEmployees } = processDataForDashboard(cachedWorkRecords, cachedUsers, filterType, filterValue1, filterValue2);
+        const { performanceData, topEmployees, overallTotalHours } = processDataForDashboard(cachedWorkRecords, cachedUsers, filterType, filterValue1, filterValue2);
 
         const labels = performanceData.map(d => d.userName);
         const data = performanceData.map(d => d.totalHours);
         const colors = performanceData.map(d => d.color); // Use colors directly from processed data
 
-        renderPerformanceChart(labels, data, colors);
+        renderPerformanceChart(labels, data, colors, overallTotalHours); // Pass overallTotalHours to chart rendering
         renderTopEmployees(cachedWorkRecords, cachedUsers); // Re-render top employees with current filter
     };
 
