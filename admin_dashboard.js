@@ -74,7 +74,7 @@ const adjustColor = (hex, percent) => {
 
 // Helper function to format hours (decimal) into HH:MM:SS
 function formatHoursToHHMMSS(decimalHours) {
-    if (typeof decimalHours !== 'number' || isNaN(decimalHours)) {
+    if (typeof decimalHours !== 'number' || isNaN(decimalHours) || decimalHours < 0) {
         return "00:00:00";
     }
 
@@ -114,7 +114,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ladderContainer = document.querySelector('.ladder-container');
     const backToAdminPanelBtn = document.getElementById('backToAdminPanelBtn');
 
-    let performanceChart = null; // Chart.js instance
+    // New DOM elements for account performance
+    const accountPerformanceChartCanvas = document.getElementById('accountPerformanceChart');
+    const accountSummaryTableBody = document.querySelector('#accountSummaryTable tbody');
+    const noAccountDataMessage = document.getElementById('noAccountDataMessage');
+
+
+    let performanceChart = null; // Chart.js instance for user performance
+    let accountChart = null; // Chart.js instance for account performance
     let cachedWorkRecords = [];
     let cachedUsers = [];
 
@@ -151,10 +158,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isDarkMode = document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         updateDarkModeIcon(isDarkMode);
-        // Re-render chart to apply new colors
+        // Re-render charts to apply new colors
         if (performanceChart) {
-            // Re-render chart by calling applyFiltersAndRender which re-processes data and renders chart
-            applyFiltersAndRender();
+            applyFiltersAndRender(); // Re-process data and render chart
+        }
+        if (accountChart) {
+            applyFiltersAndRender(); // Re-process data and render chart
         }
     };
 
@@ -204,10 +213,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             'noTopEmployees': 'لا يوجد موظفين لعرضهم.',
             'userPerformance': 'أداء المستخدم',
             'totalWorkHours': 'إجمالي ساعات العمل',
-            'noInternet': 'لا يوجد اتصال بالإنترنت. قد لا يتم تحميل البيانات.',
-            'internetRestored': 'تم استعادة الاتصال بالإنترنت.',
-            'internetLost': 'تم فقدان الاتصال بالإنترنت. يرجى التحقق من اتصالك.',
-            'category': 'الفئة' // Added for tooltip
+            'category': 'الفئة', // Added for tooltip
+            'accountPerformanceChartTitle': 'أداء الحسابات', // New translation
+            'accountSummaryTableTitle': 'ملخص أداء الحسابات', // New translation
+            'accountNameHeader': 'اسم الحساب', // New translation
+            'totalHoursHeader': 'إجمالي الساعات', // New translation
+            'noAccountData': 'لا توجد بيانات حسابات لعرضها لهذه الفترة.' // New translation
         },
         'en': {
             'adminDashboardTitle': 'Admin Dashboard',
@@ -241,10 +252,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             'noTopEmployees': 'No employees to display.',
             'userPerformance': 'User Performance',
             'totalWorkHours': 'Total Work Hours',
-            'noInternet': 'No internet connection. Data might not be loaded.',
-            'internetRestored': 'Internet connection restored.',
-            'internetLost': 'Internet connection lost. Please check your connection.',
-            'category': 'Category' // Added for tooltip
+            'category': 'Category', // Added for tooltip
+            'accountPerformanceChartTitle': 'Account Performance', // New translation
+            'accountSummaryTableTitle': 'Account Performance Summary', // New translation
+            'accountNameHeader': 'Account Name', // New translation
+            'totalHoursHeader': 'Total Hours', // New translation
+            'noAccountData': 'No account data to display for this period.' // New translation
         }
     };
 
@@ -255,12 +268,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('appLanguage', lang);
         applyTranslations();
         document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        // Re-render chart to apply new colors and direction
-        if (performanceChart) {
-            applyFiltersAndRender(); // Re-process data and render chart with new language settings
-        }
-        // Re-render top employees to update names if needed (though names are usually static)
-        renderTopEmployees(cachedWorkRecords, cachedUsers);
+        // Re-render charts to apply new colors and direction
+        applyFiltersAndRender();
     };
 
     const getTranslatedText = (key, params = {}) => {
@@ -369,7 +378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Aggregate total hours per user
         const userHours = {};
-        let overallTotalHours = 0; // Initialize overall total hours
+        let overallTotalUserHours = 0; // Initialize overall total hours for users
 
         filteredRecords.forEach(record => {
             if (!userHours[record.userId]) {
@@ -380,7 +389,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Check if record.totalTime exists and is a number
             if (typeof record.totalTime === 'number') {
                 totalMinutes = record.totalTime;
-                console.log(`DEBUG: Record ID: ${record.id}, Raw totalTime (Minutes): ${totalMinutes}`);
+                // console.log(`DEBUG: Record ID: ${record.id}, Raw totalTime (Minutes): ${totalMinutes}`); // Keep for debugging if needed
             } else {
                 console.warn(`WARN: Record ID: ${record.id}, Unexpected totalTime type or value:`, record.totalTime);
                 // Default to 0 if totalTime is invalid
@@ -390,15 +399,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Convert minutes to hours and add to user's total
             const hoursToAdd = totalMinutes / 60;
             userHours[record.userId] += hoursToAdd; 
-            overallTotalHours += hoursToAdd; // Add to overall total
+            overallTotalUserHours += hoursToAdd; // Add to overall total for users
         });
 
         console.log("DEBUG: Aggregated user hours (before category assignment):", userHours);
-        console.log("DEBUG: Overall total hours:", overallTotalHours);
-
+        console.log("DEBUG: Overall total user hours:", overallTotalUserHours);
 
         // Map user IDs to names and calculate performance scores/categories
-        const performanceData = [];
+        let performanceData = []; // Use let because we will filter it
         const userTotalHours = []; // For top employees
 
         users.forEach(user => {
@@ -442,21 +450,66 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        // Filter out users with 0 total hours for the chart
+        performanceData = performanceData.filter(user => user.totalHours > 0);
+
         // Sort performance data by total hours descending
         performanceData.sort((a, b) => b.totalHours - a.totalHours);
-        console.log("DEBUG: Performance data (sorted):", performanceData);
+        console.log("DEBUG: Performance data (sorted, filtered for >0 hours):", performanceData);
 
         // Sort user total hours for top 3
         userTotalHours.sort((a, b) => b.hours - a.hours);
         console.log("DEBUG: Top employees data (sorted):", userTotalHours);
 
+        // --- Account Performance Data Processing ---
+        const accountHours = {};
+        let overallTotalAccountHours = 0;
 
-        return { performanceData, topEmployees: userTotalHours.slice(0, 3), overallTotalHours }; // Changed slice to 3
+        filteredRecords.forEach(record => {
+            // Use accountId as the key for aggregation
+            const accId = record.accountId;
+            const accName = record.accountName || `Unknown Account (${accId})`; // Fallback name
+
+            if (!accountHours[accId]) {
+                accountHours[accId] = { name: accName, totalMinutes: 0 };
+            }
+
+            let totalMinutes = 0;
+            if (typeof record.totalTime === 'number') {
+                totalMinutes = record.totalTime;
+            } else {
+                console.warn(`WARN: Record ID: ${record.id}, Unexpected totalTime type or value for account:`, record.totalTime);
+                totalMinutes = 0;
+            }
+            accountHours[accId].totalMinutes += totalMinutes;
+        });
+
+        const accountPerformanceData = Object.values(accountHours).map(acc => {
+            const hours = acc.totalMinutes / 60;
+            overallTotalAccountHours += hours; // Sum for account chart
+            return {
+                accountName: acc.name,
+                totalHours: hours
+            };
+        }).filter(acc => acc.totalHours > 0); // Filter out accounts with 0 hours
+
+        accountPerformanceData.sort((a, b) => b.totalHours - a.totalHours);
+        console.log("DEBUG: Account performance data (sorted, filtered for >0 hours):", accountPerformanceData);
+        console.log("DEBUG: Overall total account hours:", overallTotalAccountHours);
+
+
+        return { 
+            performanceData, 
+            topEmployees: userTotalHours.slice(0, 3), // Changed slice to 3
+            overallTotalUserHours, // Pass overall total for user chart tooltip
+            accountPerformanceData, // New: account data
+            overallTotalAccountHours // New: overall total for account chart tooltip
+        }; 
     };
 
     // --- Chart Rendering ---
 
-    const renderPerformanceChart = (labels, data, colors, overallTotalHours) => { // Added overallTotalHours parameter
+    const renderPerformanceChart = (labels, data, colors, overallTotalUserHours) => { // Added overallTotalUserHours parameter
         if (performanceChart) {
             performanceChart.destroy();
         }
@@ -508,11 +561,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                             label: function(context) {
                                 const userName = context.label;
                                 const hours = context.raw;
-                                const category = performanceData.find(d => d.userName === userName)?.category || getTranslatedText('notRated');
+                                // performanceData is available in this scope from applyFiltersAndRender
+                                const userPerfData = performanceData.find(d => d.userName === userName);
+                                const category = userPerfData?.category || getTranslatedText('notRated');
                                 
                                 let percentage = 0;
-                                if (overallTotalHours > 0) { // Avoid division by zero
-                                    percentage = (hours / overallTotalHours) * 100;
+                                if (overallTotalUserHours > 0) { // Avoid division by zero
+                                    percentage = (hours / overallTotalUserHours) * 100;
                                 }
                                 return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category}) - ${percentage.toFixed(2)}%`;
                             },
@@ -552,6 +607,102 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
+    // New function for Account Performance Chart
+    const renderAccountPerformanceChart = (labels, data, overallTotalAccountHours) => {
+        if (accountChart) {
+            accountChart.destroy();
+        }
+
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        const textColor = isDarkMode ? '#00e6e6' : '#2c3e50';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const barColor = isDarkMode ? '#6f42c1' : '#007bff'; // Purple for dark, blue for light
+        const borderColor = isDarkMode ? '#00e6e6' : '#007bff';
+
+        accountChart = new Chart(accountPerformanceChartCanvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: getTranslatedText('totalWorkHours'),
+                    data: data,
+                    backgroundColor: barColor,
+                    borderColor: borderColor,
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    hoverBackgroundColor: adjustColor(barColor, -20),
+                    hoverBorderColor: borderColor,
+                    hoverBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: getTranslatedText('accountPerformanceChartTitle'),
+                        color: textColor,
+                        font: {
+                            size: 20,
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        rtl: (currentLanguage === 'ar'),
+                        callbacks: {
+                            label: function(context) {
+                                const accountName = context.label;
+                                const hours = context.raw;
+                                let percentage = 0;
+                                if (overallTotalAccountHours > 0) {
+                                    percentage = (hours / overallTotalAccountHours) * 100;
+                                }
+                                return `${accountName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} - ${percentage.toFixed(2)}%`;
+                            },
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: getTranslatedText('accountNameHeader'),
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor
+                        },
+                        grid: {
+                            color: gridColor
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: getTranslatedText('totalHoursHeader'),
+                            color: textColor
+                        },
+                        ticks: {
+                            color: textColor,
+                            beginAtZero: true
+                        },
+                        grid: {
+                            color: gridColor
+                        }
+                    }
+                }
+            }
+        });
+    };
+
     // --- Top Employees Rendering (Ladders) ---
 
     const renderTopEmployees = (records, users) => {
@@ -575,7 +726,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("renderTopEmployees - Filter Value 1:", currentFilterValue1); 
         console.log("renderTopEmployees - Filter Value 2:", currentFilterValue2); 
 
-        const { performanceData, topEmployees, overallTotalHours } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2); // Destructure overallTotalHours
+        const { performanceData, topEmployees, overallTotalUserHours, accountPerformanceData, overallTotalAccountHours } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
 
         if (!ladderContainer) return; // Defensive check
         ladderContainer.innerHTML = ''; // Clear previous ladders
@@ -617,6 +768,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
+    // New function to render account summary table
+    const renderAccountSummaryTable = (accountData) => {
+        if (!accountSummaryTableBody) return;
+
+        accountSummaryTableBody.innerHTML = ''; // Clear previous data
+        noAccountDataMessage.style.display = 'none'; // Hide no data message by default
+
+        if (accountData.length === 0) {
+            noAccountDataMessage.textContent = getTranslatedText('noAccountData');
+            noAccountDataMessage.style.display = 'block';
+            return;
+        }
+
+        accountData.forEach(account => {
+            const row = accountSummaryTableBody.insertRow();
+            const accountNameCell = row.insertCell();
+            const totalHoursCell = row.insertCell();
+
+            accountNameCell.textContent = account.accountName;
+            totalHoursCell.textContent = formatHoursToHHMMSS(account.totalHours);
+        });
+    };
+
+
     // --- Filter Logic ---
 
     const updateFilterVisibility = () => {
@@ -653,14 +828,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (filterEndDateInput) filterValue2 = filterEndDateInput.value;
         }
 
-        const { performanceData, topEmployees, overallTotalHours } = processDataForDashboard(cachedWorkRecords, cachedUsers, filterType, filterValue1, filterValue2);
+        const { performanceData, topEmployees, overallTotalUserHours, accountPerformanceData, overallTotalAccountHours } = processDataForDashboard(cachedWorkRecords, cachedUsers, filterType, filterValue1, filterValue2);
 
-        const labels = performanceData.map(d => d.userName);
-        const data = performanceData.map(d => d.totalHours);
-        const colors = performanceData.map(d => d.color); // Use colors directly from processed data
+        // Render User Performance Chart
+        const userLabels = performanceData.map(d => d.userName);
+        const userData = performanceData.map(d => d.totalHours);
+        const userColors = performanceData.map(d => d.color); 
+        renderPerformanceChart(userLabels, userData, userColors, overallTotalUserHours);
 
-        renderPerformanceChart(labels, data, colors, overallTotalHours); // Pass overallTotalHours to chart rendering
-        renderTopEmployees(cachedWorkRecords, cachedUsers); // Re-render top employees with current filter
+        // Render Top Employees Ladder
+        renderTopEmployees(cachedWorkRecords, cachedUsers); // This re-calls processDataForDashboard internally to get topEmployees
+
+        // Render Account Performance Chart
+        const accountLabels = accountPerformanceData.map(d => d.accountName);
+        const accountData = accountPerformanceData.map(d => d.totalHours);
+        renderAccountPerformanceChart(accountLabels, accountData, overallTotalAccountHours);
+
+        // Render Account Summary Table
+        renderAccountSummaryTable(accountPerformanceData);
     };
 
     // --- Event Listeners ---
