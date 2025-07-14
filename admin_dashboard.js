@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"; // Updated Firebase SDK version
+import { getFirestore, collection, getDocs, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; // Updated Firebase SDK version
 
 // Firebase configuration (should be the same as your main app)
 const firebaseConfig = {
@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log("admin_dashboard.js: DOMContentLoaded event fired."); // Debug log
+    console.log("DOMContentLoaded event fired."); // Debug log
 
     // DOM Elements
     const loadingIndicator = document.getElementById('loadingIndicator');
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Function to show toast messages (notifications)
     const showToastMessage = (message, type) => {
+        if (!toastMessage) return; // Defensive check
         toastMessage.textContent = message;
         toastMessage.className = `toast-message ${type}`; // Add type class (success/error)
         toastMessage.style.display = 'block';
@@ -72,14 +73,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000); // Hide after 3 seconds
     };
 
-    // Function to show/hide loading indicator (Changed to function declaration)
-    function showLoadingIndicator(show) {
-        loadingIndicator.style.display = show ? 'flex' : 'none';
-    }
-
     // Internet connection status check
     const checkConnectionStatus = () => {
-        console.log("admin_dashboard.js: Checking connection status..."); // Debug log inside function
+        console.log("Checking connection status..."); // Debug log
         if (!navigator.onLine) {
             showToastMessage(getTranslatedText('noInternet'), 'error');
         }
@@ -102,7 +98,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateDarkModeIcon(isDarkMode);
         // Re-render chart to apply new colors
         if (performanceChart) {
-            renderPerformanceChart(performanceChart.data.labels, performanceChart.data.datasets[0].data, performanceChart.data.datasets[0].backgroundColor);
+            // Re-render chart by calling applyFiltersAndRender which re-processes data and renders chart
+            applyFiltersAndRender();
         }
     };
 
@@ -155,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'noInternet': 'لا يوجد اتصال بالإنترنت. قد لا يتم تحميل البيانات.',
             'internetRestored': 'تم استعادة الاتصال بالإنترنت.',
             'internetLost': 'تم فقدان الاتصال بالإنترنت. يرجى التحقق من اتصالك.',
+            'category': 'الفئة' // Added for tooltip
         },
         'en': {
             'adminDashboardTitle': 'Admin Dashboard',
@@ -191,6 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'noInternet': 'No internet connection. Data might not be loaded.',
             'internetRestored': 'Internet connection restored.',
             'internetLost': 'Internet connection lost. Please check your connection.',
+            'category': 'Category' // Added for tooltip
         }
     };
 
@@ -201,19 +200,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('appLanguage', lang);
         applyTranslations();
         document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        // Re-render chart if it exists to update labels direction and colors
+        // Re-render chart to apply new colors and direction
         if (performanceChart) {
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const textColor = isDarkMode ? '#00e6e6' : '#2c3e50'; // Neon for dark, dark for light
-            performanceChart.options.plugins.legend.rtl = (lang === 'ar');
-            performanceChart.options.plugins.tooltip.rtl = (lang === 'ar');
-            performanceChart.options.plugins.legend.labels.color = textColor;
-            performanceChart.options.plugins.title.color = textColor;
-            performanceChart.options.scales.x.ticks.color = textColor;
-            performanceChart.options.scales.y.ticks.color = textColor;
-            performanceChart.options.scales.x.title.color = textColor;
-            performanceChart.options.scales.y.title.color = textColor;
-            performanceChart.update();
+            applyFiltersAndRender(); // Re-process data and render chart with new language settings
         }
         // Re-render top employees to update names if needed (though names are usually static)
         renderTopEmployees(cachedWorkRecords, cachedUsers);
@@ -274,7 +263,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             nextDay.setDate(selectedDate.getDate() + 1);
 
             filteredRecords = filteredRecords.filter(record => {
-                const recordDate = record.timestamp.toDate();
+                // Ensure record.timestamp is a Timestamp object before calling toDate()
+                const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= selectedDate && recordDate < nextDay;
             });
         } else if (filterType === 'week' && filterValue1) {
@@ -290,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             endOfWeek.setDate(startOfWeek.getDate() + 7); // End of Sunday
 
             filteredRecords = filteredRecords.filter(record => {
-                const recordDate = record.timestamp.toDate();
+                const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startOfWeek && recordDate < endOfWeek;
             });
 
@@ -301,7 +291,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const endOfMonth = new Date(year, month, 0); // Last day of the month
 
             filteredRecords = filteredRecords.filter(record => {
-                const recordDate = record.timestamp.toDate();
+                const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startOfMonth && recordDate <= endOfMonth;
             });
         } else if (filterType === 'custom' && filterValue1 && filterValue2) {
@@ -311,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             endDate.setHours(23, 59, 59, 999);
 
             filteredRecords = filteredRecords.filter(record => {
-                const recordDate = record.timestamp.toDate();
+                const recordDate = record.timestamp instanceof Timestamp ? record.timestamp.toDate() : new Date(record.timestamp);
                 return recordDate >= startDate && recordDate <= endDate;
             });
         }
@@ -322,7 +312,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!userHours[record.userId]) {
                 userHours[record.userId] = 0;
             }
-            userHours[record.userId] += record.totalTime / 60; // Convert minutes to hours
+            // Ensure record.duration is in milliseconds, convert to minutes, then to hours
+            // Assuming record.duration is already in milliseconds from main app, if not, it needs conversion
+            // The main app saves duration in milliseconds.
+            userHours[record.userId] += record.duration / (1000 * 60 * 60); // Convert milliseconds to hours
         });
 
         // Map user IDs to names and calculate performance scores/categories
@@ -427,13 +420,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             label: function(context) {
                                 const userName = context.label;
                                 const hours = context.raw;
-                                const category = performanceData.find(d => d.userName === context.label)?.category || getTranslatedText('notRated'); // Correctly access category
-                                return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')}`;
+                                // Find the category from performanceData based on userName
+                                const category = performanceData.find(d => d.userName === userName)?.category || getTranslatedText('notRated');
+                                return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category})`;
                             },
-                            afterLabel: function(context) {
-                                const category = performanceData.find(d => d.userName === context.label)?.category || getTranslatedText('notRated');
-                                return `${getTranslatedText('category')}: ${category}`; // Display category in tooltip
-                            }
+                            // Removed afterLabel as category is now in label
                         }
                     }
                 },
@@ -495,18 +486,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         let currentFilterValue2 = null;
 
         if (currentFilterType === 'day') {
-            currentFilterValue1 = filterDateInput.value;
+            if (filterDateInput) currentFilterValue1 = filterDateInput.value;
         } else if (currentFilterType === 'week') {
-            currentFilterValue1 = filterWeekInput.value;
+            if (filterWeekInput) currentFilterValue1 = filterWeekInput.value;
         } else if (currentFilterType === 'month') {
-            currentFilterValue1 = filterMonthInput.value;
+            if (filterMonthInput) currentFilterValue1 = filterMonthInput.value;
         } else if (currentFilterType === 'custom') {
-            currentFilterValue1 = filterStartDateInput.value;
-            filterValue2 = filterEndDateInput.value;
+            if (filterStartDateInput) currentFilterValue1 = filterStartDateInput.value;
+            if (filterEndDateInput) currentFilterValue2 = filterEndDateInput.value;
         }
 
-        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, filterValue2);
+        console.log("renderTopEmployees - Filter Type:", currentFilterType); // Debug log
+        console.log("renderTopEmployees - Filter Value 1:", currentFilterValue1); // Debug log
+        console.log("renderTopEmployees - Filter Value 2:", currentFilterValue2); // Debug log
 
+        // Pass all necessary arguments to processDataForDashboard
+        const { performanceData, topEmployees } = processDataForDashboard(records, users, currentFilterType, currentFilterValue1, currentFilterValue2);
+
+        if (!ladderContainer) return; // Defensive check
         ladderContainer.innerHTML = ''; // Clear previous ladders
 
         if (topEmployees.length === 0) {
@@ -542,20 +539,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Filter Logic ---
 
     const updateFilterVisibility = () => {
-        dateFilterDiv.style.display = 'none';
-        weekFilterDiv.style.display = 'none';
-        monthFilterDiv.style.display = 'none';
-        customFilterDiv.style.display = 'none';
+        if (dateFilterDiv) dateFilterDiv.style.display = 'none';
+        if (weekFilterDiv) weekFilterDiv.style.display = 'none';
+        if (monthFilterDiv) monthFilterDiv.style.display = 'none';
+        if (customFilterDiv) customFilterDiv.style.display = 'none';
 
         const selectedFilter = filterTypeSelect.value;
         if (selectedFilter === 'day') {
-            dateFilterDiv.style.display = 'flex';
+            if (dateFilterDiv) dateFilterDiv.style.display = 'flex';
         } else if (selectedFilter === 'week') {
-            weekFilterDiv.style.display = 'flex';
+            if (weekFilterDiv) weekFilterDiv.style.display = 'flex';
         } else if (selectedFilter === 'month') {
-            monthFilterDiv.style.display = 'flex';
+            if (monthFilterDiv) monthFilterDiv.style.display = 'flex';
         } else if (selectedFilter === 'custom') {
-            customFilterDiv.style.display = 'flex';
+            if (customFilterDiv) customFilterDiv.style.display = 'flex';
         }
     };
 
@@ -565,14 +562,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         let filterValue2 = null;
 
         if (filterType === 'day') {
-            filterValue1 = filterDateInput.value;
+            if (filterDateInput) filterValue1 = filterDateInput.value;
         } else if (filterType === 'week') {
-            filterValue1 = filterWeekInput.value;
+            if (filterWeekInput) filterValue1 = filterWeekInput.value;
         } else if (filterType === 'month') {
-            filterValue1 = filterMonthInput.value;
+            if (filterMonthInput) filterValue1 = filterMonthInput.value;
         } else if (filterType === 'custom') {
-            filterValue1 = filterStartDateInput.value;
-            filterValue2 = filterEndDateInput.value;
+            if (filterStartDateInput) filterValue1 = filterStartDateInput.value;
+            if (filterEndDateInput) filterValue2 = filterEndDateInput.value;
         }
 
         const { performanceData, topEmployees } = processDataForDashboard(cachedWorkRecords, cachedUsers, filterType, filterValue1, filterValue2);
@@ -587,9 +584,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Event Listeners ---
 
-    filterTypeSelect.addEventListener('change', updateFilterVisibility);
-    applyFilterBtn.addEventListener('click', applyFiltersAndRender);
-    backToAdminPanelBtn.addEventListener('click', () => {
+    if (filterTypeSelect) filterTypeSelect.addEventListener('change', updateFilterVisibility);
+    if (applyFilterBtn) applyFilterBtn.addEventListener('click', applyFiltersAndRender);
+    if (backToAdminPanelBtn) backToAdminPanelBtn.addEventListener('click', () => {
         // Redirect back to the main admin panel page (assuming it's index.html)
         // You might need to adjust this path based on your actual file structure
         window.location.href = 'index.html'; 
@@ -600,14 +597,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         langArBtn.addEventListener('click', () => {
             setLanguage('ar');
             langArBtn.classList.add('active');
-            langEnBtn.classList.remove('active');
+            if (langEnBtn) langEnBtn.classList.remove('active');
         });
     }
     if (langEnBtn) {
         langEnBtn.addEventListener('click', () => {
             setLanguage('en');
             langEnBtn.classList.add('active');
-            langArBtn.classList.remove('active');
+            if (langArBtn) langArBtn.classList.remove('active');
         });
     }
 
