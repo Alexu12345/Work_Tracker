@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const isDarkMode = document.body.classList.contains('dark-mode');
-        const textColor = isDarkMode ? '#00e6e6' : '#2c3e50'; // Neon for dark, dark for light
+        const textColor = isDarkMode ? '#00e6e6' : '#007bff'; // Neon for dark, dark for light
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
         const borderColor = isDarkMode ? '#00e6e6' : '#007bff'; // Neon for dark, blue for light
 
@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 if (overallTotalUserHours > 0) { // Avoid division by zero
                                     percentage = (hours / overallTotalUserHours) * 100;
                                 }
-                                return `${userName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} (${category}) - ${percentage.toFixed(2)}%`;
+                                return `${userName}: ${formatHoursToHHMMSS(hours)} ${getTranslatedText('hours')} (${category}) - ${percentage.toFixed(2)}%`;
                             },
                         }
                     }
