@@ -356,11 +356,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!userHours[record.userId]) {
                 userHours[record.userId] = 0;
             }
-            // Ensure record.duration is in milliseconds, convert to hours
-            userHours[record.userId] += record.duration / (1000 * 60 * 60); 
+            
+            let durationInMs = 0;
+            // Check if record.duration is a Firebase Timestamp object
+            if (record.duration && typeof record.duration.toMillis === 'function') {
+                durationInMs = record.duration.toMillis();
+                console.log(`DEBUG: Record ID: ${record.id}, Duration (Timestamp to Ms): ${durationInMs}`);
+            } else if (typeof record.duration === 'number') {
+                durationInMs = record.duration;
+                console.log(`DEBUG: Record ID: ${record.id}, Duration (Number Ms): ${durationInMs}`);
+            } else {
+                console.warn(`WARN: Record ID: ${record.id}, Unexpected duration type or value:`, record.duration);
+                // Default to 0 if duration is invalid
+                durationInMs = 0; 
+            }
+
+            // Convert milliseconds to hours
+            userHours[record.userId] += durationInMs / (1000 * 60 * 60); 
         });
 
-        console.log("Aggregated user hours:", userHours);
+        console.log("DEBUG: Aggregated user hours:", userHours);
 
         // Map user IDs to names and calculate performance scores/categories
         const performanceData = [];
