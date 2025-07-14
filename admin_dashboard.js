@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 if (overallTotalUserHours > 0) { // Avoid division by zero
                                     percentage = (hours / overallTotalUserHours) * 100;
                                 }
-                                return `${userName}: ${formatHoursToHHMMSS(hours)} ${getTranslatedText('hours')} (${category}) - ${percentage.toFixed(2)}%`;
+                                return `${userName}: ${formatHoursToHHMMSS(hours)} - ${percentage.toFixed(2)}%`;
                             },
                         }
                     }
@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 if (overallTotalAccountHours > 0) {
                                     percentage = (hours / overallTotalAccountHours) * 100;
                                 }
-                                return `${accountName}: ${hours.toFixed(2)} ${getTranslatedText('hours')} - ${percentage.toFixed(2)}%`;
+                                return `${accountName}: ${formatHoursToHHMMSS(hours)} - ${percentage.toFixed(2)}%`;
                             },
                         }
                     }
