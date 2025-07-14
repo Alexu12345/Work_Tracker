@@ -87,6 +87,33 @@
                     <!-- Ladders will be dynamically generated here -->
                 </div>
             </div>
+
+            <!-- New Account Performance Chart -->
+            <div class="chart-section account-chart-section">
+                <h2 data-key="accountPerformanceChartTitle">أداء الحسابات</h2>
+                <div class="chart-container">
+                    <canvas id="accountPerformanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- New Account Performance Table -->
+            <div class="table-section account-table-section">
+                <h2 data-key="accountSummaryTableTitle">ملخص أداء الحسابات</h2>
+                <div class="table-responsive">
+                    <table id="accountSummaryTable">
+                        <thead>
+                            <tr>
+                                <th data-key="accountNameHeader">اسم الحساب</th>
+                                <th data-key="totalHoursHeader">إجمالي الساعات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Account data will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <p id="noAccountDataMessage" class="no-data-message" style="display: none;"></p>
+            </div>
         </div>
 
         <button id="backToAdminPanelBtn" class="back-btn" data-key="backToAdminPanel">رجوع للوحة تحكم المدير</button>
