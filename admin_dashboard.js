@@ -509,7 +509,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Chart Rendering ---
 
-    const renderPerformanceChart = (labels, data, colors, overallTotalUserHours) => { // Added overallTotalUserHours parameter
+    // Modified renderPerformanceChart to accept performanceData directly
+    const renderPerformanceChart = (labels, data, colors, overallTotalUserHours, performanceDataForTooltip) => { 
         if (performanceChart) {
             performanceChart.destroy();
         }
@@ -561,8 +562,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             label: function(context) {
                                 const userName = context.label;
                                 const hours = context.raw;
-                                // performanceData is available in this scope from applyFiltersAndRender
-                                const userPerfData = performanceData.find(d => d.userName === userName);
+                                // Use the passed performanceDataForTooltip
+                                const userPerfData = performanceDataForTooltip.find(d => d.userName === userName);
                                 const category = userPerfData?.category || getTranslatedText('notRated');
                                 
                                 let percentage = 0;
@@ -834,7 +835,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userLabels = performanceData.map(d => d.userName);
         const userData = performanceData.map(d => d.totalHours);
         const userColors = performanceData.map(d => d.color); 
-        renderPerformanceChart(userLabels, userData, userColors, overallTotalUserHours);
+        renderPerformanceChart(userLabels, userData, userColors, overallTotalUserHours, performanceData); // Pass performanceData here
 
         // Render Top Employees Ladder
         renderTopEmployees(cachedWorkRecords, cachedUsers); // This re-calls processDataForDashboard internally to get topEmployees
