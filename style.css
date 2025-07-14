@@ -17,6 +17,7 @@ body {
     background-color: #f0f2f5;
     /* Light mode background */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* Align to top, not center, to allow content flow */
@@ -47,7 +48,7 @@ body {
     box-sizing: border-box;
     display: flex;
     /* Ensure flex for internal layout */
-    flex-direction: column;
+/*     flex-direction: column; */
     /* Stack content vertically within each page */
     align-items: center;
     /* Center content horizontally within the page */
@@ -1523,11 +1524,12 @@ body.dark-mode .admin-action-btntp.primary:hover {
 
     .lang-switcher,
     .dark-mode-toggle {
-        position: static;
-        margin-bottom: 10px;
+        position: fixed;
+/*         margin-bottom: 10px; */
         justify-content: center;
-        width: 100%;
+/*         width: 100%; */
         order: -1;
+        display: flex;
     }
 
     .lang-btn {
