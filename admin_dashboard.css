@@ -128,9 +128,9 @@ h1, h2 {
     justify-content: center; /* Center content when wrapped */
 }
 
-.chart-section {
-    flex: 3; /* Takes more space */
-    min-width: 400px; /* Minimum width for chart */
+.chart-section,
+.top-employees-section,
+.table-section { /* Added table-section */
     background-color: #ffffff;
     padding: 25px;
     border-radius: 12px;
@@ -139,6 +139,24 @@ h1, h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.chart-section {
+    flex: 3; /* Takes more space */
+    min-width: 400px; /* Minimum width for chart */
+}
+
+.top-employees-section {
+    flex: 1; /* Takes less space */
+    min-width: 280px; /* Minimum width for ladders */
+}
+
+/* New styles for account sections */
+.account-chart-section,
+.account-table-section {
+    flex: 1 1 45%; /* Allow two columns on wider screens, stack on smaller */
+    min-width: 300px; /* Minimum width for individual account sections */
+    box-sizing: border-box; /* Include padding and border in element's total width */
 }
 
 .chart-container {
@@ -147,20 +165,7 @@ h1, h2 {
     margin-top: 20px;
 }
 
-/* Top 5 Employees Section */
-.top-employees-section {
-    flex: 1; /* Takes less space */
-    min-width: 280px; /* Minimum width for ladders */
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
+/* Top Employees Section */
 .ladder-container {
     display: flex;
     flex-direction: row; /* Arrange ladders horizontally */
@@ -181,12 +186,10 @@ h1, h2 {
     justify-content: flex-end; /* Align content to bottom of ladder */
     align-items: center;
     padding: 10px 5px;
-/*     width: 60px; Fixed width for each ladder */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden; /* Hide overflow for content */
     transition: all 0.5s ease-out; /* Smooth transition for height changes */
-    
     /* Animation for initial render */
     transform: translateY(100%);
     opacity: 0;
@@ -265,6 +268,45 @@ h1, h2 {
 .back-btn:hover {
     background-color: #5a6268;
     transform: translateY(-1px);
+}
+
+/* Table styles for account summary */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling for tables on small screens */
+    margin-top: 20px;
+}
+
+#accountSummaryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    min-width: 300px; /* Ensure table has a minimum width */
+}
+
+#accountSummaryTable th,
+#accountSummaryTable td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: right; /* Align text to right for RTL */
+    font-size: 0.95em;
+}
+
+#accountSummaryTable th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#accountSummaryTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#accountSummaryTable tbody tr:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
 }
 
 /* Toast Message Styles (copied from main app) */
@@ -396,7 +438,8 @@ body.dark-mode {
 body.dark-mode .dashboard-container,
 body.dark-mode .filter-controls,
 body.dark-mode .chart-section,
-body.dark-mode .top-employees-section {
+body.dark-mode .top-employees-section,
+body.dark-mode .table-section { /* Added table-section for dark mode */
     background-color: #1e1e1e; /* Darker container background */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* More prominent shadow */
     border-color: #333;
@@ -489,6 +532,26 @@ body.dark-mode .lang-btn.active {
     border-color: #0056b3;
 }
 
+/* Dark mode table styles */
+body.dark-mode #accountSummaryTable th {
+    background-color: #0056b3; /* Darker blue for dark mode table header */
+    color: #e0e0e0;
+}
+
+body.dark-mode #accountSummaryTable td {
+    border-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode #accountSummaryTable tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode #accountSummaryTable tbody tr:hover {
+    background-color: #3b3b3b;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .dashboard-content {
@@ -497,7 +560,9 @@ body.dark-mode .lang-btn.active {
     }
 
     .chart-section,
-    .top-employees-section {
+    .top-employees-section,
+    .account-chart-section, /* Added for responsiveness */
+    .account-table-section { /* Added for responsiveness */
         min-width: unset;
         width: 100%;
     }
