@@ -439,6 +439,7 @@ const translations = {
         'newAccountName': 'اسم الحساب الجديد',
         'defaultPricePlaceholder': 'السعر الافتراضي للساعة (جنيه)', // New
         'addAccountBtn': 'إضافة حساب',
+        'gotoadmindashbourd': 'لوحة المستخدمين',
         'currentAccounts': 'الحسابات الحالية:',
         'accountNameColumn': 'اسم الحساب',
         'defaultPriceColumn': 'السعر الافتراضي/ساعة', // New
@@ -599,6 +600,7 @@ const translations = {
         'currentUsers': 'Current Users:',
         'nameColumn': 'Name',
         'pinColumn': 'PIN',
+        'gotoadmindashbourd': 'Admin Dashboard',
         'statusColumn': 'Status', // New
         'actionsColumn': 'Actions',
         'deleteBtn': 'Delete',
