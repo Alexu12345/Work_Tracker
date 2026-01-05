@@ -1,3 +1,63 @@
+/* إبراز حالة الدفع في لوحة القائد */
+.payment-status-paid {
+    background-color: #2ECC71 !important; /* أخضر */
+    color: #fff !important;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-weight: bold;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(46,204,113,0.08);
+}
+.payment-status-pending {
+    background-color: #E74C3C !important; /* أحمر */
+    color: #fff !important;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-weight: bold;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(231,76,60,0.08);
+}
+
+/* زر "مدفوع" في لوحة القائد */
+.mark-paid-btn {
+    background-color: #2ECC71 !important;
+    color: #fff !important;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 18px;
+    margin: 0 2px;
+    box-shadow: 0 2px 6px rgba(46,204,113,0.08);
+    transition: background 0.2s;
+}
+.mark-paid-btn:hover {
+    background-color: #27AE60 !important;
+}
+.mark-paid-btn[disabled], .mark-paid-btn.disabled {
+    background-color: #bbb !important;
+    color: #eee !important;
+    cursor: not-allowed;
+}
+
+/* إبراز صفوف لوحة القائد */
+#leaderPayrollTable tbody tr {
+    transition: background 0.2s;
+}
+#leaderPayrollTable tbody tr.paid-row {
+    background-color: #eafaf1 !important;
+}
+#leaderPayrollTable tbody tr.pending-row {
+    background-color: #fff6f6 !important;
+}
+
+/* تحسين مظهر المودال عند الفتح */
+.modal[style*="display: flex"], .modal[style*="display: block"] {
+    animation: modalFadeIn 0.35s cubic-bezier(.4,0,.2,1);
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
 /* Universal box-sizing for consistent layout */
 *,
 *::before,
@@ -683,6 +743,22 @@ button.disabled {
 
 #trackTasksTableFoot .grand-total-value {
     text-align: center;
+}
+
+/* Ensure grand totals contrast properly in light mode */
+#trackTasksTableFoot td.grand-total-value,
+#trackTasksTableFoot td.grand-total-label {
+    background-color: #D1ECF1;
+    color: #12323A;
+    padding: 10px 12px;
+}
+
+/* Dark mode: ensure footer values are readable */
+body.dark-mode #trackTasksTableFoot td.grand-total-value,
+body.dark-mode #trackTasksTableFoot td.grand-total-label {
+    background-color: #2C3E50 !important;
+    color: #76D7C4 !important;
+    border-top-color: #76D7C4 !important;
 }
 
 /* New class for footer cells to handle dark mode colors */
@@ -1578,5 +1654,128 @@ body.dark-mode .admin-action-btntp.primary:hover {
         font-size: 9px !important;
         /* Very small for mobile buttons */
         padding: 3px 6px !important;
+    }
+}
+/* تنسيقات فلاتر الشهر الجديدة */
+
+/* حاوية الفلتر في الداشبورد */
+.month-filter-wrapper {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ستايل حقل إدخال الشهر نفسه */
+.month-input-styled, 
+#trackMonthFilter, 
+#adminRatesMonthFilter {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.month-input-styled:focus, 
+#trackMonthFilter:focus, 
+#adminRatesMonthFilter:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* تنسيق خاص بفلتر الإدارة */
+.admin-month-filter {
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.admin-month-filter label {
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* دعم الوضع الليلي (Dark Mode) */
+body.dark-mode .month-input-styled,
+body.dark-mode #trackMonthFilter,
+body.dark-mode #adminRatesMonthFilter {
+    background-color: #2d2d2d;
+    border-color: #444;
+    color: #eee;
+}
+
+body.dark-mode .month-filter-wrapper {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .admin-month-filter {
+    background-color: #252525;
+    border-color: #444;
+}
+
+body.dark-mode .admin-month-filter label {
+    color: #bbb;
+}
+
+/* Improve table responsiveness and scrolling */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Ensure tables occupy most of the screen and scale nicely */
+
+.table-responsive {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.table-responsive table {
+    width: 100%;
+    table-layout: auto;
+    font-size: clamp(12px, 1.2vw, 14px);
+    border-collapse: collapse;
+}
+
+.table-responsive th,
+.table-responsive td {
+    padding: 8px 10px;
+    white-space: normal !important;
+    word-break: break-word;
+    vertical-align: middle;
+}
+
+/* Reduce heading sizes to fit better with wider tables */
+h1, h2, h3 {
+    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+}
+
+/* Slight visual polish for pages: allow full-width layout */
+.page {
+    max-width: none;
+    width: 100%;
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* تحسين شكل الفلتر في الموبايل */
+@media (max-width: 600px) {
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    
+    .month-input-styled, 
+    #trackMonthFilter, 
+    #adminRatesMonthFilter {
+        width: 100%;
+        text-align: center;
     }
 }
