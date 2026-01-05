@@ -6,34 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Tracker</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <!-- Loading Indicator -->
     <div id="loadingIndicator" class="loading-indicator" style="display: none;">
         <div class="spinner"></div>
     </div>
 
-    <!-- Toast Message -->
     <div id="toastMessage" class="toast-message" style="display: none;"></div>
 
-    <!-- Language Switcher -->
     <div class="lang-switcher">
         <button id="langArBtn" class="lang-btn active">العربية</button>
         <button id="langEnBtn" class="lang-btn">English</button>
     </div>
 
-    <!-- Dark Mode Toggle -->
+    <div class="global-month-filter" id="globalMonthFilterContainer" style="text-align:center; margin:10px 0;">
+        <label for="globalMonthFilter" style="display:block; font-size:0.95em; margin-bottom:6px;" data-key="globalFilterByMonth">عرض بيانات الشهر (عام):</label>
+        <input type="month" id="globalMonthFilter" class="month-input-styled">
+    </div>
     <button id="darkModeToggle" class="dark-mode-toggle">
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- Login Page -->
     <div id="loginPage" class="login-container page">
         <h1 data-key="loginTitle">تسجيل الدخول</h1>
         <div class="pin-input-group">
@@ -48,27 +44,27 @@
         </div>
     </div>
 
-    <!-- Main Dashboard -->
     <div id="mainDashboard" class="main-dashboard-container page" style="display: none;">
         <div class="header-bar">
             <div class="user-info">
                 <img src="https://github.com/Alexu12345/Work_Tracker/blob/main/images.jpg?raw=true" alt="User Avatar" class="user-avatar">
                 <p><span data-key="hello">مرحباً، </span><span id="userNameDisplay"></span>!</p>
+                
+                <!-- تم حذف month filter من الداشبورد -->
+
                 <div class="total-hours-box">
                     <p><span data-key="totalHoursTitle">إجمالي ساعات العمل:</span> <span id="totalHoursDisplay">0.00</span> <span data-key="hoursUnit">ساعة</span></p>
-                    <p><span data-key="totalBalanceTitle">إجمالي الرصيد:</span> <span id="totalBalanceDisplay">0.00</span> <span data-key="currencyUnit">جنيه</span></p>
+                    <p><span data-key="totalBalanceTitle">إجمالي الرصيد:</span> <span id="totalBalanceDisplay">0.00</span></p>
                 </div>
             </div>
         </div>
         <div class="dashboard-options">
             <button id="startWorkOption" class="big-option-btn" data-key="startWorkOption">بدء العمل</button>
             <button id="trackWorkOption" class="big-option-btn" data-key="trackWorkOption">متابعة العمل</button>
-            <!-- Admin Panel button will be added dynamically by JS for admin user only -->
         </div>
         <button id="logoutDashboardBtn" class="back-btn" data-key="logoutAdmin">تسجيل الخروج</button>
     </div>
 
-    <!-- Start Work Page -->
     <div id="startWorkPage" class="start-work-container page" style="display: none;">
         <div id="taskSelectionPopup" class="popup">
             <h2 data-key="chooseTask">اختر المهمة</h2>
@@ -97,22 +93,22 @@
                     </tr>
                 </table>
                 <div id="detailedSummaryContainer">
-                    <!-- Detailed timing summary will be rendered here -->
-                </div>
+                    </div>
             </div>
 
             <div id="taskTimingButtonsContainer" class="task-timing-buttons-section">
-                <!-- Task timing buttons will be rendered here -->
-            </div>
+                </div>
 
             <button id="saveWorkBtn" class="save-work-btn" data-key="saveWorkBtn">حفظ العمل</button>
             <button id="backToDashboardFromStartWork" class="back-btn" data-key="backToDashboard">رجوع للرئيسية</button>
         </div>
     </div>
 
-    <!-- Track Work Page -->
     <div id="trackWorkPage" class="track-work-container page" style="display: none;">
         <h1 data-key="trackWorkTitle">متابعة العمل</h1>
+        
+        <!-- تم حذف month filter من صفحة متابعة العمل -->
+
         <div class="chart-container">
             <canvas id="taskChart"></canvas>
         </div>
@@ -134,24 +130,22 @@
                     </tr>
                 </thead>
                 <tbody id="trackTasksTableBody">
-                    <!-- Data will be dynamically loaded here -->
-                </tbody>
+                    </tbody>
                 <tfoot id="trackTasksTableFoot">
-                    <!-- Grand totals will be dynamically loaded here -->
-                </tfoot>
+                    </tfoot>
             </table>
         </div>
     </div>
 
-    <!-- Admin Panel Page -->
     <div id="adminPanelPage" class="admin-panel-container page" style="display: none;">
         <h1 data-key="adminPanelTitle">لوحة تحكم المدير</h1>
         <button id="gotoadmindashbourd" onclick="window.location.href = 'https://alexu12345.github.io/Work_Tracker/admin_dashboard.html'" data-key="gotoadmindashbourd">لوحة المستخدمين</button>
         <button id="logoutAdminBtn" class="back-btn" data-key="logoutAdmin">تسجيل الخروج</button>
+        
         <div class="admin-section">
             <h2 data-key="manageUsers">إدارة المستخدمين</h2>
             <div class="input-group">
-                <input type="text" id="newUserNameInput" placeholder="اسم المستخدم الجديد" data-key="newUserName">
+                       
                 <span id="newUserNameInputError" class="input-error-message"></span>
             </div>
             <div class="input-group">
@@ -166,13 +160,11 @@
                         <tr>
                             <th data-key="nameColumn">الاسم</th>
                             <th data-key="pinColumn">PIN</th>
-                            <th data-key="statusColumn">الحالة</th> <!-- New Status Column -->
+                            <th data-key="statusColumn">الحالة</th>
                             <th data-key="actionsColumn">إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="usersTableBody">
-                        <!-- Users will be loaded here -->
-                    </tbody>
+                    <tbody id="usersTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -184,8 +176,16 @@
                 <span id="newAccountNameInputError" class="input-error-message"></span>
             </div>
             <div class="input-group">
-                <input type="number" id="newAccountPriceInput" placeholder="السعر الافتراضي للساعة (جنيه)" step="0.01" min="0" data-key="defaultPricePlaceholder">
+                <input type="number" id="newAccountPriceInput" placeholder="السعر الافتراضي للساعة ($)" step="0.01" min="0" data-key="defaultPricePlaceholder">
                 <span id="newAccountPriceInputError" class="input-error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="newAccountTypeSelect" data-key="accountTypeLabel">نوع الحساب:</label>
+                <select id="newAccountTypeSelect">
+                    <option value="1" data-key="acctype1">النوع 1</option>
+                    <option value="2" data-key="acctype2">النوع 2</option>
+                </select>
+                <span id="newAccountTypeInputError" class="input-error-message"></span>
             </div>
             <button id="addAccountBtn" data-key="addAccountBtn">إضافة حساب</button>
             <h3 data-key="currentAccounts">الحسابات الحالية:</h3>
@@ -195,12 +195,11 @@
                         <tr>
                             <th data-key="accountNameColumn">اسم الحساب</th>
                             <th data-key="defaultPriceColumn">السعر الافتراضي/ساعة</th>
+                            <th data-key="accountTypeColumn">نوع الحساب</th>
                             <th data-key="actionsColumn">إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="accountsTableBody">
-                        <!-- Accounts will be loaded here -->
-                    </tbody>
+                    <tbody id="accountsTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -212,7 +211,6 @@
                 <span id="newTaskNameInputError" class="input-error-message"></span>
             </div>
             <div id="newTimingsContainer" class="timing-input-group-container">
-                <!-- Changed to minutes and seconds inputs -->
                 <div class="timing-input-group">
                     <input type="number" class="new-task-timing-minutes" placeholder="دقائق" min="0" data-key="minutesPlaceholder">
                     <input type="number" class="new-task-timing-seconds" placeholder="ثواني" min="0" max="59" data-key="secondsPlaceholder">
@@ -231,35 +229,55 @@
                             <th data-key="actionsColumn">إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="tasksDefinitionTableBody">
-                        <!-- Task definitions will be loaded here -->
-                    </tbody>
+                    <tbody id="tasksDefinitionTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- New Admin Section: Manage Employee Rates and Totals -->
         <div class="admin-section">
             <h2 data-key="manageEmployeeRates">إدارة أسعار الموظفين والإجماليات</h2>
+            
+            <!-- تم حذف month filter من لوحة الإدارة -->
+
             <div class="table-responsive">
                 <table id="employeeRatesTable">
                     <thead>
                         <tr>
-                            <th></th> <!-- New empty header for the icon column -->
+                            <th></th>
                             <th data-key="employeeNameColumn">الموظف</th>
                             <th data-key="accountNameColumn">الحساب</th>
                             <th data-key="defaultPriceColumn">السعر الافتراضي/ساعة</th>
                             <th data-key="customPriceColumn">السعر المخصص/ساعة</th>
-                            <th data-key="accountTotalTimeColumnShort" title="إجمالي وقت الحساب (بالدقائق والثواني)">وقت الحساب</th>
+                            <th data-key="accountTotalTimeColumnShort">وقت الحساب</th>
                             <th data-key="accountBalanceColumn">رصيد الحساب</th>
                             <th data-key="employeeTotalHoursColumn">إجمالي الساعات</th>
                             <th data-key="employeeTotalBalanceColumn">إجمالي الرصيد المستحق</th>
                         </tr>
                     </thead>
-                    <tbody id="employeeRatesTableBody">
-                        <!-- Employee rates and totals will be loaded here -->
-                    </tbody>
+                    <tbody id="employeeRatesTableBody"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 data-key="leaderPayrollTitle">لوحة القائد - المدفوعات</h2>
+            <p data-key="leaderPayrollHint">عرض ملخص المستحقات لكل موظف للشهر المحدد، ووضع علامة "مدفوع".</p>
+            <div class="table-responsive">
+                <table id="leaderPayrollTable">
+                    <thead>
+                        <tr>
+                            <th data-key="employeeNameColumn">الموظف</th>
+                            <th data-key="employeeTotalHoursColumn">إجمالي الساعات</th>
+                            <th data-key="employeeTotalBalanceColumn">إجمالي الرصيد المستحق</th>
+                            <th data-key="accountTypeColumn">نوع الحساب</th>
+                            <th data-key="paymentDueColumn">تاريخ الاستحقاق</th>
+                            <th data-key="paymentStatusColumn">الحالة</th>
+                            <th data-key="actionsColumn">إجراءات</th>
+                        </tr>
+                        </thead>
+                    <tbody id="leaderPayrollTableBody"></tbody>
+                </table>
+                
             </div>
         </div>
 
@@ -267,15 +285,9 @@
             <h2 data-key="manageWorkRecords">إدارة سجلات العمل</h2>
             <div class="filter-controls">
                 <input type="date" id="recordFilterDate">
-                <select id="recordFilterUser">
-                    <!-- Users will be populated here -->
-                </select>
-                <select id="recordFilterAccount">
-                    <!-- Accounts will be populated here -->
-                </select>
-                <select id="recordFilterTask">
-                    <!-- Tasks will be populated here -->
-                </select>
+                <select id="recordFilterUser"></select>
+                <select id="recordFilterAccount"></select>
+                <select id="recordFilterTask"></select>
                 <button id="filterRecordsBtn" data-key="filterBtn">تصفية</button>
             </div>
             <div class="table-responsive">
@@ -290,9 +302,7 @@
                             <th data-key="actionsColumn">إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="workRecordsTableBody">
-                        <!-- Work records will be loaded here -->
-                    </tbody>
+                    <tbody id="workRecordsTableBody"></tbody>
                 </table>
             </div>
             <div class="pagination-controls">
@@ -302,7 +312,6 @@
         </div>
     </div>
 
-    <!-- Edit Record Modal -->
     <div id="editRecordModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -312,42 +321,35 @@
                 <select id="editAccountSelect"></select>
                 <span id="editAccountSelectError" class="input-error-message"></span>
             </div>
-
             <div class="input-group">
                 <label for="editTaskTypeSelect" data-key="taskType">نوع المهمة:</label>
                 <select id="editTaskTypeSelect"></select>
                 <span id="editTaskTypeSelectError" class="input-error-message"></span>
             </div>
-
             <div class="input-group">
                 <label for="editTotalTasksCount" data-key="taskCountEdit">عدد المهام:</label>
                 <input type="number" id="editTotalTasksCount" step="1" min="0">
                 <span id="editTotalTasksCountError" class="input-error-message"></span>
             </div>
-
             <div class="input-group">
                 <label for="editTotalTime" data-key="totalTimeEdit">إجمالي الوقت (دقيقة):</label>
                 <input type="number" id="editTotalTime" step="0.01" min="0">
                 <span id="editTotalTimeError" class="input-error-message"></span>
             </div>
-
             <div class="input-group">
                 <label for="editRecordDate" data-key="dateColumn">التاريخ:</label>
                 <input type="date" id="editRecordDate">
                 <span id="editRecordDateError" class="input-error-message"></span>
             </div>
-
             <div class="input-group">
                 <label for="editRecordTime" data-key="timeColumn">الوقت:</label>
                 <input type="time" id="editRecordTime">
                 <span id="editRecordTimeError" class="input-error-message"></span>
             </div>
-
             <button id="saveEditedRecordBtn" data-key="saveChangesBtn">حفظ التعديلات</button>
         </div>
     </div>
 
-    <!-- Edit Employee Custom Rate Modal -->
     <div id="editEmployeeRateModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -355,18 +357,44 @@
             <p><span data-key="employeeNameLabel">الموظف:</span> <span id="modalEmployeeName"></span></p>
             <p><span data-key="accountNameLabel">الحساب:</span> <span id="modalAccountName"></span></p>
             <p><span data-key="defaultPriceLabel">السعر الافتراضي:</span> <span id="modalDefaultPrice"></span></p>
-            
             <div class="input-group">
-                <label for="modalCustomPriceInput" data-key="customPriceInputLabel">السعر المخصص (جنيه):</label>
+                <label for="modalCustomPriceInput" data-key="customPriceInputLabel">السعر المخصص ($):</label>
                 <input type="number" id="modalCustomPriceInput" step="0.01" min="0">
                 <span id="modalCustomPriceInputError" class="input-error-message"></span>
             </div>
-
             <button id="saveCustomRateBtn" data-key="saveChangesBtn">حفظ التعديلات</button>
         </div>
     </div>
 
-    <!-- Custom Alert/Error Modal for Login PIN -->
+    <div id="editAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeEditAccountModal">&times;</span>
+            <h3 data-key="editAccountTitle">تعديل الحساب</h3>
+            <div class="input-group">
+                <label for="editAccountNameInput" data-key="accountName">اسم الحساب:</label>
+                <input type="text" id="editAccountNameInput">
+                <span id="editAccountNameError" class="input-error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="editAccountPriceInput" data-key="defaultPriceLabel">السعر الافتراضي (دولار):</label>
+                <input type="number" id="editAccountPriceInput" step="0.01" min="0">
+                <span id="editAccountPriceError" class="input-error-message"></span>
+            </div>
+            <div class="input-group">
+                <label for="editAccountTypeSelect" data-key="accountTypeLabel">نوع الحساب:</label>
+                <select id="editAccountTypeSelect">
+                    <option value="1" data-key="acctype1">النوع 1</option>
+                    <option value="2" data-key="acctype2">النوع 2</option>
+                </select>
+                <span id="editAccountTypeError" class="input-error-message"></span>
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+                <button id="saveEditedAccountBtn" data-key="saveChangesBtn">حفظ التعديلات</button>
+                <button id="cancelEditAccountBtn" class="secondary" data-key="cancelBtn">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loginErrorModal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="closeLoginErrorModal">&times;</span>
@@ -376,7 +404,6 @@
         </div>
     </div>
 
-    <!-- Custom Confirmation Modal -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="closeConfirmationModal">&times;</span>
