@@ -11,8 +11,10 @@
 </head>
 
 <body>
-    <div id="loadingIndicator" class="loading-indicator" style="display: none;">
-        <div class="spinner"></div>
+
+    <!-- رسالة خطأ عامة تظهر أعلى الصفحة عند أي خطأ JS أو مشكلة تحميل -->
+    <div id="globalErrorBanner" style="display:none;background:#e74c3c;color:#fff;padding:16px 10px;text-align:center;font-size:1.2em;font-weight:bold;z-index:9999;position:fixed;top:0;left:0;right:0;box-shadow:0 2px 8px rgba(0,0,0,0.12);">
+        <span id="globalErrorText">حدث خطأ غير متوقع في التطبيق. يرجى إعادة تحميل الصفحة أو مراجعة الاتصال بالإنترنت.</span>
     </div>
 
     <div id="toastMessage" class="toast-message" style="display: none;"></div>
@@ -145,11 +147,12 @@
         <div class="admin-section">
             <h2 data-key="manageUsers">إدارة المستخدمين</h2>
             <div class="input-group">
-                       
+                <input type="text" id="newUserNameInput" placeholder="اسم المستخدم الجديد" maxlength="30" data-key="newUserName">
                 <span id="newUserNameInputError" class="input-error-message"></span>
             </div>
-            <div class="input-group">
-                <input type="password" id="newUserPINInput" placeholder="رمز PIN للمستخدم (8 أرقام)" maxlength="8" data-key="newUserPIN">
+            <div class="input-group" style="display: flex; align-items: center; gap: 8px;">
+                <input type="text" id="newUserPINInput" placeholder="رمز PIN للمستخدم (8 أرقام)" maxlength="8" data-key="newUserPIN" style="flex:1;">
+                <button id="generatePinBtn" type="button" title="توليد رمز عشوائي" style="padding: 6px 10px; font-size: 1em;">🔄</button>
                 <span id="newUserPINInputError" class="input-error-message"></span>
             </div>
             <button id="addUserBtn" data-key="addUserBtn">إضافة مستخدم</button>
@@ -165,9 +168,21 @@
                         </tr>
                     </thead>
                     <tbody id="usersTableBody"></tbody>
-                </table>
-            </div>
-        </div>
+
+                                </table>
+                        </div>
+                </div>
+
+                <!-- مودال تفاصيل الجلسة -->
+                <div id="sessionDetailsModal" class="modal" style="display:none;">
+                    <div class="modal-content" style="min-width:320px;max-width:400px;">
+                        <span id="closeSessionDetailsModal" style="float:left;cursor:pointer;font-size:1.5em;">&times;</span>
+                        <h3 id="sessionDetailsTitle">تفاصيل الجلسة</h3>
+                        <div id="sessionDetailsBody">
+                            <!-- سيتم تعبئة التفاصيل ديناميكياً -->
+                        </div>
+                    </div>
+                </div>
 
         <div class="admin-section">
             <h2 data-key="manageAccounts">إدارة الحسابات</h2>
@@ -180,10 +195,9 @@
                 <span id="newAccountPriceInputError" class="input-error-message"></span>
             </div>
             <div class="input-group">
-                <label for="newAccountTypeSelect" data-key="accountTypeLabel">نوع الحساب:</label>
                 <select id="newAccountTypeSelect">
-                    <option value="1" data-key="acctype1">النوع 1</option>
-                    <option value="2" data-key="acctype2">النوع 2</option>
+                    <option value="1" data-key="acctype1">شهر</option>
+                    <option value="2" data-key="acctype2">شهرين</option>
                 </select>
                 <span id="newAccountTypeInputError" class="input-error-message"></span>
             </div>
@@ -383,8 +397,8 @@
             <div class="input-group">
                 <label for="editAccountTypeSelect" data-key="accountTypeLabel">نوع الحساب:</label>
                 <select id="editAccountTypeSelect">
-                    <option value="1" data-key="acctype1">النوع 1</option>
-                    <option value="2" data-key="acctype2">النوع 2</option>
+                    <option value="1" data-key="acctype1">شهر</option>
+                    <option value="2" data-key="acctype2">شهرين</option>
                 </select>
                 <span id="editAccountTypeError" class="input-error-message"></span>
             </div>
