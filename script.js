@@ -1,3 +1,25 @@
+
+// --- تحقق فوري من الاسم والرمز أثناء الكتابة في إضافة المستخدم ---
+// يجب وضع هذا الكود بعد تعريف عناصر DOM الخاصة بالمستخدمين مباشرة (أسفل التعريفات)
+// ...existing code...
+// --- [معالجة الأخطاء العامة: عرض رسالة أعلى الصفحة عند أي خطأ JS أو مشكلة تحميل] ---
+window.addEventListener('error', function(event) {
+    const banner = document.getElementById('globalErrorBanner');
+    const text = document.getElementById('globalErrorText');
+    if (banner && text) {
+        banner.style.display = 'block';
+        text.textContent = 'حدث خطأ في التطبيق: ' + (event.message || 'خطأ غير معروف') + ' (راجع الكونسول للمزيد)';
+    }
+});
+window.addEventListener('unhandledrejection', function(event) {
+    const banner = document.getElementById('globalErrorBanner');
+    const text = document.getElementById('globalErrorText');
+    if (banner && text) {
+        banner.style.display = 'block';
+        text.textContent = 'حدث خطأ في الاتصال أو البيانات: ' + (event.reason && event.reason.message ? event.reason.message : 'خطأ غير معروف') + ' (راجع الكونسول للمزيد)';
+    }
+});
+// --- نهاية معالجة الأخطاء العامة ---
 // دالة لتحويل الدقائق الكلية إلى نص عربي (10س 30د 30ث)
 function formatTotalMinutesToArabicText(totalMinutes) {
     if (isNaN(totalMinutes) || totalMinutes < 0) return '0س 0د 0ث';
@@ -270,16 +292,99 @@ const addUserBtn = document.getElementById('addUserBtn');
 const usersTableBody = document.getElementById('usersTableBody');
 const newUserNameInputError = document.getElementById('newUserNameInputError');
 const newUserPINInputError = document.getElementById('newUserPINInputError');
+const generatePinBtn = document.getElementById('generatePinBtn');
+
+
+// تحقق فوري من الاسم والرمز أثناء الكتابة
+if (newUserNameInput && newUserPINInput && addUserBtn) {
+    function validateNewUserFields() {
+        let name = newUserNameInput.value.trim();
+        let pin = newUserPINInput.value.trim();
+        let nameTaken = allUsers.some(u => u.name === name);
+        let pinTaken = allUsers.some(u => u.pin === pin);
+        // فقط رسائل التكرار
+        if (nameTaken) {
+            showInputError(newUserNameInput, newUserNameInputError, 'اسم المستخدم غير متاح');
+        } else {
+            clearInputError(newUserNameInput, newUserNameInputError);
+        }
+        if (pinTaken) {
+            showInputError(newUserPINInput, newUserPINInputError, 'الرمز غير متاح');
+        } else {
+            clearInputError(newUserPINInput, newUserPINInputError);
+        }
+        // تعطيل زر الإضافة إذا لم تتحقق الشروط
+        const pinValid = /^\d{8}$/.test(pin);
+        const valid = !!name && !nameTaken && pinValid && !pinTaken;
+        addUserBtn.disabled = !valid;
+        return valid;
+    }
+    newUserNameInput.addEventListener('input', validateNewUserFields);
+    newUserPINInput.addEventListener('input', validateNewUserFields);
+    // منع إدخال الحروف في حقل الرمز
+    newUserPINInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^\d]/g, '');
+    });
+    if (generatePinBtn) {
+        generatePinBtn.addEventListener('click', () => {
+            setTimeout(validateNewUserFields, 0);
+        });
+    }
+    setTimeout(validateNewUserFields, 0);
+}
 
 // Admin Panel Elements - Accounts
 const newAccountNameInput = document.getElementById('newAccountNameInput');
-const newAccountPriceInput = document.getElementById('newAccountPriceInput'); 
+const newAccountPriceInput = document.getElementById('newAccountPriceInput');
+// توليد رمز عشوائي غير مكرر
+function generateUniquePin(existingPins) {
+    let pin;
+    do {
+        pin = '';
+        for (let i = 0; i < 8; i++) {
+            pin += Math.floor(Math.random() * 10);
+        }
+    } while (existingPins.has(pin));
+    return pin;
+}
+
+if (generatePinBtn) {
+    generatePinBtn.addEventListener('click', () => {
+        // اجمع كل الرموز الحالية
+        const pinsSet = new Set(allUsers.map(u => u.pin));
+        const newPin = generateUniquePin(pinsSet);
+        newUserPINInput.value = newPin;
+        clearInputError(newUserPINInput, newUserPINInputError);
+    });
+}
 const addAccountBtn = document.getElementById('addAccountBtn');
 const accountsTableBody = document.getElementById('accountsTableBody');
 const newAccountNameInputError = document.getElementById('newAccountNameInputError');
 const newAccountPriceInputError = document.getElementById('newAccountPriceInputError');
 const newAccountTypeSelect = document.getElementById('newAccountTypeSelect');
 const newAccountTypeInputError = document.getElementById('newAccountTypeInputError');
+
+// تحقق فوري من الاسم والسعر في إضافة الحساب
+if (newAccountNameInput && newAccountPriceInput && addAccountBtn) {
+    function validateNewAccountFields() {
+        let name = newAccountNameInput.value.trim();
+        let price = newAccountPriceInput.value.trim();
+        let nameTaken = allAccounts.some(a => a.name === name);
+        // فقط رسالة التكرار
+        if (nameTaken) {
+            showInputError(newAccountNameInput, newAccountNameInputError, 'accountExists');
+        } else {
+            clearInputError(newAccountNameInput, newAccountNameInputError);
+        }
+        // تعطيل زر الإضافة إذا لم تتحقق الشروط
+        const valid = !!name && !nameTaken && !!price;
+        addAccountBtn.disabled = !valid;
+        return valid;
+    }
+    newAccountNameInput.addEventListener('input', validateNewAccountFields);
+    newAccountPriceInput.addEventListener('input', validateNewAccountFields);
+    setTimeout(validateNewAccountFields, 0);
+}
 
 // Admin Panel Elements - Task Definitions
 const newTaskNameInput = document.getElementById('newTaskNameInput');
@@ -289,6 +394,268 @@ const addTaskDefinitionBtn = document.getElementById('addTaskDefinitionBtn');
 const tasksDefinitionTableBody = document.getElementById('tasksDefinitionTableBody');
 const newTaskNameInputError = document.getElementById('newTaskNameInputError');
 const newTimingsInputError = document.getElementById('newTimingsInputError');
+
+// تحقق فوري من اسم المهمة والتوقيتات
+if (newTaskNameInput && newTimingsContainer && addTaskDefinitionBtn) {
+    function validateNewTaskFields() {
+        let name = newTaskNameInput.value.trim();
+        let nameTaken = allTaskDefinitions.some(t => t.name === name);
+        // تحقق من وجود توقيت واحد على الأقل صحيح
+        let timingsValid = false;
+        const timingInputsMinutes = newTimingsContainer.querySelectorAll('.new-task-timing-minutes');
+        const timingInputsSeconds = newTimingsContainer.querySelectorAll('.new-task-timing-seconds');
+        for (let i = 0; i < timingInputsMinutes.length; i++) {
+            const minVal = timingInputsMinutes[i].value.trim();
+            const secVal = timingInputsSeconds[i].value.trim();
+            if (minVal !== '' && !isNaN(minVal) && Number(minVal) > 0) {
+                timingsValid = true;
+                break;
+            }
+        }
+        // فقط رسالة التكرار
+        if (nameTaken) {
+            showInputError(newTaskNameInput, newTaskNameInputError, 'taskExists');
+        } else {
+            clearInputError(newTaskNameInput, newTaskNameInputError);
+        }
+        const valid = !!name && !nameTaken && timingsValid;
+        addTaskDefinitionBtn.disabled = !valid;
+        return valid;
+    }
+    newTaskNameInput.addEventListener('input', validateNewTaskFields);
+    newTimingsContainer.addEventListener('input', validateNewTaskFields);
+    setTimeout(validateNewTaskFields, 0);
+}
+
+// زر حذف لكل مجموعة توقيت جديدة
+// زر حذف لكل مجموعة توقيت جديدة
+function addTimingField() {
+    // يصنع مجموعة واحدة فقط في كل ضغطه
+    const timingGroupDiv = document.createElement('div');
+    timingGroupDiv.classList.add('timing-input-group');
+    timingGroupDiv.style.display = 'flex';
+    timingGroupDiv.style.alignItems = 'center';
+    timingGroupDiv.style.gap = '8px';
+
+    const minutesInput = document.createElement('input');
+    minutesInput.type = 'number';
+    minutesInput.classList.add('new-task-timing-minutes');
+    minutesInput.placeholder = getTranslatedText('minutesPlaceholder');
+    minutesInput.min = '0';
+    timingGroupDiv.appendChild(minutesInput);
+
+    const secondsInput = document.createElement('input');
+    secondsInput.type = 'number';
+    secondsInput.classList.add('new-task-timing-seconds');
+    secondsInput.placeholder = getTranslatedText('secondsPlaceholder');
+    secondsInput.min = '0';
+    secondsInput.max = '59';
+    timingGroupDiv.appendChild(secondsInput);
+
+    // زر حذف صغير
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = '🗑️';
+    removeBtn.title = 'حذف هذا التوقيت';
+    removeBtn.style.fontSize = '1em';
+    removeBtn.style.width = '20px';
+    removeBtn.style.height = '20px';
+    removeBtn.style.background = 'none';
+    removeBtn.style.border = 'none';
+    removeBtn.style.cursor = 'pointer';
+    removeBtn.style.display = 'flex';
+    removeBtn.style.alignItems = 'center';
+    removeBtn.style.justifyContent = 'center';
+    removeBtn.onclick = function() {
+        timingGroupDiv.remove();
+        if (typeof validateNewTaskFields === 'function') validateNewTaskFields();
+    };
+    timingGroupDiv.appendChild(removeBtn);
+
+    newTimingsContainer.appendChild(timingGroupDiv);
+    if (typeof validateNewTaskFields === 'function') validateNewTaskFields();
+}
+
+// نافذة تعديل توقيتات المهام (UI فقط كبداية)
+function showEditTaskTimingsModal(taskId) {
+    const task = allTaskDefinitions.find(t => t.id === taskId);
+    if (!task) return;
+
+    // إعادة استخدام مودال جاهز أو إنشاء مودال جديد بنفس كلاس باقي المودالات
+    let modal = document.getElementById('editTaskTimingsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'editTaskTimingsModal';
+        modal.className = 'modal'; // يضمن دعم الدارك واللايت
+        document.body.appendChild(modal);
+    }
+    // تصفير المحتوى
+    modal.innerHTML = '';
+
+    const content = document.createElement('div');
+    content.className = 'modal-content'; // ستايل موحد وألوان تدعم الوضع الليلي
+    content.style.minWidth = '340px';
+    content.style.maxWidth = '440px';
+
+    // زر إغلاق
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'close-button';
+    closeBtn.textContent = '×';
+    closeBtn.onclick = () => { modal.style.display = 'none'; };
+    content.appendChild(closeBtn);
+
+    // عنوان
+    const title = document.createElement('h3');
+    title.textContent = getTranslatedText('modify'); // "تعديل"
+    content.appendChild(title);
+
+    // قائمة Inputs كل توقيت: دقائق+ثواني+حذف
+    const timingsContainer = document.createElement('div');
+    timingsContainer.style.display = 'flex';
+    timingsContainer.style.flexDirection = 'column';
+    timingsContainer.style.gap = '10px';
+
+    let timings = Array.isArray(task.timings) && task.timings.length ? [...task.timings] : [];
+
+    function renderTimingsInputs() {
+        timingsContainer.innerHTML = '';
+        timings.forEach((t, idx) => {
+            const group = document.createElement('div');
+            group.className = 'timing-input-group';
+            group.style.gap = '8px';
+            group.style.display = 'flex';
+            group.style.alignItems = 'center';
+
+            const minInput = document.createElement('input');
+            minInput.type = 'number';
+            minInput.value = Math.floor(t);
+            minInput.placeholder = getTranslatedText('minutesPlaceholder');
+            minInput.min = '0';
+            minInput.className = 'new-task-timing-minutes';
+
+            const secInput = document.createElement('input');
+            secInput.type = 'number';
+            secInput.value = Math.round((t % 1) * 60);
+            secInput.placeholder = getTranslatedText('secondsPlaceholder');
+            secInput.min = '0';
+            secInput.max = '59';
+            secInput.className = 'new-task-timing-seconds';
+
+            // حذف
+            const delBtn = document.createElement('button');
+            delBtn.innerHTML = '🗑️';
+            delBtn.type = 'button';
+            delBtn.title = getTranslatedText('deleteBtn');
+            delBtn.className = 'admin-action-btntp delete';
+            delBtn.onclick = () => { timings.splice(idx, 1); renderTimingsInputs(); };
+
+            // في كل تغير قيمة
+            minInput.oninput = () => {
+                let val = parseInt(minInput.value, 10);
+                if (isNaN(val) || val < 0) val = 0;
+                let sec = parseInt(secInput.value, 10) || 0;
+                timings[idx] = val + (sec / 60);
+            };
+            secInput.oninput = () => {
+                let sval = parseInt(secInput.value, 10);
+                if (isNaN(sval) || sval < 0) sval = 0;
+                if (sval > 59) sval = 59;
+                let min = parseInt(minInput.value, 10) || 0;
+                timings[idx] = min + (sval / 60);
+            };
+
+            group.appendChild(minInput);
+            group.appendChild(document.createTextNode(':'));
+            group.appendChild(secInput);
+            group.appendChild(delBtn);
+
+            timingsContainer.appendChild(group);
+        });
+    }
+
+    renderTimingsInputs();
+
+    // زر إضافة توقيت
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.textContent = getTranslatedText('addTimingField');
+    addBtn.className = 'admin-action-btntp primary';
+    addBtn.onclick = () => { timings.push(0); renderTimingsInputs(); };
+
+    // زر حفظ
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.textContent = getTranslatedText('saveChangesBtn');
+    saveBtn.className = 'admin-action-btntp primary';
+    saveBtn.style.marginTop = '15px';
+    saveBtn.onclick = async () => {
+        let valid = true;
+        let uniqueObj = {};
+        let hasError = false;
+        const cleanedTimings = [];
+
+        for (const tm of timings) {
+            if (isNaN(tm) || tm < 0 || Math.round((tm % 1) * 60) > 59) valid = false;
+            // نستخدم string دقيقة:ثانية كمفتاح uniqueness
+            const min = Math.floor(tm);
+            const sec = Math.round((tm % 1) * 60);
+            const key = `${min}:${sec}`;
+            if (uniqueObj[key]) hasError = true;
+            else uniqueObj[key] = true;
+            if (tm > 0) cleanedTimings.push(Number(min) + Number(sec)/60);
+        }
+        if (!valid || !cleanedTimings.length || hasError) {
+            alert('يرجى التأكد من جميع التواقيت وعدم وجود تكرارات أو أرقام سالب أو ثواني أكبر من 59');
+            return;
+        }
+        // حفظ في الفايرستور
+        try {
+            saveBtn.disabled = true;
+            saveBtn.textContent = getTranslatedText('saving');
+            await updateDoc(doc(db, 'tasks', taskId), { timings: cleanedTimings });
+            showToastMessage(getTranslatedText('recordUpdatedSuccess'), 'success');
+            modal.style.display = 'none';
+            await fetchAllStaticData();
+            await loadAndDisplayTaskDefinitions();
+            await populateFilters();
+        } catch (e) {
+            alert(getTranslatedText('errorUpdatingRecord'));
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = getTranslatedText('saveChangesBtn');
+        }
+    };
+
+    // تجميع المكونات وعرض المودال
+    content.appendChild(timingsContainer);
+    content.appendChild(addBtn);
+    content.appendChild(saveBtn);
+
+    modal.appendChild(content);
+    modal.style.display = 'flex';
+}
+
+// إضافة زر تعديل بجانب كل مهمة في جدول المهام
+function addEditTaskTimingButtonToTable() {
+    if (!tasksDefinitionTableBody) return;
+    Array.from(tasksDefinitionTableBody.rows).forEach(row => {
+        // إذا لم يوجد زر تعديل بالفعل
+        if (!row.querySelector('.edit-task-timing-btn')) {
+            const lastCell = row.lastElementChild;
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'تعديل التوقيتات';
+            editBtn.className = 'edit-task-timing-btn';
+            editBtn.style.marginRight = '8px';
+            editBtn.onclick = function() {
+                const taskId = row.getAttribute('data-task-id') || (allTaskDefinitions.find(t => t.name === row.cells[0].textContent)?.id);
+                if (taskId) showEditTaskTimingsModal(taskId);
+            };
+            lastCell.insertBefore(editBtn, lastCell.firstChild);
+        }
+    });
+}
+// استدعاء الدالة بعد تحميل جدول المهام
+setTimeout(addEditTaskTimingButtonToTable, 1000);
 
 // Admin Panel Elements - Work Records
 const recordFilterDate = document.getElementById('recordFilterDate');
@@ -349,7 +716,7 @@ let currentEditingAccountId = null;
 // Common Elements
 const logoutAdminBtn = document.getElementById('logoutAdminBtn');
 const toastMessage = document.getElementById('toastMessage');
-const loadingIndicator = document.getElementById('loadingIndicator');
+// const loadingIndicator = document.getElementById('loadingIndicator');
 const langArBtn = document.getElementById('langArBtn');
 const langEnBtn = document.getElementById('langEnBtn');
 const darkModeToggle = document.getElementById('darkModeToggle');
@@ -488,9 +855,7 @@ const showToastMessage = (message, type) => {
     }, 3000); 
 };
 
-function showLoadingIndicator(show) { 
-    loadingIndicator.style.display = show ? 'flex' : 'none';
-}
+function showLoadingIndicator(show) { /* تم إلغاء شاشة التحميل */ }
 
 const showConfirmationModal = (message, onConfirm, onCancel, titleKey = 'confirmAction') => {
     confirmationModalTitle.textContent = getTranslatedText(titleKey);
@@ -504,6 +869,8 @@ const showConfirmationModal = (message, onConfirm, onCancel, titleKey = 'confirm
 confirmModalBtn.addEventListener('click', () => {
     confirmationModal.style.display = 'none';
     if (confirmCallback) confirmCallback();
+
+// نهاية ملف script.js - تم التأكد من إغلاق جميع الأقواس
 });
 
 cancelModalBtn.addEventListener('click', () => {
@@ -790,8 +1157,8 @@ const translations = {
         , 'globalFilterByMonth': 'عرض بيانات الشهر (عام):',
         'accountTypeLabel': 'نوع الحساب:',
         'accountTypeColumn': 'نوع الحساب',
-        'acctype1': 'النوع 1',
-        'acctype2': 'النوع 2'
+        'acctype1': 'شهر',
+        'acctype2': 'شهرين'
         , 'editAccountTitle': 'تعديل الحساب'
         , 'saveChangesBtn': 'حفظ التعديلات'
         , 'cancelBtn': 'إلغاء'
@@ -1011,8 +1378,8 @@ const translations = {
         , 'globalFilterByMonth': 'Global Month (all views):',
         'accountTypeLabel': 'Account Type:',
         'accountTypeColumn': 'Account Type',
-        'acctype1': 'Type 1',
-        'acctype2': 'Type 2'
+        'acctype1': 'Month',
+        'acctype2': 'Two Months'
         , 'editAccountTitle': 'Edit Account'
         , 'saveChangesBtn': 'Save Changes'
         , 'cancelBtn': 'Cancel'
@@ -1232,7 +1599,7 @@ window.addEventListener('beforeunload', (event) => {
 });
 
 const fetchAllStaticData = async () => {
-    showLoadingIndicator(true);
+    // showLoadingIndicator(true);
     try {
         const usersSnapshot = await getDocs(collection(db, 'users'));
         allUsers = usersSnapshot.docs.map(getDocData);
@@ -1246,7 +1613,7 @@ const fetchAllStaticData = async () => {
     } catch (error) {
         showToastMessage(getTranslatedText('errorLoadingData'), 'error');
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
     }
 };
 
@@ -1271,7 +1638,7 @@ const handleLogin = async () => {
         return;
     }
 
-    showLoadingIndicator(true);
+    // showLoadingIndicator(true);
     try {
         // Load admin and leader PINs from settings (with defaults)
         const adminDocRef = doc(db, 'settings', 'adminPin');
@@ -1351,7 +1718,7 @@ const handleLogin = async () => {
             showLoginErrorModal(getTranslatedText('loginError'));
         }
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
     }
 };
 
@@ -1465,7 +1832,7 @@ const renderMainDashboard = async () => {
         return;
     }
     userNameDisplay.textContent = loggedInUser.name; 
-    showLoadingIndicator(true);
+    // showLoadingIndicator(true);
     
     try {
         const userId = loggedInUser.id;
@@ -1548,7 +1915,7 @@ const renderMainDashboard = async () => {
     } catch (error) {
         showToastMessage(getTranslatedText('errorLoadingData'), 'error');
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
     }
 };
 
@@ -1794,7 +2161,7 @@ const saveWorkRecord = async () => {
 
     showConfirmationModal(getTranslatedText('confirmSave'), async () => {
         isSavingWork = true; 
-        showLoadingIndicator(true);
+        // showLoadingIndicator(true);
         saveWorkBtn.disabled = true;
         saveWorkBtn.textContent = getTranslatedText('saving');
 
@@ -1830,7 +2197,7 @@ const saveWorkRecord = async () => {
         catch (error) {
             showToastMessage(getTranslatedText('errorSavingWork'), 'error');
         } finally {
-            showLoadingIndicator(false);
+            // showLoadingIndicator(false);
             saveWorkBtn.disabled = false;
             saveWorkBtn.textContent = getTranslatedText('saveWorkBtn');
         }
@@ -1858,7 +2225,7 @@ const renderTrackWorkPage = async () => {
     }
     trackTasksTableBody.innerHTML = '';
     trackTasksTableFoot.innerHTML = ''; 
-    showLoadingIndicator(true);
+    // showLoadingIndicator(true);
 
     try {
         const userId = loggedInUser.id;
@@ -2080,7 +2447,7 @@ const renderTrackWorkPage = async () => {
     } catch (error) {
         showToastMessage(`${getTranslatedText('errorLoadingRecords')}: ${error.message}`, 'error');
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
     }
 };
 
@@ -2091,7 +2458,7 @@ const renderAdminPanel = async () => {
         showToastMessage(getTranslatedText('unauthorizedAccess'), 'error'); // Show unauthorized message
         return;
     }
-    showLoadingIndicator(true); // Start loading indicator for admin panel
+    // showLoadingIndicator(true); // Start loading indicator for admin panel
     try {
         // Unsubscribe from previous listener if exists to prevent multiple listeners
         if (unsubscribeUsers) {
@@ -2132,13 +2499,16 @@ const renderAdminPanel = async () => {
     } catch (error) {
         showToastMessage(getTranslatedText('errorLoadingData'), 'error');
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
     }
 };
 
 // Admin: Manage Users
 const loadAndDisplayUsers = async () => {
     usersTableBody.innerHTML = '';
+    // لإعادة رسم العداد الحي كل ثانية
+    if (window._usersStatusInterval) clearInterval(window._usersStatusInterval);
+    const updateStatusCells = [];
     try {
         // Use cached allUsers data
         if (allUsers.length === 0) {
@@ -2159,113 +2529,161 @@ const loadAndDisplayUsers = async () => {
 
                 // Status Column Logic
                 const statusCell = row.insertCell();
-                let statusText = '';
-                let statusTooltip = '';
-                let statusColor = '';
+                statusCell.style.cursor = 'pointer';
+                updateStatusCells.push({statusCell, user});
 
-                if (user.lastActivityTimestamp) {
-                    const lastActivityTime = user.lastActivityTimestamp.toDate().getTime();
-                    const diffMs = now - lastActivityTime;
-
-                    if (diffMs < USER_ONLINE_THRESHOLD_MS) { // Less than 1 minute (actively online)
-                        if (user.currentAccountId && user.currentTaskDefinitionId) {
-                            // User is on Start Work page and selected account/task
-                            statusText = getTranslatedText('onlineOnAccountTask', {
-                                account: user.currentAccountName,
-                                task: user.currentTaskDefinitionName
-                            });
-                            statusColor = '#3498DB'; // Blue for working on a task
-
-                            // --- Calculate Session Details for Tooltip ---
-                            let netSessionMinutes = 0;
-                            let totalDelayMinutes = 0;
-                            let totalSessionMinutes = 0;
-
-                            if (user.sessionStartTime) {
-                                const sessionStartMs = user.sessionStartTime.toDate().getTime();
-                                const currentSessionDurationMs = now - sessionStartMs;
-                                totalSessionMinutes = currentSessionDurationMs / (60 * 1000); // in minutes
-
-                                if (user.lastRecordedTaskTimestamp) {
-                                    const lastRecordedTimeMs = user.lastRecordedTaskTimestamp.toDate().getTime();
-                                    const timeSinceLastRecordMs = now - lastRecordedTimeMs;
-                                    const maxTimingMinutes = getMaxTimingForTask(user.currentTaskDefinitionId);
-                                    // Grace period: max task timing + 1 minute (converted to milliseconds)
-                                    const delayThresholdMs = (maxTimingMinutes * 60 * 1000) + (1 * 60 * 1000);
-
-                                    if (timeSinceLastRecordMs > delayThresholdMs) {
-                                        totalDelayMinutes = (timeSinceLastRecordMs - delayThresholdMs) / (60 * 1000); // in minutes
-                                    }
-                                }
-                                netSessionMinutes = totalSessionMinutes - totalDelayMinutes;
-                            }
-
-                            statusTooltip = `${getTranslatedText('totalSessionTime')}: ${formatNumberToEnglish(formatMinutesToMMSS(totalSessionMinutes))}`;
-
-                        } else {
-                            // User is online but not on a specific task (dashboard, track work, or selecting)
-                            statusText = getTranslatedText('onlineButNotWorking');
-                            statusColor = '#F39C12'; // Orange for online but idle
-                        }
-                    } else if (diffMs < USER_RECENTLY_ONLINE_THRESHOLD_MS) { // Less than USER_RECENTLY_ONLINE_THRESHOLD_MS (5 minutes)
-                        const minutes = Math.floor(diffMs / (60 * 1000));
-                        const seconds = Math.floor((diffMs % (60 * 1000)) / 1000);
-                        statusText = getTranslatedText('onlineSince', {
-                            minutes: formatNumberToEnglish(minutes),
-                            seconds: formatNumberToEnglish(seconds)
-                        });
-                        statusColor = '#2ECC71'; // Green for recently online
-                    } else { // Offline (more than USER_RECENTLY_ONLINE_THRESHOLD_MS)
-                        const activityDate = new Date(lastActivityTime);
-                        const formattedDate = activityDate.toLocaleDateString(currentLanguage, { day: 'numeric', month: 'short', year: 'numeric' });
-                        const formattedTime = activityDate.toLocaleTimeString(currentLanguage, { hour: '2-digit', minute: '2-digit' });
-                        statusText = getTranslatedText('lastActivity', {
-                            date: formattedDate,
-                            time: formattedTime
-                        });
-                        statusColor = '#95A5A6'; // Gray for offline
-                    }
-                } else {
-                    statusText = getTranslatedText('notSet'); // If no activity recorded yet
-                    statusColor = '#95A5A6';
-                }
-
-                statusCell.textContent = statusText;
-                if (statusTooltip) {
-                    statusCell.title = statusTooltip;
-                }
-                statusCell.style.color = statusColor;
+                // تفاصيل الجلسة عند الضغط
+                statusCell.addEventListener('click', () => showSessionDetailsModal(user));
 
                 const actionCell = row.insertCell();
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = getTranslatedText('deleteBtn');
-                deleteBtn.classList.add('admin-action-btntp', 'delete'); // Use admin-action-btntp for consistency
+                deleteBtn.classList.add('admin-action-btntp', 'delete');
                 deleteBtn.addEventListener('click', () => {
                     showConfirmationModal(getTranslatedText('confirmDeleteUser', { name: user.name }), async () => {
-                        showLoadingIndicator(true);
+                        // showLoadingIndicator(true);
                         deleteBtn.disabled = true;
                         deleteBtn.textContent = getTranslatedText('deleting');
                         try {
                             await deleteDoc(doc(db, 'users', user.id));
                             showToastMessage(getTranslatedText('userDeletedSuccess'), 'success');
-                            await fetchAllStaticData(); // Re-fetch all static data after deletion
-                            // loadAndDisplayUsers() will be called by onSnapshot
-                            await populateFilters(); // Update all filter dropdowns
-                            // renderEmployeeRatesAndTotals() will be called by onSnapshot
+                            await fetchAllStaticData();
+                            await populateFilters();
                         } catch (err) {
-                            showToastMessage(getTranslatedText('errorAddingUser'), 'error'); // Reusing translation key
+                            showToastMessage(getTranslatedText('errorAddingUser'), 'error');
                         } finally {
-                            showLoadingIndicator(false);
+                            // showLoadingIndicator(false);
                             deleteBtn.disabled = false;
                             deleteBtn.textContent = getTranslatedText('deleteBtn');
                         }
-                    }, () => {
-                        // Do nothing if cancelled
-                    });
+                    }, () => {});
                 });
                 actionCell.appendChild(deleteBtn);
             });
         }
+        // تحديث حي للحالة كل ثانية
+        function renderStatusCell(statusCell, user) {
+            const now = Date.now();
+            let statusText = '';
+            let statusColor = '';
+            if (user.lastActivityTimestamp) {
+                const lastActivityTime = user.lastActivityTimestamp.toDate().getTime();
+                const diffMs = now - lastActivityTime;
+                if (diffMs < USER_ONLINE_THRESHOLD_MS) {
+                    // متصل الآن
+                    if (user.sessionStartTime) {
+                        const sessionStartMs = user.sessionStartTime.toDate().getTime();
+                        const sessionDuration = now - sessionStartMs;
+                        const h = Math.floor(sessionDuration / 3600000);
+                        const m = Math.floor((sessionDuration % 3600000) / 60000);
+                        const s = Math.floor((sessionDuration % 60000) / 1000);
+                        statusText = `متصل الآن (${h}س ${m}د ${s}ث)`;
+                        statusColor = '#3498DB';
+                    } else {
+                        statusText = 'متصل الآن';
+                        statusColor = '#3498DB';
+                    }
+                } else if (diffMs < USER_RECENTLY_ONLINE_THRESHOLD_MS) {
+                    // كان متصل منذ ...
+                    const ago = Math.floor(diffMs / 1000);
+                    const m = Math.floor(ago / 60);
+                    const s = ago % 60;
+                    statusText = `كان متصل منذ ${m > 0 ? m + ' دقيقة و ' : ''}${s} ثانية`;
+                    statusColor = '#2ECC71';
+                } else {
+                    // آخر ظهور كان ...
+                    const activityDate = new Date(lastActivityTime);
+                    statusText = `آخر ظهور كان ${activityDate.toLocaleDateString()} ${activityDate.toLocaleTimeString()}`;
+                    statusColor = '#95A5A6';
+                }
+            } else {
+                statusText = 'غير متصل';
+                statusColor = '#95A5A6';
+            }
+            statusCell.textContent = statusText;
+            statusCell.style.color = statusColor;
+        }
+        window._usersStatusInterval = setInterval(() => {
+            updateStatusCells.forEach(({statusCell, user}) => renderStatusCell(statusCell, user));
+        }, 1000);
+    // نافذة تفاصيل الجلسة
+    function showSessionDetailsModal(user) {
+        const modal = document.getElementById('sessionDetailsModal');
+        const closeBtn = document.getElementById('closeSessionDetailsModal');
+        const body = document.getElementById('sessionDetailsBody');
+        if (!modal || !body) return;
+        // تفاصيل الجلسة
+        let html = '';
+        if (user.sessionStartTime) {
+            const start = user.sessionStartTime.toDate();
+            html += `<div>وقت بداية الجلسة: ${start.toLocaleString()}</div>`;
+            if (user.lastActivityTimestamp) {
+                const now = new Date();
+                const duration = now - start;
+                const h = Math.floor(duration / 3600000);
+                const m = Math.floor((duration % 3600000) / 60000);
+                const s = Math.floor((duration % 60000) / 1000);
+                html += `<div>زمن الجلسة حتى الآن: <span id="sessionLiveTimer">${h}س ${m}د ${s}ث</span></div>`;
+            }
+            html += `<div>اسم الحساب: ${user.currentAccountName || '-'}</div>`;
+            html += `<div>اسم المهمة: ${user.currentTaskDefinitionName || '-'}</div>`;
+            // صافي ساعات العمل (من سجلات العمل)
+            html += `<div id="sessionNetWork">صافي ساعات العمل: ...</div>`;
+        } else {
+            html += '<div>لا توجد جلسة حالية</div>';
+        }
+        body.innerHTML = html;
+        modal.style.display = 'block';
+        // عداد حي
+        let timerInterval = null;
+        if (user.sessionStartTime && user.lastActivityTimestamp) {
+            const start = user.sessionStartTime.toDate();
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const duration = now - start;
+                const h = Math.floor(duration / 3600000);
+                const m = Math.floor((duration % 3600000) / 60000);
+                const s = Math.floor((duration % 60000) / 1000);
+                const timerSpan = document.getElementById('sessionLiveTimer');
+                if (timerSpan) timerSpan.textContent = `${h}س ${m}د ${s}ث`;
+            }, 1000);
+        }
+        // صافي ساعات العمل (من الكاش)
+        if (user.sessionStartTime && user.id) {
+    const sessionStart = user.sessionStartTime.toDate().getTime();
+    let netMinutes = 0;
+    // 1. سجلات محفوظة
+    if (userWorkRecordsCache.has(user.id)) {
+        const records = userWorkRecordsCache.get(user.id) || [];
+        records.forEach(r => {
+            if (r.timestamp && r.timestamp.toDate && r.timestamp.toDate().getTime() >= sessionStart) {
+                netMinutes += r.totalTime || 0;
+            }
+        });
+    }
+    // 2. مهام الجلسة الحالية (لو هو نفس الشخص وفيه مهمة شغالة)
+    if (loggedInUser && loggedInUser.id === user.id && Array.isArray(currentSessionTasks)) {
+        currentSessionTasks.forEach(task => {
+            if (task.timestamp && task.timestamp >= sessionStart) {
+                netMinutes += task.timing || 0;
+            }
+        });
+    }
+    const netDiv = document.getElementById('sessionNetWork');
+    if (netDiv) netDiv.textContent = `صافي ساعات العمل: ${formatTotalMinutesToArabicText(netMinutes)}`;
+}
+        // إغلاق
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+            if (timerInterval) clearInterval(timerInterval);
+        };
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                if (timerInterval) clearInterval(timerInterval);
+            }
+        };
+    }
     } catch (error) {
         showToastMessage(getTranslatedText('errorLoadingData'), 'error');
     }
@@ -2274,7 +2692,8 @@ const loadAndDisplayUsers = async () => {
 const addUser = async () => { // Renamed for clarity
     const name = newUserNameInput.value.trim();
     const pin = newUserPINInput.value.trim();
-
+    // تحقق من التكرار قبل الإضافة
+    // التحقق الفوري أصبح يتم أثناء الكتابة، لا داعي لتكراره هنا
     clearInputError(newUserNameInput, newUserNameInputError);
     clearInputError(newUserPINInput, newUserPINInputError);
 
@@ -2292,7 +2711,7 @@ const addUser = async () => { // Renamed for clarity
         return;
     }
 
-    showLoadingIndicator(true);
+    // showLoadingIndicator(true);
     addUserBtn.disabled = true;
     addUserBtn.textContent = getTranslatedText('adding');
     try {
@@ -2327,7 +2746,7 @@ const addUser = async () => { // Renamed for clarity
     } catch (error) {
         showToastMessage(getTranslatedText('errorAddingUser'), 'error');
     } finally {
-        showLoadingIndicator(false);
+        // showLoadingIndicator(false);
         addUserBtn.disabled = false;
         addUserBtn.textContent = getTranslatedText('addUserBtn');
     }
@@ -2372,7 +2791,7 @@ const loadAndDisplayAccounts = async () => {
                 deleteBtn.classList.add('admin-action-btntp', 'delete'); // Use admin-action-btntp for consistency
                 deleteBtn.addEventListener('click', () => {
                     showConfirmationModal(getTranslatedText('confirmDeleteAccount', { name: account.name }), async () => {
-                        showLoadingIndicator(true);
+                        // showLoadingIndicator(true);
                         deleteBtn.disabled = true;
                         deleteBtn.textContent = getTranslatedText('deleting');
                         try {
@@ -2459,7 +2878,6 @@ const addAccount = async () => { // Renamed for clarity
 const loadAndDisplayTaskDefinitions = async () => {
     tasksDefinitionTableBody.innerHTML = '';
     try {
-        // Use cached allTaskDefinitions data
         if (allTaskDefinitions.length === 0) {
             const row = tasksDefinitionTableBody.insertRow();
             const cell = row.insertCell(0);
@@ -2467,23 +2885,37 @@ const loadAndDisplayTaskDefinitions = async () => {
             cell.textContent = getTranslatedText('noDataToShow');
             cell.style.textAlign = 'center';
         } else {
-            allTaskDefinitions.forEach(task => { // Iterate over cached tasks
+            allTaskDefinitions.forEach(task => {
                 const row = tasksDefinitionTableBody.insertRow();
+                // لو عندك ID للصف - أضفها
+                row.setAttribute('data-task-id', task.id);
+
                 row.insertCell().textContent = task.name;
 
                 const timingsCell = row.insertCell();
                 if (task.timings && task.timings.length > 0) {
-                    // Display timings in MM:SS format with English digits
                     const timingStrings = task.timings.map(t => formatNumberToEnglish(formatMinutesToMMSS(t)));
                     timingsCell.textContent = timingStrings.join(', ');
                 } else {
-                    timingsCell.textContent = getTranslatedText('noTimings'); // Or empty
+                    timingsCell.textContent = getTranslatedText('noTimings');
                 }
 
                 const actionCell = row.insertCell();
+
+                // ---- زر التعديل ----
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'تعديل';
+                editBtn.className = 'edit-task-timing-btn admin-action-btntp';
+                editBtn.style.marginRight = '8px';
+                editBtn.onclick = function() {
+                    showEditTaskTimingsModal(task.id);
+                };
+                actionCell.appendChild(editBtn);
+
+                // ---- زر الحذف ----
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = getTranslatedText('deleteBtn');
-                deleteBtn.classList.add('admin-action-btntp', 'delete'); // Use admin-action-btntp for consistency
+                deleteBtn.classList.add('admin-action-btntp', 'delete');
                 deleteBtn.addEventListener('click', () => {
                     showConfirmationModal(getTranslatedText('confirmDeleteTask', { name: task.name }), async () => {
                         showLoadingIndicator(true);
@@ -2496,7 +2928,7 @@ const loadAndDisplayTaskDefinitions = async () => {
                             await loadAndDisplayTaskDefinitions(); // Reload after delete
                             await populateFilters(); // Update all filter dropdowns
                         } catch (err) {
-                            showToastMessage(getTranslatedText('errorAddingTask'), 'error'); // Reusing translation key
+                            showToastMessage(getTranslatedText('errorAddingTask'), 'error');
                         } finally {
                             showLoadingIndicator(false);
                             deleteBtn.disabled = false;
@@ -2514,27 +2946,8 @@ const loadAndDisplayTaskDefinitions = async () => {
     }
 };
 
-const addTimingField = () => { // Renamed for clarity
-    const minutesInput = document.createElement('input');
-    minutesInput.type = 'number';
-    minutesInput.classList.add('new-task-timing-minutes');
-    minutesInput.placeholder = getTranslatedText('minutesPlaceholder');
-    minutesInput.min = '0';
+// ...existing code...
 
-    const secondsInput = document.createElement('input');
-    secondsInput.type = 'number';
-    secondsInput.classList.add('new-task-timing-seconds');
-    secondsInput.placeholder = getTranslatedText('secondsPlaceholder');
-    secondsInput.min = '0';
-    secondsInput.max = '59';
-
-    const timingGroupDiv = document.createElement('div');
-    timingGroupDiv.classList.add('timing-input-group'); // Apply the new flex styling
-    timingGroupDiv.appendChild(minutesInput);
-    timingGroupDiv.appendChild(secondsInput);
-
-    newTimingsContainer.appendChild(timingGroupDiv);
-};
 
 const addTaskDefinition = async () => { // Renamed for clarity
     const name = newTaskNameInput.value.trim();
@@ -2556,26 +2969,39 @@ const addTaskDefinition = async () => { // Renamed for clarity
     let hasValidTimings = false;
 
     timingInputsMinutes.forEach((minInput, index) => {
-        const secInput = timingInputsSeconds[index];
-        const minutes = parseInt(minInput.value);
-        const seconds = parseInt(secInput.value);
+    const secInput = timingInputsSeconds[index];
+    const minutes = parseInt(minInput.value);
+    // تعديل: لو حقل الثواني فاضي اعتبره صفر
+    const seconds = secInput.value === '' ? 0 : parseInt(secInput.value);
 
-        // Check if both are empty, then skip this pair (allow empty pairs if not the only input)
-        if (minInput.value === '' && secInput.value === '') {
-            return;
-        }
+    // Check if both are empty, then skip this pair (allow empty pairs if not the only input)
+    if (minInput.value === '' && secInput.value === '') {
+        return;
+    }
 
-        if (!isNaN(minutes) && minutes >= 0 && !isNaN(seconds) && seconds >= 0 && seconds < 60) {
-            const totalMinutes = minutes + (seconds / 60);
-            timings.push(totalMinutes);
-            hasValidTimings = true;
-        } else {
-            // If fields are not empty but invalid
-            showInputError(minInput, newTimingsInputError, 'invalidTimeInput'); // Point to the first invalid input
-            showInputError(secInput, newTimingsInputError, 'invalidTimeInput');
-            isValid = false;
-        }
-    });
+    if (!isNaN(minutes) && minutes >= 0 && !isNaN(seconds) && seconds >= 0 && seconds < 60) {
+        const totalMinutes = minutes + (seconds / 60);
+        timings.push(totalMinutes);
+        hasValidTimings = true;
+    } else {
+        // If fields are not empty but invalid
+        showInputError(minInput, newTimingsInputError, 'invalidTimeInput'); // Point to the first invalid input
+        showInputError(secInput, newTimingsInputError, 'invalidTimeInput');
+        isValid = false;
+    }
+});
+
+// التحقق من عدم تكرار التوقيتات
+const timingsStrs = timings.map(t => t.toFixed(3)); // نحوّل كل قيمة لنص دقيق
+const timingsSet = new Set(timingsStrs);
+if (timings.length !== timingsSet.size) {
+    showInputError(
+        newTimingsContainer.querySelector('.new-task-timing-minutes') || newTimingsContainer,
+        newTimingsInputError,
+        'لا يجب تكرار نفس قيمة التوقيت أكثر من مرة'
+    );
+    isValid = false;
+}
 
     if (!hasValidTimings && isValid) { // If no valid timings were added and no other errors
         showInputError(newTimingsContainer.querySelector('.new-task-timing-minutes') || newTimingsContainer, newTimingsInputError, 'enterTaskNameTiming');
@@ -2602,12 +3028,8 @@ const addTaskDefinition = async () => { // Renamed for clarity
         await addDoc(tasksCollectionRef, { name: name, timings: timings });
         showToastMessage(getTranslatedText('taskAddedSuccess'), 'success');
         newTaskNameInput.value = '';
-        newTimingsContainer.innerHTML = `
-            <div class="timing-input-group">
-                <input type="number" class="new-task-timing-minutes" placeholder="${getTranslatedText('minutesPlaceholder')}" min="0" data-key="minutesPlaceholder">
-                <input type="number" class="new-task-timing-seconds" placeholder="${getTranslatedText('secondsPlaceholder')}" min="0" max="59" data-key="secondsPlaceholder">
-            </div>
-        `; // Reset to one pair
+        newTimingsContainer.innerHTML = '';
+        addTimingField(); // Reset to a single timing field (minutes + seconds)
         await fetchAllStaticData(); // Re-fetch all static data after adding
         await loadAndDisplayTaskDefinitions();
         await populateFilters(); // Update all filter dropdowns
@@ -2741,7 +3163,7 @@ const loadAndDisplayWorkRecords = async (userId = null, date = null, accountId =
 
             const actionCell = row.insertCell();
             const editBtn = document.createElement('button');
-            editBtn.textContent = getTranslatedText('editRecord');
+            editBtn.textContent = getTranslatedText('modify');
             editBtn.classList.add('admin-action-btntp');
             editBtn.addEventListener('click', () => openEditRecordModal(record));
             actionCell.appendChild(editBtn);
@@ -3650,6 +4072,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             langArBtn.classList.remove('active');
         });
     }
+
     if (darkModeToggle) {
         darkModeToggle.addEventListener('click', toggleDarkMode);
     }
