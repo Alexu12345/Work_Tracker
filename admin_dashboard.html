@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title data-key="adminDashboardTitle">لوحة تحكم المدير</title>
+    <title data-key="adminDashboardTitle">
+        لوحة تحكم المدير
+    </title>
 
     <link rel="stylesheet" href="admin_dashboard.css">
 
@@ -14,7 +16,9 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        /* إخفاء المحتوى قبل إدخال كلمة المرور */
+        /*
+         * إخفاء لوحة التحكم قبل إدخال كلمة المرور
+         */
         [hidden] {
             display: none !important;
         }
@@ -23,7 +27,9 @@
             overflow: hidden;
         }
 
-        /* نافذة كلمة المرور */
+        /*
+         * نافذة كلمة المرور
+         */
         #passwordGate {
             position: fixed;
             inset: 0;
@@ -32,7 +38,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
         }
 
         .password-box {
@@ -40,36 +46,36 @@
             padding: 30px;
             border-radius: 14px;
             background: #ffffff;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
             text-align: right;
         }
 
         .password-box h2 {
-            margin-top: 0;
-            text-align: center;
+            margin: 0 0 24px;
             color: #007bff;
+            text-align: center;
         }
 
         .password-box label {
             display: block;
             margin-bottom: 8px;
+            color: #333333;
             font-weight: bold;
-            color: #333;
         }
 
         .password-box input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #bbb;
+            margin-bottom: 16px;
+            border: 1px solid #bbbbbb;
             border-radius: 8px;
-            font-size: 16px;
+            outline: none;
+            font-size: 17px;
             direction: ltr;
             text-align: left;
         }
 
         .password-box input:focus {
-            outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
         }
@@ -81,8 +87,8 @@
             border-radius: 8px;
             background: #007bff;
             color: #ffffff;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 17px;
         }
 
         .password-box button:hover {
@@ -90,19 +96,21 @@
         }
 
         .password-box button:disabled {
-            opacity: 0.7;
             cursor: wait;
+            opacity: 0.7;
         }
 
         #passwordError {
             min-height: 24px;
-            margin-bottom: 0;
+            margin: 14px 0 0;
             color: #dc3545;
             font-weight: bold;
             text-align: center;
         }
 
-        /* منع التفاعل مع الصفحة قبل فتحها */
+        /*
+         * لا تظهر لوحة التحكم قبل فتحها
+         */
         body.is-locked #protectedContent {
             display: none !important;
         }
@@ -110,19 +118,47 @@
         body.is-unlocked #protectedContent {
             display: block;
         }
+
+        /*
+         * تنسيق النافذة في الوضع الليلي
+         */
+        body.dark-mode #passwordGate {
+            background: rgba(0, 0, 0, 0.92);
+        }
+
+        body.dark-mode .password-box {
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .password-box h2 {
+            color: #00e6e6;
+        }
+
+        body.dark-mode .password-box label {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .password-box input {
+            background: #2a2a2a;
+            border-color: #555555;
+            color: #ffffff;
+        }
     </style>
 </head>
 
 <body class="is-locked">
 
-    <!-- نافذة كلمة المرور -->
+    <!-- نافذة كلمة المرور الإجبارية -->
     <div id="passwordGate"
          role="dialog"
          aria-modal="true"
          aria-labelledby="passwordTitle">
 
         <form id="passwordForm" class="password-box">
-            <h2 id="passwordTitle">تسجيل الدخول</h2>
+            <h2 id="passwordTitle">
+                تسجيل الدخول
+            </h2>
 
             <label for="passwordInput">
                 أدخل كلمة المرور
@@ -135,13 +171,14 @@
                 required
                 autofocus>
 
-            <button type="submit" id="passwordButton">
+            <button id="passwordButton" type="submit">
                 موافق
             </button>
 
             <p id="passwordError"
                role="alert"
-               aria-live="polite"></p>
+               aria-live="polite">
+            </p>
         </form>
     </div>
 
@@ -149,20 +186,32 @@
     <div id="protectedContent" hidden>
 
         <!-- Loading Indicator -->
-        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+        <div id="loadingIndicator"
+             class="loading-indicator"
+             style="display: none;">
+
             <div class="spinner"></div>
         </div>
 
         <!-- Toast Message -->
-        <div id="toastMessage" class="toast-message" style="display: none;"></div>
+        <div id="toastMessage"
+             class="toast-message"
+             style="display: none;">
+        </div>
 
         <!-- Language Switcher -->
         <div class="lang-switcher">
-            <button id="langArBtn" class="lang-btn active">
+            <button id="langArBtn"
+                    class="lang-btn active"
+                    type="button">
+
                 العربية
             </button>
 
-            <button id="langEnBtn" class="lang-btn">
+            <button id="langEnBtn"
+                    class="lang-btn"
+                    type="button">
+
                 English
             </button>
         </div>
@@ -172,6 +221,7 @@
                 class="dark-mode-toggle"
                 type="button"
                 aria-label="تبديل الوضع الليلي">
+
             <i class="fas fa-moon"></i>
         </button>
 
@@ -184,28 +234,40 @@
             <!-- Filter Controls -->
             <div class="filter-controls">
 
-                <label for="filterType" data-key="filterBy">
+                <label for="filterType"
+                       data-key="filterBy">
+
                     تصفية حسب:
                 </label>
 
                 <select id="filterType">
-                    <option value="all" data-key="allTime">
+                    <option value="all"
+                            data-key="allTime">
+
                         جميع الأوقات
                     </option>
 
-                    <option value="day" data-key="specificDay">
+                    <option value="day"
+                            data-key="specificDay">
+
                         يوم معين
                     </option>
 
-                    <option value="week" data-key="specificWeek">
+                    <option value="week"
+                            data-key="specificWeek">
+
                         أسبوع معين
                     </option>
 
-                    <option value="month" data-key="specificMonth">
+                    <option value="month"
+                            data-key="specificMonth">
+
                         شهر معين
                     </option>
 
-                    <option value="custom" data-key="customRange">
+                    <option value="custom"
+                            data-key="customRange">
+
                         نطاق مخصص
                     </option>
                 </select>
@@ -214,55 +276,71 @@
                      class="filter-input-group"
                      style="display: none;">
 
-                    <label for="filterDate" data-key="selectDate">
+                    <label for="filterDate"
+                           data-key="selectDate">
+
                         اختر تاريخ:
                     </label>
 
-                    <input type="date" id="filterDate">
+                    <input type="date"
+                           id="filterDate">
                 </div>
 
                 <div id="weekFilter"
                      class="filter-input-group"
                      style="display: none;">
 
-                    <label for="filterWeek" data-key="selectWeek">
+                    <label for="filterWeek"
+                           data-key="selectWeek">
+
                         اختر أسبوع:
                     </label>
 
-                    <input type="week" id="filterWeek">
+                    <input type="week"
+                           id="filterWeek">
                 </div>
 
                 <div id="monthFilter"
                      class="filter-input-group"
                      style="display: none;">
 
-                    <label for="filterMonth" data-key="selectMonth">
+                    <label for="filterMonth"
+                           data-key="selectMonth">
+
                         اختر شهر:
                     </label>
 
-                    <input type="month" id="filterMonth">
+                    <input type="month"
+                           id="filterMonth">
                 </div>
 
                 <div id="customFilter"
                      class="filter-input-group"
                      style="display: none;">
 
-                    <label for="filterStartDate" data-key="startDate">
+                    <label for="filterStartDate"
+                           data-key="startDate">
+
                         تاريخ البدء:
                     </label>
 
-                    <input type="date" id="filterStartDate">
+                    <input type="date"
+                           id="filterStartDate">
 
-                    <label for="filterEndDate" data-key="endDate">
+                    <label for="filterEndDate"
+                           data-key="endDate">
+
                         تاريخ الانتهاء:
                     </label>
 
-                    <input type="date" id="filterEndDate">
+                    <input type="date"
+                           id="filterEndDate">
                 </div>
 
                 <button id="applyFilterBtn"
                         type="button"
                         data-key="applyFilter">
+
                     تطبيق التصفية
                 </button>
             </div>
@@ -278,6 +356,7 @@
 
                 <!-- Top 3 Employees Section -->
                 <div class="top-employees-section">
+
                     <h2 data-key="topEmployeesTitle">
                         أفضل 3 موظفين
                     </h2>
@@ -333,18 +412,16 @@
                     class="back-btn"
                     type="button"
                     data-key="backToAdminPanel">
+
                 رجوع للوحة تحكم المدير
             </button>
         </div>
     </div>
 
-    <!-- كود الحماية وتحميل ملفات الصفحة -->
+    <!-- كود الحماية وتحميل ملفات لوحة التحكم -->
     <script>
         /*
-         * غيّر كلمة المرور من هذا السطر فقط.
-         *
-         * هذه حماية من جهة المتصفح وليست حماية أمنية حقيقية،
-         * لأن كلمة المرور موجودة داخل كود JavaScript.
+         * كلمة المرور
          */
         const PAGE_PASSWORD = '11223344';
 
@@ -366,15 +443,30 @@
         const protectedContent =
             document.getElementById('protectedContent');
 
-        function loadScript(src, isModule = false) {
+        /*
+         * تحميل ملف JavaScript عادي
+         */
+        function loadScript(src) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');
 
                 script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
 
-                if (isModule) {
-                    script.type = 'module';
-                }
+                document.body.appendChild(script);
+            });
+        }
+
+        /*
+         * تحميل ملف JavaScript من نوع module
+         */
+        function loadModule(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+
+                script.src = src;
+                script.type = 'module';
 
                 script.onload = resolve;
                 script.onerror = reject;
@@ -406,28 +498,37 @@
 
                 try {
                     /*
-                     * إظهار محتوى لوحة التحكم بعد نجاح كلمة المرور
+                     * إظهار محتوى لوحة التحكم
                      */
                     protectedContent.hidden = false;
 
                     document.body.classList.remove('is-locked');
                     document.body.classList.add('is-unlocked');
 
+                    /*
+                     * إزالة نافذة كلمة المرور
+                     */
                     passwordGate.remove();
 
                     /*
-                     * تحميل Chart.js أولًا
+                     * تحميل Chart.js بعد كلمة المرور
                      */
                     await loadScript(
                         'https://cdn.jsdelivr.net/npm/chart.js'
                     );
 
                     /*
-                     * تحميل JavaScript الخاص بلوحة التحكم
+                     * تحميل admin_dashboard.js بعد Chart.js
                      */
-                    await loadScript(
-                        'admin_dashboard.js',
-                        true
+                    await loadModule('admin_dashboard.js');
+
+                    /*
+                     * ملف admin_dashboard.js الحالي
+                     * يحتوي على DOMContentLoaded.
+                     * يتم تشغيل الحدث بعد تحميله.
+                     */
+                    document.dispatchEvent(
+                        new Event('DOMContentLoaded')
                     );
 
                 } catch (error) {
@@ -436,17 +537,28 @@
                         error
                     );
 
+                    document.body.classList.add('is-locked');
+                    document.body.classList.remove('is-unlocked');
+
+                    protectedContent.hidden = true;
+
                     passwordError.textContent =
                         'حدث خطأ أثناء تحميل لوحة التحكم.';
 
                     passwordButton.disabled = false;
                     passwordButton.textContent = 'موافق';
+
+                    if (!document.body.contains(passwordGate)) {
+                        document.body.appendChild(passwordGate);
+                    }
+
+                    passwordInput.focus();
                 }
             }
         );
 
         /*
-         * منع زر Escape من تجاوز نافذة كلمة المرور
+         * منع زر Escape من تجاوز النافذة
          */
         document.addEventListener(
             'keydown',
@@ -456,6 +568,19 @@
                     document.body.classList.contains('is-locked')
                 ) {
                     event.preventDefault();
+                }
+            }
+        );
+
+        /*
+         * منع النقر خارج النافذة من إغلاقها
+         */
+        passwordGate.addEventListener(
+            'click',
+            function (event) {
+                if (event.target === passwordGate) {
+                    event.preventDefault();
+                    passwordInput.focus();
                 }
             }
         );
