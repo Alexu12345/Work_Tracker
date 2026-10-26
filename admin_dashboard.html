@@ -4,6 +4,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>صفحة محمية</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+            <h1
+        /* إخفاء الصفحة قبل إدخال كلمة المرور */
+        body.is-locked {
+            overflow: hidden;
+        }
+
+        /* نافذة كلمة المرور */
+        #passwordGate {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .password-box {
+            width: min(100%, 380px);
+            padding: 30px;
+            border-radius: 14px;
+            background: white;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+            text-align: right;
+        }
+
+        .password-box h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .password-box label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            font-size: 16px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .password-box input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .password-box button {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .password-box button:hover {
+            background: #0056b3;
+        }
+
+        .password-box button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        #passwordError {
+            min-height: 24px;
+            margin-bottom: 0;
+            color: #dc3545;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* محتوى الصفحة يظل مخفيًا قبل المصادقة */
+        #protectedContent {
+            display: none;
+        }
+
+        body.is-unlocked #protectedContent {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="is-locked">
+
+    <!-- نافذة لا يمكن تجاوزها -->
+    <div id="passwordGate"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="passwordTitle">
+
+        <form id="passwordForm" class="password-box">
+            <h2 id="passwordTitle">تسجيل الدخول</h2>
+
+            <label for="passwordInput">
+                أدخل كلمة المرور
+            </label>
+
+            <input
+                id="passwordInput"
+                type="password"
+                autocomplete="current-password"
+                required
+                autofocus>
+
+            <button type="submit" id="passwordButton">
+                موافق
+            </button>
+
+            <p id="passwordError" role="alert" aria-live="polite"></p>
+        </form>
+    </div>
+
+    <!--
+        ضع محتوى صفحتك الحالي داخل هذا القالب.
+        المحتوى لن يظهر قبل إدخال كلمة المرور الصحيحة.
+    -->
+    <template id="protectedTemplate">
+        <main id="protectedContent">
+
+            
+            <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-key="adminDashboardTitle">لوحة تحكم المدير</title>
     <link rel="stylesheet" href="admin_dashboard.css">
     <!-- Font Awesome for icons -->
@@ -118,6 +269,87 @@
     </div>
 
     <script type="module" src="admin_dashboard.js"></script>
+</body>
+
+</html>
+
+        </main>
+    </template>
+
+    <script>
+        /*
+         * غيّر كلمة المرور من هذا السطر فقط.
+         *
+         * تنبيه:
+         * هذه حماية من جهة المتصفح وليست حماية أمنية حقيقية،
+         * لأن كلمة المرور موجودة داخل كود JavaScript.
+         */
+        const PAGE_PASSWORD = '11223344';
+
+        const passwordGate = document.getElementById('passwordGate');
+        const passwordForm = document.getElementById('passwordForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordButton = document.getElementById('passwordButton');
+        const passwordError = document.getElementById('passwordError');
+        const protectedTemplate = document.getElementById('protectedTemplate');
+
+        passwordForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            passwordError.textContent = '';
+
+            if (passwordInput.value !== PAGE_PASSWORD) {
+                passwordError.textContent = 'كلمة المرور غير صحيحة، أعد كتابتها.';
+                passwordInput.value = '';
+                passwordInput.focus();
+                return;
+            }
+
+            passwordButton.disabled = true;
+            passwordButton.textContent = 'جاري فتح الصفحة...';
+
+            // نقل محتوى القالب إلى الصفحة بعد نجاح كلمة المرور
+            const content = protectedTemplate.content.cloneNode(true);
+            document.body.appendChild(content);
+
+            // إخفاء نافذة الدخول وفتح الصفحة
+            document.body.classList.remove('is-locked');
+            document.body.classList.add('is-unlocked');
+            passwordGate.remove();
+
+            /*
+             * إذا كان لديك ملف JavaScript خاص بالصفحة،
+             * يمكنك تحميله هنا بعد نجاح كلمة المرور.
+             *
+             * مثال:
+             *
+             * loadScript('admin_dashboard.js', true);
+             */
+        });
+
+        // منع زر Escape من تجاوز النافذة
+        document.addEventListener('keydown', function (event) {
+            if (
+                event.key === 'Escape' &&
+                document.body.classList.contains('is-locked')
+            ) {
+                event.preventDefault();
+            }
+        });
+
+        // تحميل ملف JavaScript بعد نجاح كلمة المرور
+        function loadScript(src, isModule = false) {
+            const script = document.createElement('script');
+
+            script.src = src;
+
+            if (isModule) {
+                script.type = 'module';
+            }
+
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 
 </html>
