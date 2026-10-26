@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>صفحة محمية</title>
+    <title data-key="adminDashboardTitle">لوحة تحكم المدير</title>
+
+    <link rel="stylesheet" href="admin_dashboard.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        * {
-            box-sizing: border-box;
+        /* إخفاء المحتوى قبل إدخال كلمة المرور */
+        [hidden] {
+            display: none !important;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-            <h1
-        /* إخفاء الصفحة قبل إدخال كلمة المرور */
         body.is-locked {
             overflow: hidden;
         }
@@ -39,7 +39,7 @@
             width: min(100%, 380px);
             padding: 30px;
             border-radius: 14px;
-            background: white;
+            background: #ffffff;
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
             text-align: right;
         }
@@ -47,12 +47,14 @@
         .password-box h2 {
             margin-top: 0;
             text-align: center;
+            color: #007bff;
         }
 
         .password-box label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+            color: #333;
         }
 
         .password-box input {
@@ -75,10 +77,10 @@
         .password-box button {
             width: 100%;
             padding: 12px;
-            border: 0;
+            border: none;
             border-radius: 8px;
             background: #007bff;
-            color: white;
+            color: #ffffff;
             font-size: 16px;
             cursor: pointer;
         }
@@ -100,9 +102,9 @@
             text-align: center;
         }
 
-        /* محتوى الصفحة يظل مخفيًا قبل المصادقة */
-        #protectedContent {
-            display: none;
+        /* منع التفاعل مع الصفحة قبل فتحها */
+        body.is-locked #protectedContent {
+            display: none !important;
         }
 
         body.is-unlocked #protectedContent {
@@ -113,7 +115,7 @@
 
 <body class="is-locked">
 
-    <!-- نافذة لا يمكن تجاوزها -->
+    <!-- نافذة كلمة المرور -->
     <div id="passwordGate"
          role="dialog"
          aria-modal="true"
@@ -137,218 +139,326 @@
                 موافق
             </button>
 
-            <p id="passwordError" role="alert" aria-live="polite"></p>
+            <p id="passwordError"
+               role="alert"
+               aria-live="polite"></p>
         </form>
     </div>
 
-    <!--
-        ضع محتوى صفحتك الحالي داخل هذا القالب.
-        المحتوى لن يظهر قبل إدخال كلمة المرور الصحيحة.
-    -->
-    <template id="protectedTemplate">
-        <main id="protectedContent">
+    <!-- محتوى لوحة التحكم -->
+    <div id="protectedContent" hidden>
 
-            
-            <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-key="adminDashboardTitle">لوحة تحكم المدير</title>
-    <link rel="stylesheet" href="admin_dashboard.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-
-<body>
-    <!-- Loading Indicator -->
-    <div id="loadingIndicator" class="loading-indicator" style="display: none;">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Toast Message -->
-    <div id="toastMessage" class="toast-message" style="display: none;"></div>
-
-    <!-- Language Switcher -->
-    <div class="lang-switcher">
-        <button id="langArBtn" class="lang-btn active">العربية</button>
-        <button id="langEnBtn" class="lang-btn">English</button>
-    </div>
-
-    <!-- Dark Mode Toggle -->
-    <button id="darkModeToggle" class="dark-mode-toggle">
-        <i class="fas fa-moon"></i>
-    </button>
-
-    <div class="dashboard-container page">
-        <h1 data-key="adminDashboardTitle">لوحة تحكم المدير</h1>
-
-        <!-- Filter Controls -->
-        <div class="filter-controls">
-            <label for="filterType" data-key="filterBy">تصفية حسب:</label>
-            <select id="filterType">
-                <option value="all" data-key="allTime">جميع الأوقات</option>
-                <option value="day" data-key="specificDay">يوم معين</option>
-                <option value="week" data-key="specificWeek">أسبوع معين</option>
-                <option value="month" data-key="specificMonth">شهر معين</option>
-                <option value="custom" data-key="customRange">نطاق مخصص</option>
-            </select>
-
-            <div id="dateFilter" class="filter-input-group" style="display: none;">
-                <label for="filterDate" data-key="selectDate">اختر تاريخ:</label>
-                <input type="date" id="filterDate">
-            </div>
-
-            <div id="weekFilter" class="filter-input-group" style="display: none;">
-                <label for="filterWeek" data-key="selectWeek">اختر أسبوع:</label>
-                <input type="week" id="filterWeek">
-            </div>
-
-            <div id="monthFilter" class="filter-input-group" style="display: none;">
-                <label for="filterMonth" data-key="selectMonth">اختر شهر:</label>
-                <input type="month" id="filterMonth">
-            </div>
-
-            <div id="customFilter" class="filter-input-group" style="display: none;">
-                <label for="filterStartDate" data-key="startDate">تاريخ البدء:</label>
-                <input type="date" id="filterStartDate">
-                <label for="filterEndDate" data-key="endDate">تاريخ الانتهاء:</label>
-                <input type="date" id="filterEndDate">
-            </div>
-
-            <button id="applyFilterBtn" data-key="applyFilter">تطبيق التصفية</button>
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
         </div>
 
-        <div class="dashboard-content">
-            <!-- Main Performance Chart -->
-            <div class="chart-section">
-                <div class="chart-container">
-                    <canvas id="performanceChart"></canvas>
-                </div>
-            </div>
+        <!-- Toast Message -->
+        <div id="toastMessage" class="toast-message" style="display: none;"></div>
 
-            <!-- Top 3 Employees Section -->
-            <div class="top-employees-section">
-                <h2 data-key="topEmployeesTitle">أفضل 3 موظفين</h2>
-                <div class="ladder-container">
-                    <!-- Ladders will be dynamically generated here -->
-                </div>
-            </div>
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+            <button id="langArBtn" class="lang-btn active">
+                العربية
+            </button>
 
-            <!-- New Account Performance Chart -->
-            <div class="chart-section account-chart-section">
-                <div class="chart-container">
-                    <canvas id="accountPerformanceChart"></canvas>
-                </div>
-            </div>
-
-            <!-- New Account Performance Table -->
-            <div class="table-section account-table-section">
-                <h2 data-key="accountSummaryTableTitle">ملخص أداء الحسابات</h2>
-                <div class="table-responsive">
-                    <table id="accountSummaryTable">
-                        <thead>
-                            <tr>
-                                <th data-key="accountNameHeader">اسم الحساب</th>
-                                <th data-key="totalHoursHeader">إجمالي الساعات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Account data will be dynamically generated here -->
-                        </tbody>
-                    </table>
-                </div>
-                <p id="noAccountDataMessage" class="no-data-message" style="display: none;"></p>
-            </div>
+            <button id="langEnBtn" class="lang-btn">
+                English
+            </button>
         </div>
 
-        <button id="backToAdminPanelBtn" class="back-btn" data-key="backToAdminPanel">رجوع للوحة تحكم المدير</button>
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle"
+                class="dark-mode-toggle"
+                type="button"
+                aria-label="تبديل الوضع الليلي">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <div class="dashboard-container page">
+
+            <h1 data-key="adminDashboardTitle">
+                لوحة تحكم المدير
+            </h1>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+
+                <label for="filterType" data-key="filterBy">
+                    تصفية حسب:
+                </label>
+
+                <select id="filterType">
+                    <option value="all" data-key="allTime">
+                        جميع الأوقات
+                    </option>
+
+                    <option value="day" data-key="specificDay">
+                        يوم معين
+                    </option>
+
+                    <option value="week" data-key="specificWeek">
+                        أسبوع معين
+                    </option>
+
+                    <option value="month" data-key="specificMonth">
+                        شهر معين
+                    </option>
+
+                    <option value="custom" data-key="customRange">
+                        نطاق مخصص
+                    </option>
+                </select>
+
+                <div id="dateFilter"
+                     class="filter-input-group"
+                     style="display: none;">
+
+                    <label for="filterDate" data-key="selectDate">
+                        اختر تاريخ:
+                    </label>
+
+                    <input type="date" id="filterDate">
+                </div>
+
+                <div id="weekFilter"
+                     class="filter-input-group"
+                     style="display: none;">
+
+                    <label for="filterWeek" data-key="selectWeek">
+                        اختر أسبوع:
+                    </label>
+
+                    <input type="week" id="filterWeek">
+                </div>
+
+                <div id="monthFilter"
+                     class="filter-input-group"
+                     style="display: none;">
+
+                    <label for="filterMonth" data-key="selectMonth">
+                        اختر شهر:
+                    </label>
+
+                    <input type="month" id="filterMonth">
+                </div>
+
+                <div id="customFilter"
+                     class="filter-input-group"
+                     style="display: none;">
+
+                    <label for="filterStartDate" data-key="startDate">
+                        تاريخ البدء:
+                    </label>
+
+                    <input type="date" id="filterStartDate">
+
+                    <label for="filterEndDate" data-key="endDate">
+                        تاريخ الانتهاء:
+                    </label>
+
+                    <input type="date" id="filterEndDate">
+                </div>
+
+                <button id="applyFilterBtn"
+                        type="button"
+                        data-key="applyFilter">
+                    تطبيق التصفية
+                </button>
+            </div>
+
+            <div class="dashboard-content">
+
+                <!-- Main Performance Chart -->
+                <div class="chart-section">
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top 3 Employees Section -->
+                <div class="top-employees-section">
+                    <h2 data-key="topEmployeesTitle">
+                        أفضل 3 موظفين
+                    </h2>
+
+                    <div class="ladder-container">
+                        <!-- سيتم إنشاء البيانات تلقائيًا -->
+                    </div>
+                </div>
+
+                <!-- Account Performance Chart -->
+                <div class="chart-section account-chart-section">
+                    <div class="chart-container">
+                        <canvas id="accountPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Account Performance Table -->
+                <div class="table-section account-table-section">
+
+                    <h2 data-key="accountSummaryTableTitle">
+                        ملخص أداء الحسابات
+                    </h2>
+
+                    <div class="table-responsive">
+                        <table id="accountSummaryTable">
+
+                            <thead>
+                                <tr>
+                                    <th data-key="accountNameHeader">
+                                        اسم الحساب
+                                    </th>
+
+                                    <th data-key="totalHoursHeader">
+                                        إجمالي الساعات
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- سيتم إنشاء بيانات الحسابات تلقائيًا -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p id="noAccountDataMessage"
+                       class="no-data-message"
+                       style="display: none;">
+                    </p>
+                </div>
+            </div>
+
+            <button id="backToAdminPanelBtn"
+                    class="back-btn"
+                    type="button"
+                    data-key="backToAdminPanel">
+                رجوع للوحة تحكم المدير
+            </button>
+        </div>
     </div>
 
-    <script type="module" src="admin_dashboard.js"></script>
-</body>
-
-</html>
-
-        </main>
-    </template>
-
+    <!-- كود الحماية وتحميل ملفات الصفحة -->
     <script>
         /*
          * غيّر كلمة المرور من هذا السطر فقط.
          *
-         * تنبيه:
          * هذه حماية من جهة المتصفح وليست حماية أمنية حقيقية،
          * لأن كلمة المرور موجودة داخل كود JavaScript.
          */
         const PAGE_PASSWORD = '11223344';
 
-        const passwordGate = document.getElementById('passwordGate');
-        const passwordForm = document.getElementById('passwordForm');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordButton = document.getElementById('passwordButton');
-        const passwordError = document.getElementById('passwordError');
-        const protectedTemplate = document.getElementById('protectedTemplate');
+        const passwordGate =
+            document.getElementById('passwordGate');
 
-        passwordForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+        const passwordForm =
+            document.getElementById('passwordForm');
 
-            passwordError.textContent = '';
+        const passwordInput =
+            document.getElementById('passwordInput');
 
-            if (passwordInput.value !== PAGE_PASSWORD) {
-                passwordError.textContent = 'كلمة المرور غير صحيحة، أعد كتابتها.';
-                passwordInput.value = '';
-                passwordInput.focus();
-                return;
-            }
+        const passwordButton =
+            document.getElementById('passwordButton');
 
-            passwordButton.disabled = true;
-            passwordButton.textContent = 'جاري فتح الصفحة...';
+        const passwordError =
+            document.getElementById('passwordError');
 
-            // نقل محتوى القالب إلى الصفحة بعد نجاح كلمة المرور
-            const content = protectedTemplate.content.cloneNode(true);
-            document.body.appendChild(content);
+        const protectedContent =
+            document.getElementById('protectedContent');
 
-            // إخفاء نافذة الدخول وفتح الصفحة
-            document.body.classList.remove('is-locked');
-            document.body.classList.add('is-unlocked');
-            passwordGate.remove();
-
-            /*
-             * إذا كان لديك ملف JavaScript خاص بالصفحة،
-             * يمكنك تحميله هنا بعد نجاح كلمة المرور.
-             *
-             * مثال:
-             *
-             * loadScript('admin_dashboard.js', true);
-             */
-        });
-
-        // منع زر Escape من تجاوز النافذة
-        document.addEventListener('keydown', function (event) {
-            if (
-                event.key === 'Escape' &&
-                document.body.classList.contains('is-locked')
-            ) {
-                event.preventDefault();
-            }
-        });
-
-        // تحميل ملف JavaScript بعد نجاح كلمة المرور
         function loadScript(src, isModule = false) {
-            const script = document.createElement('script');
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
 
-            script.src = src;
+                script.src = src;
 
-            if (isModule) {
-                script.type = 'module';
-            }
+                if (isModule) {
+                    script.type = 'module';
+                }
 
-            document.body.appendChild(script);
+                script.onload = resolve;
+                script.onerror = reject;
+
+                document.body.appendChild(script);
+            });
         }
+
+        passwordForm.addEventListener(
+            'submit',
+            async function (event) {
+                event.preventDefault();
+
+                passwordError.textContent = '';
+
+                if (passwordInput.value !== PAGE_PASSWORD) {
+                    passwordError.textContent =
+                        'كلمة المرور غير صحيحة، أعد كتابتها.';
+
+                    passwordInput.value = '';
+                    passwordInput.focus();
+
+                    return;
+                }
+
+                passwordButton.disabled = true;
+                passwordButton.textContent =
+                    'جاري فتح الصفحة...';
+
+                try {
+                    /*
+                     * إظهار محتوى لوحة التحكم بعد نجاح كلمة المرور
+                     */
+                    protectedContent.hidden = false;
+
+                    document.body.classList.remove('is-locked');
+                    document.body.classList.add('is-unlocked');
+
+                    passwordGate.remove();
+
+                    /*
+                     * تحميل Chart.js أولًا
+                     */
+                    await loadScript(
+                        'https://cdn.jsdelivr.net/npm/chart.js'
+                    );
+
+                    /*
+                     * تحميل JavaScript الخاص بلوحة التحكم
+                     */
+                    await loadScript(
+                        'admin_dashboard.js',
+                        true
+                    );
+
+                } catch (error) {
+                    console.error(
+                        'Error loading dashboard:',
+                        error
+                    );
+
+                    passwordError.textContent =
+                        'حدث خطأ أثناء تحميل لوحة التحكم.';
+
+                    passwordButton.disabled = false;
+                    passwordButton.textContent = 'موافق';
+                }
+            }
+        );
+
+        /*
+         * منع زر Escape من تجاوز نافذة كلمة المرور
+         */
+        document.addEventListener(
+            'keydown',
+            function (event) {
+                if (
+                    event.key === 'Escape' &&
+                    document.body.classList.contains('is-locked')
+                ) {
+                    event.preventDefault();
+                }
+            }
+        );
     </script>
 </body>
 
